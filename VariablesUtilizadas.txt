@@ -14,3 +14,36 @@ P6088
 
 P6080
 
+Datos de la vivienda
+-----------------------------------
+CANT_HOGARES_VIVIENDA
+CANT_HOG_COMPLETOS
+P1070 (tipo de vivienda)
+P4015 (material predominante pisos)
+P8520 (Concuales servisios cuenta)
+P8520S1 (Energía eléctrica)
+P8520S1A1 (Estraro para tarifa)
+P8520S5 (Acueducto)
+P8520S3 (Alcantarillado)
+
+
+Educación
+-----------------------------------
+P8587 (Cuál es el nivel educativo más alto alcanzado por...Y el último)
+P8586 (Actualmente estudia?)
+
+
+Salud
+-----------------------------------
+P6090 (Está adiliado(a))
+P1708 (¿A qué edad tuvo su primer hijo?)
+P1708S1 (¿A qué edad tuvo su primer hijo? - Edad)
+
+
+Servicios del hogar
+-----------------------------------
+P5000 (Cuantos cuartos hay en ese hogar incluyendo sala y comedor)
+I_hogar (ingresos del hogar)
+
+
+
