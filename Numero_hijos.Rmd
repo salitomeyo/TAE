@@ -11,13 +11,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Lectura de las bases de datos
 ```{r}
-Vivienda <- read.table("Datos de la vivienda/Datos de la vivienda.csv", sep = ";", header = T)
 
-Hogar_servicios <- read.table("Servicios del hogar/Servicios del hogar.csv", sep = ";", header = T)
 
-Energeticos_hogar <- read.table("Uso de energeticos del hogar/Uso de energéticos del hogar.csv", sep = ";", header = T)
-
-Caracteristicas_hogar_personas <- read.table("Caracteristicas y composicion del hogar/Caracteristicas y composicion del hogar.csv", sep = ";", header = T)
+Caracteristicas_hogar_personas <- read.table("Caracteristicas y composicion del hogar.csv", sep = ";", header = T)
 ```
 
 
@@ -25,8 +21,12 @@ Caracteristicas_hogar_personas <- read.table("Caracteristicas y composicion del 
 require(dplyr)
 
 hijos <- Caracteristicas_hogar_personas %>%
-  filter(P6051 == 3) %>%
+  filter(P6051 == 3 | P6051 == 4) %>%
   group_by(ï..DIRECTORIO, SECUENCIA_P) %>%
   count(SECUENCIA_P)
+```
+
+```{r}
+hijos
 ```
 
