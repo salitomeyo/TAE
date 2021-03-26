@@ -35,7 +35,7 @@ P8586 (Actualmente estudia?)
 
 Salud
 -----------------------------------
-P6090 (Está adiliado(a))
+P6090 (Está afiliado(a))
 P1708 (¿A qué edad tuvo su primer hijo?)
 P1708S1 (¿A qué edad tuvo su primer hijo? - Edad)
 
