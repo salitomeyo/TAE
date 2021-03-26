@@ -25,7 +25,7 @@ Caracteristicas_hogar_personas <- read.table("Caracteristicas y composicion del 
 ```
 
 ```{r}
-head(Caracteristicas_hogar_personas)
+Caracteristicas_hogar_personas
 ```
 
 ###Hijos
@@ -88,7 +88,7 @@ Educacion<-Educacion[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P8587","P8586")]
 ```
 
 ```{r}
-head(Educacion)
+Educacion
 ```
 ## Salud
 
@@ -118,7 +118,7 @@ Datos_vivienda<-Datos_vivienda[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","CANT_H
 ```
 
 ```{r}
-head(Datos_vivienda)
+Datos_vivienda
 ```
 
 ## Servicios del hogar
@@ -132,5 +132,19 @@ ServiciosDelHogar<-ServiciosDelHogar[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","
 ```
 
 ```{r}
-head(ServiciosDelHogar)
+ServiciosDelHogar
+```
+
+## Condiciones de vida
+
+```{r}
+CondicionesDeVida<- read.table("Condiciones de vida del hogar y tenencia de bienes (programas).csv", sep = ";", header = T)
+```
+
+```{r}
+CondicionesDeVida<-CondicionesDeVida[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P784S4A3")]
+```
+
+```{r}
+CondicionesDeVida
 ```
