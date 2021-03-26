@@ -30,7 +30,7 @@ Caracteristicas_hogar_personas
 
 ###Hijos
 
-Filtramos a los hijos si tienen una relacion de hijo/hija o nieto/nieta con el jefe y contamos al numero de hijos por hogar, los hogares se describen con el codigo unico de ï..DIRECTORIO, SECUENCIA_P
+Filtramos a los hijos si tienen una relación de hijo/hija o nieto/nieta con el jefe y contamos al numero de hijos por hogar, los hogares se describen con el codigo unico de ï..DIRECTORIO, SECUENCIA_P
 
 ```{r}
 require(dplyr)
