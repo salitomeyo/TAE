@@ -1,7 +1,5 @@
 ---
 title: "Prediciendo el número de hijos"
-author: "Juan Esteban Sanchez pulgarin - 1000538867"
-date: "21/3/2021"
 output: html_document
 ---
 
@@ -20,46 +18,76 @@ Caracteristicas_hogar_personas <- read.table("Caracteristicas y composicion del 
 ```
 
 
-```{r}
-  Caracteristicas_hogar_personas<-Caracteristicas_hogar_personas[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P6020", "P6040","P6051", "P5502", "P6071", "P756","P6081", "P6087","P6083","P6088","P6080")]
-```
+Nota: la variable P6051 solo será utilizada para la creación de la variable número de hijos, esta no deberia ir como covariable para el ajuste de modelos:
 
 ```{r}
-Caracteristicas_hogar_personas
+aux_creacion_respuesta<-Caracteristicas_hogar_personas[,c("ï..DIRECTORIO","SECUENCIA_P","P6051")]
+```
+
+
+
+```{r}
+head(aux_creacion_respuesta)
 ```
 
 ###Hijos
 
-Filtramos a los hijos si tienen una relación de hijo/hija o nieto/nieta con el jefe y contamos al numero de hijos por hogar, los hogares se describen con el codigo unico de ï..DIRECTORIO, SECUENCIA_P
+Filtramos a los hijos si tienen una relacion de hijo/hija o nieto/nieta con el jefe y contamos al numero de hijos por hogar, los hogares se describen con el codigo unico de ï..DIRECTORIO, SECUENCIA_P
 
 ```{r}
 require(dplyr)
 
-num_hijos <- Caracteristicas_hogar_personas %>%
+num_hijos <- aux_creacion_respuesta %>%
   filter(P6051 == 3 | P6051 == 4) %>%
   group_by(ï..DIRECTORIO, SECUENCIA_P) %>%
   count(SECUENCIA_P)
-```
 
-```{r}
 num_hijos
 ```
 
-Filtramos a los hijos si tienen una relacion de hijo/hija o nieto/nieta con el jefe y guardamos el codigo unico de cada una de las recurrencias que se identifican como hijos, el codigo unico de los hijos se describe como ï..DIRECTORIO, SECUENCIA_P, ORDEN
-
-Nota: Usar si se requiere informacion de los hijos, por ejemplo si se utilizara la variable edad
+Número de hogares con hijos:
 ```{r}
-#require(dplyr)
-
-#hijos <- Caracteristicas_hogar_personas %>%
-#  filter(P6051 == 3 | P6051 == 4) %>%
-#  group_by(ï..DIRECTORIO, SECUENCIA_P, ORDEN) %>%
-#  count(SECUENCIA_P)
+dim(num_hijos)[1]
 ```
 
+
 ```{r}
-#hijos
+require(dplyr)
+
+num_integrantes <- Caracteristicas_hogar_personas %>%
+  group_by(ï..DIRECTORIO, SECUENCIA_P) %>%
+  count(SECUENCIA_P)
+num_integrantes
 ```
+
+Número de hogares
+
+```{r}
+dim(num_integrantes)[1]
+```
+
+
+
+
+
+
+
+# Número de hijos final 
+
+
+```{r}
+num_hijos_final <- merge(num_integrantes, num_hijos, by = "ï..DIRECTORIO", all.x=TRUE)
+
+num_hijos_final <- num_hijos_final[,-4]
+num_hijos_final$n.y[is.na(num_hijos_final$n.y)] <- 0
+colnames(num_hijos_final) <- c("Directorio", "Secuencia", "Num Integrantes", "Num Hijos")
+```
+
+
+```{r}
+head(num_hijos_final)
+```
+
 
 ###Jefes de hogar
 
@@ -68,83 +96,137 @@ Se guarda el codigo unico que identifica a los jefes de cada hogar, se pudo apre
 ```{r}
 require(dplyr)
 
-jefes <- Caracteristicas_hogar_personas %>%
+jefes <- aux_creacion_respuesta %>%
   filter(P6051 == 1) %>%
-  group_by(ï..DIRECTORIO, SECUENCIA_P, ORDEN) %>%
+  group_by(ï..DIRECTORIO, SECUENCIA_P) %>%
   count(SECUENCIA_P)
 ```
 
 ```{r}
 jefes
 ```
-## Educacion
+
+
+# Importación de las bases de datos con sus respectivas variables:
+
+##Caracteristicas_hogar_personas
 
 ```{r}
-Educacion<- read.table("Educacion.csv", sep = ";", header = T)
+Caracteristicas_hogar_personas <- read.table("Caracteristicas y composicion del hogar.csv", sep = ";", header = T)
 ```
 
 ```{r}
-Educacion<-Educacion[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P8587","P8586")]
+Caracteristicas_hogar_personas<-Caracteristicas_hogar_personas[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P6020", "P6040","P6051", "P5502", "P6071", "P756","P767","P6081", "P6087","P6083","P6088","P6080")]
 ```
+
+
+## Condiciones de vida del hogar y tenencia de bienes (programas)
 
 ```{r}
-Educacion
-```
-## Salud
+condiciones_de_vida <- read.table("Condiciones de vida del hogar y tenencia de bienes (programas).csv", sep=";", header = T)
 
-```{r}
-Salud<- read.table("Salud.csv", sep = ";", header = T)
-```
+condiciones_de_vida <- condiciones_de_vida[, c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P784S4A3")]
 
-```{r}
-Salud<-Salud[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P6090","P1708","P1708S1")]
-```
-
-```{r}
-head(Salud)
+head(condiciones_de_vida)
 ```
 
 
-# Sobre la vivienda
+
 
 ## Datos de la vivienda
 
 ```{r}
 Datos_vivienda <- read.table("Datos de la vivienda.csv", sep = ";", header = T)
+
+Datos_vivienda<-Datos_vivienda[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","CANT_HOGARES_VIVIENDA","P1070","P4015","P8520","P8520S1","P8520S1A1","P8520S5","P8520S3")]
+
+head(Datos_vivienda)
 ```
 
-```{r}
-Datos_vivienda<-Datos_vivienda[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","CANT_HOGARES_VIVIENDA","CANT_HOG_COMPLETOS","P1070","P4015","P8520","P8520S1","P8520S1A1","P8520S5","P8520S3")]
-```
+
+## Educacion
 
 ```{r}
-Datos_vivienda
+Educacion<- read.table("Educacion.csv", sep = ";", header = T)
+
+Educacion<-Educacion[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P8587","P8586")]
+
+head(Educacion)
 ```
+
+## Fuerza de trabajo 
+
+
+```{r}
+fuerza_trabajo <- read.table("Fuerza de trabajo.csv", sep=";", header = T)
+fuerza_trabajo <- fuerza_trabajo[, c("ï..DIRECTORIO","SECUENCIA_P","ORDEN", "P6435")]
+
+head(fuerza_trabajo)
+
+```
+
+
+
+## Salud
+
+```{r}
+Salud<- read.table("Salud.csv", sep = ";", header = T)
+
+Salud<-Salud[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P6090","P6127", "P1708","P1708S1")]
+
+head(Salud)
+```
+
+
 
 ## Servicios del hogar
 
 ```{r}
 ServiciosDelHogar<- read.table("Servicios del hogar.csv", sep = ";", header = T)
+
+ServiciosDelHogar<-ServiciosDelHogar[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P5000","P5666","P5024","P5305", "I_HOGAR")]
+
+head(ServiciosDelHogar)
 ```
+
+
+
+## Tecnologia e información y comunicación
 
 ```{r}
-ServiciosDelHogar<-ServiciosDelHogar[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P5000","I_HOGAR","CANT_PERSONAS_HOGAR")]
+tecn_inf_comunicacion <- read.table("Tecnologías de información y comunicación.csv", sep=";", header = T) 
+
+tecn_inf_comunicacion <- tecn_inf_comunicacion[, c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P769")]
+
+
+head(tecn_inf_comunicacion)
 ```
+
+
+
+## Tenencia y financiación de la vivienda que ocupa el hogar
+
 
 ```{r}
-ServiciosDelHogar
+financiacion_vivienda <- read.table("Tenencia y financiación de la vivienda que ocupa el hogar.csv", sep=";", header = T)
+
+
+financiacion_vivienda <- financiacion_vivienda[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P5095", "P5130")]
+
+head(financiacion_vivienda)
+
 ```
 
-## Condiciones de vida
+
+Uso de energéticos del hogar
+
 
 ```{r}
-CondicionesDeVida<- read.table("Condiciones de vida del hogar y tenencia de bienes (programas).csv", sep = ";", header = T)
+energeticos_hogar <- read.table("Uso de energéticos del hogar.csv", sep=";", header = T)
+
+energeticos_hogar <- energeticos_hogar[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P5529", "P5018", "P5018S1")]
+
+head(energeticos_hogar)
 ```
 
-```{r}
-CondicionesDeVida<-CondicionesDeVida[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P784S4A3")]
-```
 
-```{r}
-CondicionesDeVida
-```
