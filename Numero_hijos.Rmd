@@ -144,6 +144,12 @@ head(Datos_vivienda)
 ```
 
 
+```{r}
+Datos_vivienda$CANT_HOGARES_VIVIENDA <- ifelse(Datos_vivienda$CANT_HOGARES_VIVIENDA>1, 1, 0)
+```
+
+
+
 ## Educacion
 
 ```{r}
@@ -228,5 +234,11 @@ energeticos_hogar <- energeticos_hogar[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN"
 
 head(energeticos_hogar)
 ```
+
+
+```{r}
+energeticos_hogar$P5018S <- energeticos_hogar$P5018/energeticos_hogar$P5018S1
+```
+
 
 
