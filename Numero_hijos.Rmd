@@ -339,6 +339,6 @@ energeticos_hogar$P5018S <- energeticos_hogar$P5018/energeticos_hogar$P5018S1
 
 
 ```{r}
-Base_final <- Reduce(function(...) merge (..., by="ï..DIRECTORIO", all.x=T), list(Base2, Educacion, fuerza_trabajo, Salud, ServiciosDelHogar, tecn_inf_comunicacion, financiacion_vivienda, energeticos_hogar, num_hijos_final))
+#Base_final <- Reduce(function(...) merge (..., by="ï..DIRECTORIO", all.x=T), list(Base2, Educacion, fuerza_trabajo, Salud, ServiciosDelHogar, tecn_inf_comunicacion, financiacion_vivienda, energeticos_hogar, num_hijos_final))
 ```
 
