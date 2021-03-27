@@ -81,7 +81,6 @@ P769	(¿con que frecuencia utiliza ____ teléfono celular?)
 ------------------------------------------------------------------
 
 P5095	(La vivienda ocupada por este hogar es)
-P5100	(¿cuánto pagan mensual por cuota de amortización?)
 P5130	Si tuviera que pagar el arriendo por esta vivienda, ¿cuánto estima que tendría que pagar mensualmente? 
 
 
@@ -90,3 +89,5 @@ Uso de energéticos del hogar
 P5529	¿Cuántos portátiles usa y recarga en su hogar?
 P5018	¿Cuanto pagaron EL MES PASADO o la última vez por la electricidad consumida?
 P5018S1	¿a cuántos meses corresponde ese pago?
+Nota: dividir las dos variables anteriores
+
