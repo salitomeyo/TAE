@@ -76,16 +76,15 @@ dim(num_integrantes)[1]
 
 
 ```{r}
-num_hijos_final <- merge(num_integrantes, num_hijos, by = "ï..DIRECTORIO", all.x=TRUE)
+num_hijos_final <- merge(num_integrantes, num_hijos, by =c("ï..DIRECTORIO","SECUENCIA_P"), all.x=TRUE)
 
-num_hijos_final <- num_hijos_final[,-4]
 num_hijos_final$n.y[is.na(num_hijos_final$n.y)] <- 0
-colnames(num_hijos_final) <- c("Directorio", "Secuencia", "Num Integrantes", "Num Hijos")
+colnames(num_hijos_final) <- c("ï..DIRECTORIO","SECUENCIA_P", "Num Integrantes", "Num Hijos")
 ```
 
 
 ```{r}
-head(num_hijos_final)
+head(num_hijos_final, 10)
 ```
 
 
@@ -107,6 +106,12 @@ jefes
 ```
 
 
+
+```{r}
+rm(aux_creacion_respuesta)
+```
+
+
 # Importación de las bases de datos con sus respectivas variables:
 
 ##Caracteristicas_hogar_personas
@@ -120,6 +125,18 @@ Caracteristicas_hogar_personas<-Caracteristicas_hogar_personas[,c("ï..DIRECTORI
 ```
 
 
+Vamos a filtar la base de datos por el jefe del hogar de tal manera que quede una fila por hogar:
+
+```{r}
+Caracteristicas_hogar_personas <- Caracteristicas_hogar_personas[Caracteristicas_hogar_personas$P6051==1,]
+
+head(Caracteristicas_hogar_personas)
+```
+
+
+
+
+
 ## Condiciones de vida del hogar y tenencia de bienes (programas)
 
 ```{r}
@@ -131,6 +148,44 @@ head(condiciones_de_vida)
 ```
 
 
+Organizamos la variable condiciones de vida para que los hogares aparezcan una sola vez (Un mismo hogar puede recibir varios subsidios):
+
+```{r}
+library(dplyr)
+data<-group_by(data,id)%>%summarise(n=n[1])
+data
+```
+
+
+```{r, message=FALSE, warning=FALSE}
+condiciones_de_vida <-   
+  group_by(condiciones_de_vida, ï..DIRECTORIO, SECUENCIA_P) %>%
+  summarise(P784S4A3=sum(P784S4A3))
+
+
+```
+
+
+
+## Merge de la base de datos de caracteristicas del hogar con condiciones de vida
+
+
+```{r}
+Base1 <- merge(Caracteristicas_hogar_personas, condiciones_de_vida, by = c("ï..DIRECTORIO","SECUENCIA_P"), all.x =TRUE)
+tail(Base1)
+```
+
+
+Reemplazar los NA's por ceros dado que se refieren a los hogares que no tienen subsidios:
+
+```{r}
+Base1$P784S4A3[is.na(Base1$P784S4A3)] <- 0
+tail(Base1)
+```
+
+```{r}
+rm(Caracteristicas_hogar_personas, condiciones_de_vida)
+```
 
 
 ## Datos de la vivienda
@@ -150,6 +205,15 @@ Datos_vivienda$CANT_HOGARES_VIVIENDA <- ifelse(Datos_vivienda$CANT_HOGARES_VIVIE
 
 
 
+Merge de Base1 con datos vivienda
+
+
+```{r}
+Base2 <- merge(Datos_vivienda, Base1, by="ï..DIRECTORIO", all.x=T)
+```
+
+
+
 ## Educacion
 
 ```{r}
@@ -159,6 +223,17 @@ Educacion<-Educacion[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P8587","P8586")]
 
 head(Educacion)
 ```
+
+La variable educación esta por integrantes del hogar, debemos dejar solo los hogares por lo tanto nuevamente a esta variable se le hace un filtro:
+
+
+```{r}
+Educacion <- Educacion %>%
+  filter(ORDEN == 1) %>%
+  group_by(ï..DIRECTORIO, SECUENCIA_P)
+```
+
+
 
 ## Fuerza de trabajo 
 
@@ -172,6 +247,11 @@ head(fuerza_trabajo)
 ```
 
 
+```{r}
+fuerza_trabajo <- fuerza_trabajo %>%
+  filter(ORDEN == 1) %>%
+  group_by(ï..DIRECTORIO, SECUENCIA_P)
+```
 
 ## Salud
 
@@ -183,6 +263,12 @@ Salud<-Salud[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P6090","P6127", "P1708",
 head(Salud)
 ```
 
+
+```{r}
+Salud <- Salud %>%
+  filter(ORDEN == 1) %>%
+  group_by(ï..DIRECTORIO, SECUENCIA_P)
+```
 
 
 ## Servicios del hogar
@@ -209,6 +295,12 @@ head(tecn_inf_comunicacion)
 ```
 
 
+```{r}
+tecn_inf_comunicacion <- tecn_inf_comunicacion %>%
+  filter(ORDEN == 1) %>%
+  group_by(ï..DIRECTORIO, SECUENCIA_P)
+```
+
 
 ## Tenencia y financiación de la vivienda que ocupa el hogar
 
@@ -224,7 +316,7 @@ head(financiacion_vivienda)
 ```
 
 
-Uso de energéticos del hogar
+## Uso de energéticos del hogar
 
 
 ```{r}
@@ -241,4 +333,12 @@ energeticos_hogar$P5018S <- energeticos_hogar$P5018/energeticos_hogar$P5018S1
 ```
 
 
+
+
+# Merge de todas las bases de datos
+
+
+```{r}
+Base_final <- Reduce(function(...) merge (..., by="ï..DIRECTORIO", all.x=T), list(Base2, Educacion, fuerza_trabajo, Salud, ServiciosDelHogar, tecn_inf_comunicacion, financiacion_vivienda, energeticos_hogar, num_hijos_final))
+```
 
