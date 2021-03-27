@@ -6,7 +6,6 @@ P5502 (Estado civil)
 P6071 (Vive con el conyugue)
 P756 (Donde Nacio)
 
-P767 "Posible" (Cantida de años que lleva viviendo en la ciudad)
 
 Comentario: Las siguientes no parecen hechas para el jefe del hogar si no para algún integrante del hogar
 #Sobre los padres
@@ -31,7 +30,6 @@ CANT_HOGARES_VIVIENDA: Esta variable variable va a tener dos categorias (0, 1) D
 
 P1070 (tipo de vivienda)
 P4015 (material predominante pisos)
-# P8520 (Con cuales servicios cuenta) esta realmente no va
 P8520S1 (Energía eléctrica)
 P8520S1A1 (Estraro para tarifa)
 P8520S5 (Acueducto)
@@ -54,8 +52,6 @@ Salud
 -----------------------------------
 P6090 (Está afiliado(a))
 P6127 (El estado de salud de .. en general es)
-P1708 (¿A qué edad tuvo su primer hijo?)
-P1708S1 (¿A qué edad tuvo su primer hijo? - Edad)
 
 
 Servicios del hogar
@@ -90,4 +86,18 @@ P5529	¿Cuántos portátiles usa y recarga en su hogar?
 P5018	¿Cuanto pagaron EL MES PASADO o la última vez por la electricidad consumida?
 P5018S1	¿a cuántos meses corresponde ese pago?
 Nota: dividir las dos variables anteriores
+
+
+
+
+Eliminar estas variables:
+
+P767
+P8520
+P1708
+P170851
+P5130              
+P5529
+P5018            
+P5018S1
 
