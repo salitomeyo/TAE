@@ -1,0 +1,82 @@
+---
+title: "Depuracion"
+author: "SalomeAristizabal"
+date: "27/3/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Cargando la base de datos
+
+```{r}
+load("datos.RData")
+```
+
+```{r}
+Base_final[,c("ï..DIRECTORIO", "SECUENCIA_P")] <- NULL
+```
+
+
+```{r}
+colnames(Base_final)
+```
+```{r}
+nombres <- c(
+  "Genero","Edad","Estado_civil","Lugar_nacimiento","Vive_hogar_padre","Educacion_padre","Vive_hogar_madre","Educacion_madre","Etnia","Num_Subsidios","Cant_hogares_vivienda","Tipo_vivienda","Material_pisos","Energia_electrica","Estrato","Acueducto","Alcantarillado","Nivel_educativo","Estudia","Afiliado","Salud_general","Uso_celular","Num_cuartos","Gas_natural","Telefonia_fija","Ingresos_hogar","Contrato_vivienda","Ultimo_pago_energia","Pago_mes_energia","Num_integrantes","Num_hijos"
+)
+```
+
+```{r}
+colnames(Base_final) <- nombres
+```
+
+```{r}
+rm(nombres)
+```
+
+```{r}
+str(Base_final)
+```
+
+```{r}
+str(Base_final)
+```
+
+```{r}
+sapply(1:32, function(i){
+  boxplot(Base_final$Num_hijos~Base_final[, i], xlab = nombres[i])
+})
+```
+
+
+```{r}
+barplot(table(Base_final$Num_hijos))
+```
+```{r}
+plot(Base_final$Num_hijos,Base_final$Ingresos_hogar)
+```
+
+```{r}
+plot(Base_final$Num_hijos,Base_final$Ultimo_pago_energia)
+```
+
+```{r}
+plot(Base_final$Num_hijos,Base_final$Pago_mes_energia)
+```
+
+```{r}
+plot(Base_final$Num_hijos~Base_final$Edad)
+```
+
+```{r}
+plot(Base_final$Ingresos_hogar,Base_final$Edad, xlim = c(0,60000000), col = rainbow(7, start = 0, end = 0.5)[Base_final$Num_hijos], pch=19)
+```
+
+
+```{r}
+colors()[1:14]
+```
+
