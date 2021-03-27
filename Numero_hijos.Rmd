@@ -88,28 +88,6 @@ head(num_hijos_final, 10)
 ```
 
 
-###Jefes de hogar
-
-Se guarda el codigo unico que identifica a los jefes de cada hogar, se pudo apreciar que los jefes siempre poseen un 1 en el orden, (este valor es invariable por lo que sabemos que si se habla de un individuo de orden 1 se trata de un jefe de hogar), el codigo unico de los jefes es tomado como ï..DIRECTORIO, SECUENCIA_P, ORDEN
-
-```{r}
-require(dplyr)
-
-jefes <- aux_creacion_respuesta %>%
-  filter(P6051 == 1) %>%
-  group_by(ï..DIRECTORIO, SECUENCIA_P) %>%
-  count(SECUENCIA_P)
-```
-
-```{r}
-jefes
-```
-
-
-
-```{r}
-rm(aux_creacion_respuesta)
-```
 
 
 # Importación de las bases de datos con sus respectivas variables:
@@ -122,6 +100,8 @@ Caracteristicas_hogar_personas <- read.table("Caracteristicas y composicion del 
 
 ```{r}
 Caracteristicas_hogar_personas<-Caracteristicas_hogar_personas[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P6020", "P6040","P6051", "P5502", "P6071", "P756","P767","P6081", "P6087","P6083","P6088","P6080")]
+
+head(Caracteristicas_hogar_personas)
 ```
 
 
@@ -142,26 +122,23 @@ head(Caracteristicas_hogar_personas)
 ```{r}
 condiciones_de_vida <- read.table("Condiciones de vida del hogar y tenencia de bienes (programas).csv", sep=";", header = T)
 
-condiciones_de_vida <- condiciones_de_vida[, c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P784S4A3")]
+condiciones_de_vida <- condiciones_de_vida[, c("ï..DIRECTORIO","SECUENCIA_ENCUESTA","ORDEN","P784S4A3")]
 
 head(condiciones_de_vida)
+```
+
+```{r}
+summary(condiciones_de_vida$SECUENCIA_ENCUESTA)
 ```
 
 
 Organizamos la variable condiciones de vida para que los hogares aparezcan una sola vez (Un mismo hogar puede recibir varios subsidios):
 
-```{r}
-library(dplyr)
-data<-group_by(data,id)%>%summarise(n=n[1])
-data
-```
-
 
 ```{r, message=FALSE, warning=FALSE}
 condiciones_de_vida <-   
-  group_by(condiciones_de_vida, ï..DIRECTORIO, SECUENCIA_P) %>%
+  group_by(condiciones_de_vida, ï..DIRECTORIO, SECUENCIA_ENCUESTA) %>%
   summarise(P784S4A3=sum(P784S4A3))
-
 
 ```
 
@@ -171,7 +148,7 @@ condiciones_de_vida <-
 
 
 ```{r}
-Base1 <- merge(Caracteristicas_hogar_personas, condiciones_de_vida, by = c("ï..DIRECTORIO","SECUENCIA_P"), all.x =TRUE)
+Base1 <- merge(Caracteristicas_hogar_personas, condiciones_de_vida, by.x = c("ï..DIRECTORIO","SECUENCIA_P"), by.y = c("ï..DIRECTORIO","SECUENCIA_ENCUESTA"), all.x =TRUE)
 tail(Base1)
 ```
 
@@ -184,7 +161,7 @@ tail(Base1)
 ```
 
 ```{r}
-rm(Caracteristicas_hogar_personas, condiciones_de_vida)
+#rm(Caracteristicas_hogar_personas, condiciones_de_vida, num_integrantes, num_hijos, aux_creacion_respuesta)
 ```
 
 
@@ -198,6 +175,10 @@ Datos_vivienda<-Datos_vivienda[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","CANT_H
 head(Datos_vivienda)
 ```
 
+```{r}
+summary(Datos_vivienda$SECUENCIA_P)
+```
+
 
 ```{r}
 Datos_vivienda$CANT_HOGARES_VIVIENDA <- ifelse(Datos_vivienda$CANT_HOGARES_VIVIENDA>1, 1, 0)
@@ -209,9 +190,23 @@ Merge de Base1 con datos vivienda
 
 
 ```{r}
-Base2 <- merge(Datos_vivienda, Base1, by="ï..DIRECTORIO", all.x=T)
+Base2 <- merge(Base1, Datos_vivienda, by="ï..DIRECTORIO", all.x=T)
 ```
 
+```{r}
+colnames(Base2)
+```
+
+
+```{r}
+colnames(Base2)[2:3] <- c("SECUENCIA_P","ORDEN")
+Base2[,c("SECUENCIA_P.y","ORDEN.y" )] <- NULL
+```
+
+
+```{r}
+summary(Base2$SECUENCIA_P)
+```
 
 
 ## Educacion
@@ -253,6 +248,12 @@ fuerza_trabajo <- fuerza_trabajo %>%
   group_by(ï..DIRECTORIO, SECUENCIA_P)
 ```
 
+
+```{r}
+summary(fuerza_trabajo$SECUENCIA_P)
+```
+
+
 ## Salud
 
 ```{r}
@@ -270,17 +271,25 @@ Salud <- Salud %>%
   group_by(ï..DIRECTORIO, SECUENCIA_P)
 ```
 
+```{r}
+summary(Salud$SECUENCIA_P)
+```
 
 ## Servicios del hogar
 
 ```{r}
 ServiciosDelHogar<- read.table("Servicios del hogar.csv", sep = ";", header = T)
 
-ServiciosDelHogar<-ServiciosDelHogar[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P5000","P5666","P5024","P5305", "I_HOGAR")]
+ServiciosDelHogar<-ServiciosDelHogar[,c("ï..DIRECTORIO","SECUENCIA_ENCUESTA","ORDEN","P5000","P5666","P5024","P5305", "I_HOGAR")]
 
 head(ServiciosDelHogar)
 ```
 
+
+
+```{r}
+summary(ServiciosDelHogar$SECUENCIA_ENCUESTA)
+```
 
 
 ## Tecnologia e información y comunicación
@@ -302,6 +311,11 @@ tecn_inf_comunicacion <- tecn_inf_comunicacion %>%
 ```
 
 
+
+```{r}
+summary(tecn_inf_comunicacion$SECUENCIA_P)
+```
+
 ## Tenencia y financiación de la vivienda que ocupa el hogar
 
 
@@ -309,12 +323,17 @@ tecn_inf_comunicacion <- tecn_inf_comunicacion %>%
 financiacion_vivienda <- read.table("Tenencia y financiación de la vivienda que ocupa el hogar.csv", sep=";", header = T)
 
 
-financiacion_vivienda <- financiacion_vivienda[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P5095", "P5130")]
+financiacion_vivienda <- financiacion_vivienda[,c("ï..DIRECTORIO","SECUENCIA_ENCUESTA","ORDEN","P5095", "P5130")]
 
 head(financiacion_vivienda)
 
 ```
 
+
+
+```{r}
+summary(financiacion_vivienda$SECUENCIA_ENCUESTA)
+```
 
 ## Uso de energéticos del hogar
 
@@ -322,7 +341,7 @@ head(financiacion_vivienda)
 ```{r}
 energeticos_hogar <- read.table("Uso de energéticos del hogar.csv", sep=";", header = T)
 
-energeticos_hogar <- energeticos_hogar[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P5529", "P5018", "P5018S1")]
+energeticos_hogar <- energeticos_hogar[,c("ï..DIRECTORIO","SECUENCIA_ENCUESTA","ORDEN","P5529", "P5018", "P5018S1")]
 
 head(energeticos_hogar)
 ```
@@ -332,6 +351,14 @@ head(energeticos_hogar)
 energeticos_hogar$P5018S <- energeticos_hogar$P5018/energeticos_hogar$P5018S1
 ```
 
+```{r}
+summary(energeticos_hogar$SECUENCIA_ENCUESTA)
+```
+
+
+```{r}
+Base3 <- merge(Base2, Educacion, by =c("ï..DIRECTORIO","SECUENCIA_P", "ORDEN"), all.x=TRUE)
+```
 
 
 
@@ -339,6 +366,57 @@ energeticos_hogar$P5018S <- energeticos_hogar$P5018/energeticos_hogar$P5018S1
 
 
 ```{r}
-#Base_final <- Reduce(function(...) merge (..., by="ï..DIRECTORIO", all.x=T), list(Base2, Educacion, fuerza_trabajo, Salud, ServiciosDelHogar, tecn_inf_comunicacion, financiacion_vivienda, energeticos_hogar, num_hijos_final))
+Base4 <- Reduce(function(...) merge (..., by=c("ï..DIRECTORIO","SECUENCIA_P", "ORDEN"), all=T), list(Base3, fuerza_trabajo, Salud, tecn_inf_comunicacion))
+
+Base4[,c("ORDEN")] <- NULL
 ```
+
+
+
+
+```{r}
+Base5 <- Reduce(function(...) merge (..., by= c("ï..DIRECTORIO","SECUENCIA_ENCUESTA", "ORDEN"), all=T), list(ServiciosDelHogar, financiacion_vivienda, energeticos_hogar))
+
+Base5[,c("ORDEN")] <- NULL
+```
+
+
+
+
+
+```{r}
+Base6 <- merge(Base4, Base5, by.x =c("ï..DIRECTORIO","SECUENCIA_P"),
+               by.y =c("ï..DIRECTORIO","SECUENCIA_ENCUESTA"), all=TRUE)
+```
+
+
+# Base final
+
+```{r}
+Base_final <- merge(Base6, num_hijos_final, by =c("ï..DIRECTORIO","SECUENCIA_P"), all.x=TRUE)
+```
+
+eliminación de bases
+
+```{r}
+#rm(Educacion, fuerza_trabajo, Salud, ServiciosDelHogar, tecn_inf_comunicacion, financiacion_vivienda, energeticos_hogar,Datos_vivienda)
+```
+
+
+
+################################################################################
+
+
+
+
+Resumen de las variables:
+
+
+```{r}
+summary(Base_final)
+```
+
+
+
+
 
