@@ -36,6 +36,7 @@ P8520S5 (Acueducto)
 P8520S3 (Alcantarillado)
 
 
+
 Educación
 -----------------------------------
 P8587 (Cuál es el nivel educativo más alto alcanzado por...Y el último)
@@ -86,6 +87,10 @@ P5529	¿Cuántos portátiles usa y recarga en su hogar?
 P5018	¿Cuanto pagaron EL MES PASADO o la última vez por la electricidad consumida?
 P5018S1	¿a cuántos meses corresponde ese pago?
 Nota: dividir las dos variables anteriores
+
+Adicional: 
+
+P5510 En promedio, ¿cuántas cargas de ropa lava en su lavadora a la semana?	
 
 
 
