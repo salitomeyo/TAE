@@ -151,7 +151,8 @@ summary(mod2)
 ```
 
 ```{r}
-plot(mod2)
+plot(Base_final$Num_hijos~Base_final$Num_integrantes)
+abline(mod2)
 ```
 
 ## Lasso
@@ -159,6 +160,7 @@ plot(mod2)
 ```{r}
 str(Base_final)
 ```
+
 ```{r}
 summary(Base_final)
 ```
@@ -224,6 +226,8 @@ lasso.mod <- glmnet(x, y, alpha = 1, lambda = gridz)
 require(plotmo)
 plot_glmnet(lasso.mod, xvar = 'lambda', grid.col="lightgray", label = 5, xlim = c(-5, 0.5))
 ```
+
+
 ```{r}
 set.seed(23)
 train <- sample(1:nrow(x), nrow(x)/2)
@@ -243,77 +247,100 @@ lasso.coef
 ```{r}
 require(broom)
 ```
+
+
+Estado_civil
+Lugar_nacimiento
+Genero
+Etnia
+Tipo_vivienda
+Contrato_vivienda
+Material_pisos
+Uso_celular
+Vive_hogar_madre
+Num_subsidios
+Afiliado
+Nivel_educativo
+Num_cuartos
+
 ```{r}
-sort(lasso.coef, decreasing = T)
+sort(abs(lasso.coef), decreasing = T)[1:20]
+```
 
 
+```{r}
 lasso.coef[lasso.coef == 0 ]
 ```
 
 
 
-# Modelo lineal 
+
+------------------------------------------------------------------------------------
+
 
 ```{r}
+x <- model.matrix(Num_hijos ~ ., Base_basuras)[,-1]
 
-mod3 <- lm(Num_hijos~., data = Base_final)
-
-ols_step_both_p(mod3)
-
+y <- Base_basuras$Num_hijos
 ```
 
-
-
-## Juanes
-
-
-Seleccionemos las variables mas relevantes para explicar a y.
-
-Transformando las varibles en factores
-
-```{r}
-
-for (i in 1:length(names(Base_final))) {
-  if(is.integer(Base_final[,i])){
-    Base_final[ ,i] <- as.factor(Base_final[ ,i])
-  }
-  
-}
-
-str(Base_final)
-
-Base_final <- na.omit(Base_final) # quitamos los NA's de nuestra base de datos
-```
-
-Veamos con Lasso regresion.
 
 ```{r}
 require(glmnet)
-x <- model.matrix(Num_hijos ~ ., Base_final)[,-1]
-y <- Base_final$Num_hijos
 
 gridz <- 10^seq(-2,10, length = 100)
+
 lasso.mod <- glmnet(x, y, alpha = 1, lambda = gridz)
 ```
 
 ```{r}
 require(plotmo)
-plot_glmnet(lasso.mod, xvar = 'lambda', grid.col="lightgray", label = 31, xlim = c(-5, 0))
+plot_glmnet(lasso.mod, xvar = 'lambda', grid.col="lightgray", label = 5, xlim = c(-5, 0.5))
 ```
 
 
+```{r}
+set.seed(23)
+train <- sample(1:nrow(x), nrow(x)/2)
+test <- -train
+y.test <- y[test]
+cv.out <- cv.glmnet(x[train,], y[train], alpha=1)
+bestlam <-cv.out$lambda.min
+```
+
+```{r}
+out <- glmnet(x, y, alpha=1)
+lasso.coef <-predict(out, type = "coefficients", s=bestlam)[1:93, ]
+
+lasso.coef
+```
+
+```{r}
+require(broom)
+```
 
 
+Num_integrantes
+Estado civil
+Lugar_nacimiento
+Etnia
+Genero
+Tipo_vivienda
+Contrato_vivienda
+Uso_celular
+Num_subsidios
+Vive_hogar_madre
+Estrato
+Afiliado
+
+```{r}
+sort(abs(lasso.coef), decreasing = T)[1:20]
+```
 
 
-
-
-
-
-
-
-
-
+```{r}
+lasso.coef[lasso.coef == 0 ]
+```
 
 
 
