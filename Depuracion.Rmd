@@ -9,6 +9,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+require(tidyverse)
+```
+
+
 ##Cargando la base de datos
 
 ```{r}
@@ -45,8 +50,40 @@ str(Base_final)
 ```{r}
 # Variables interesantes
 
-c("Num_integrantes", "Num_cuartos", "Estrato", "Material_pisos", "Tipo_vivienda", "Num_Subsidios", "Educacion_madre", "Estado_civil")
+c(
+  "Genero",
+  "Num_integrantes",
+  "Num_cuartos",
+  "Estrato",
+  "Material_pisos",
+  "Tipo_vivienda",
+  "Num_Subsidios",
+  "Educacion_madre",
+  "Estado_civil",
+  "Ultimo_pago_energia",
+  "Ingresos_hogar",
+  "Contrato_vivienda"
+)
 ```
+
+
+```{r}
+
+Base_final <- Base_final %>% 
+  mutate(
+    Genero = factor(Genero)
+  )
+
+
+mod1 <- lm(Num_hijos~., data = Base_final)
+
+
+
+
+
+summary(mod1)
+```
+
 
 
 ```{r}
@@ -83,4 +120,61 @@ plot(Base_final$Ingresos_hogar,Base_final$Edad, xlim = c(0,60000000), col = rain
 ```{r}
 colors()[1:14]
 ```
+
+
+## Juanes
+
+
+Seleccionemos las variables mas relevantes para explicar a y.
+
+Transformando las varibles en factores
+
+```{r}
+
+for (i in 1:length(names(Base_final))) {
+  if(is.integer(Base_final[,i])){
+    Base_final[ ,i] <- as.factor(Base_final[ ,i])
+  }
+  
+}
+
+str(Base_final)
+
+Base_final <- na.omit(Base_final) # quitamos los NA's de nuestra base de datos
+```
+
+Veamos con Lasso regresion.
+
+```{r}
+require(glmnet)
+x <- model.matrix(Num_hijos ~ ., Base_final)[,-1]
+y <- Base_final$Num_hijos
+
+gridz <- 10^seq(-2,10, length = 100)
+lasso.mod <- glmnet(x, y, alpha = 1, lambda = gridz)
+```
+
+```{r}
+require(plotmo)
+plot_glmnet(lasso.mod, xvar = 'lambda', grid.col="lightgray", label = 31, xlim = c(-5, 0))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
