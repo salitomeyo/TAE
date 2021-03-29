@@ -99,7 +99,7 @@ Caracteristicas_hogar_personas <- read.table("Caracteristicas y composicion del 
 ```
 
 ```{r}
-Caracteristicas_hogar_personas<-Caracteristicas_hogar_personas[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P6020", "P6040","P6051", "P5502", "P6071", "P756","P767","P6081", "P6087","P6083","P6088","P6080")]
+Caracteristicas_hogar_personas<-Caracteristicas_hogar_personas[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P6020", "P6040","P6051", "P5502", "P756","P6081", "P6087","P6083","P6088","P6080")]
 
 head(Caracteristicas_hogar_personas)
 ```
@@ -170,7 +170,7 @@ tail(Base1)
 ```{r}
 Datos_vivienda <- read.table("Datos de la vivienda.csv", sep = ";", header = T)
 
-Datos_vivienda<-Datos_vivienda[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","CANT_HOGARES_VIVIENDA","P1070","P4015","P8520","P8520S1","P8520S1A1","P8520S5","P8520S3")]
+Datos_vivienda<-Datos_vivienda[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","CANT_HOGARES_VIVIENDA","P1070","P4015","P8520S1","P8520S1A1","P8520S5","P8520S3")]
 
 head(Datos_vivienda)
 ```
@@ -259,7 +259,7 @@ summary(fuerza_trabajo$SECUENCIA_P)
 ```{r}
 Salud<- read.table("Salud.csv", sep = ";", header = T)
 
-Salud<-Salud[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P6090","P6127", "P1708","P1708S1")]
+Salud<-Salud[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P6090","P6127")]
 
 head(Salud)
 ```
@@ -278,9 +278,9 @@ summary(Salud$SECUENCIA_P)
 ## Servicios del hogar
 
 ```{r}
-ServiciosDelHogar<- read.table("Servicios del hogar.csv", sep = ";", header = T)
+ServiciosDelHogar<- read.table("Servicios del hogar.csv", sep = ";", dec=",", header = T)
 
-ServiciosDelHogar<-ServiciosDelHogar[,c("ï..DIRECTORIO","SECUENCIA_ENCUESTA","ORDEN","P5000","P5666","P5024","P5305", "I_HOGAR")]
+ServiciosDelHogar<-ServiciosDelHogar[,c("ï..DIRECTORIO","SECUENCIA_ENCUESTA","ORDEN","P5000","P5666","P5305", "I_HOGAR")]
 
 head(ServiciosDelHogar)
 ```
@@ -323,7 +323,7 @@ summary(tecn_inf_comunicacion$SECUENCIA_P)
 financiacion_vivienda <- read.table("Tenencia y financiación de la vivienda que ocupa el hogar.csv", sep=";", header = T)
 
 
-financiacion_vivienda <- financiacion_vivienda[,c("ï..DIRECTORIO","SECUENCIA_ENCUESTA","ORDEN","P5095", "P5130")]
+financiacion_vivienda <- financiacion_vivienda[,c("ï..DIRECTORIO","SECUENCIA_ENCUESTA","ORDEN","P5095")]
 
 head(financiacion_vivienda)
 
@@ -341,7 +341,7 @@ summary(financiacion_vivienda$SECUENCIA_ENCUESTA)
 ```{r}
 energeticos_hogar <- read.table("Uso de energéticos del hogar.csv", sep=";", header = T)
 
-energeticos_hogar <- energeticos_hogar[,c("ï..DIRECTORIO","SECUENCIA_ENCUESTA","ORDEN","P5529", "P5018", "P5018S1")]
+energeticos_hogar <- energeticos_hogar[,c("ï..DIRECTORIO","SECUENCIA_ENCUESTA","ORDEN", "P5018", "P5018S1")]
 
 head(energeticos_hogar)
 ```
@@ -396,10 +396,14 @@ Base6 <- merge(Base4, Base5, by.x =c("ï..DIRECTORIO","SECUENCIA_P"),
 Base_final <- merge(Base6, num_hijos_final, by =c("ï..DIRECTORIO","SECUENCIA_P"), all.x=TRUE)
 ```
 
+```{r}
+Base_final[,c("P6435","P6051","P5018S1","ï..DIRECTORIO","SECUENCIA_P")] <- NULL
+```
+
 eliminación de bases
 
 ```{r}
-#rm(Educacion, fuerza_trabajo, Salud, ServiciosDelHogar, tecn_inf_comunicacion, financiacion_vivienda, energeticos_hogar,Datos_vivienda)
+rm(Educacion, fuerza_trabajo, Salud, ServiciosDelHogar, tecn_inf_comunicacion, financiacion_vivienda, energeticos_hogar,Datos_vivienda,aux_creacion_respuesta,Base1,Base2,Base3)
 ```
 
 
@@ -415,8 +419,7 @@ Resumen de las variables:
 ```{r}
 summary(Base_final)
 ```
-
-
-
-
+```{r}
+save(Base_final, file="datos.RData")
+```
 
