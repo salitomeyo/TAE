@@ -1,0 +1,4 @@
+Variables interesantes seleccionadas
+
+
+c("Num_integrantes", "Num_cuartos", "Estrato", "Material_pisos", "Tipo_vivienda", "Num_Subsidios", "Educacion_madre", "Estado_civil")
