@@ -1,0 +1,217 @@
+---
+title: "Seleccionando más variables hogar"
+author: "Miguel Ángel Londoño Ciceros"
+date: "29/3/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Se harán boxplot para cada variable de las siguentes bases de datos
+
+```{r}
+library(readr)
+
+Datos_de_la_vivienda <- read_delim("Datos de la vivienda.csv", 
+    ";", escape_double = FALSE, trim_ws = TRUE)
+View(Datos_de_la_vivienda)
+
+
+Uso_energetico <- read.csv("Uso de energéticos del hogar.csv", sep = ";")
+```
+
+# Se crea la variable número de hijos
+
+## Caracteristicas y composicion del hogar
+
+Lectura de las bases de datos
+
+```{r}
+Caracteristicas_hogar_personas <- read.table("Caracteristicas y composicion del hogar.csv", sep = ";", header = T)
+```
+
+
+Nota: la variable P6051 solo será utilizada para la creación de la variable número de hijos, esta no deberia ir como covariable para el ajuste de modelos:
+
+```{r}
+aux_creacion_respuesta<-Caracteristicas_hogar_personas[,c("ï..DIRECTORIO","SECUENCIA_P","P6051")]
+```
+
+###Hijos
+
+Filtramos a los hijos si tienen una relacion de hijo/hija o nieto/nieta con el jefe y contamos al numero de hijos por hogar, los hogares se describen con el codigo unico de ï..DIRECTORIO, SECUENCIA_P
+
+```{r}
+require(dplyr)
+
+num_hijos <- aux_creacion_respuesta %>%
+  filter(P6051 == 3 | P6051 == 4) %>%
+  group_by(ï..DIRECTORIO, SECUENCIA_P) %>%
+  count(SECUENCIA_P)
+
+num_hijos
+```
+
+Número de hogares con hijos:
+```{r}
+dim(num_hijos)[1]
+```
+
+
+```{r}
+require(dplyr)
+
+num_integrantes <- Caracteristicas_hogar_personas %>%
+  group_by(ï..DIRECTORIO, SECUENCIA_P) %>%
+  count(SECUENCIA_P)
+num_integrantes
+```
+
+Número de hogares
+
+```{r}
+dim(num_integrantes)[1]
+```
+
+# Número de hijos final 
+
+```{r}
+num_hijos_final <- merge(num_integrantes, num_hijos, by =c("ï..DIRECTORIO","SECUENCIA_P"), all.x=TRUE)
+
+num_hijos_final$n.y[is.na(num_hijos_final$n.y)] <- 0
+colnames(num_hijos_final) <- c("DIRECTORIO","SECUENCIA_P", "Num Integrantes", "Num Hijos")
+```
+
+***
+
+# Se une Datos vivienda con Num_hijos final
+
+```{r}
+Datos_vivienda_bxplt <- merge(num_hijos_final, Datos_de_la_vivienda, by="DIRECTORIO", all.x=T)
+```
+
+- Eliminamos variables que no se necesitan o con muchos NAs
+
+```{r}
+summary(Datos_vivienda_bxplt)
+```
+```{r}
+var_eliminar <-c("DIRECTORIO", "SECUENCIA_P.x", "SECUENCIA_P.y", "P8520", "ORDEN", "SECUENCIA_ENCUESTA", "Num Integrantes", "P1_DEPARTAMENTO", "CANT_HOG_COMPLETOS", "P4065", "P5661", "FEX_C")
+
+Datos_vivienda_bxplt[, var_eliminar ] <- NULL
+
+```
+
+
+```{r}
+for (i in 1:dim(Datos_vivienda_bxplt)[1]) {
+  
+  boxplot(Datos_vivienda_bxplt$`Num Hijos`~Datos_vivienda_bxplt[, i],
+          xlab = names(Datos_vivienda_bxplt)[i])
+  
+}
+
+
+```
+```{r}
+var_relevantes <- c(
+  "CANT_HOGARES_VIVIENDA", # No hay que categorizarla
+  "P8520S4A1"
+)
+```
+
+***
+
+# Se seleccionan las varaibles de energeticos que vamos autilizar
+
+```{r}
+var_sel <-c(
+  "ï..DIRECTORIO",
+  "SECUENCIA_ENCUESTA",
+  "P5510",
+  "P5512",
+  "P5514",
+  "P5521S1",
+  "P5521S2",
+  "P5522S1",
+  "P5522S2",
+  "P5532"
+)
+
+Uso_energetico_sel <- subset(Uso_energetico, select = var_sel)
+
+colnames(Uso_energetico_sel)[1] <- c("DIRECTORIO")
+```
+
+# Se une la base de datos de uso energetico con la de numero de hijos
+
+```{r}
+Datos_energeticos_plt <- merge(num_hijos_final, Uso_energetico_sel,
+                              by.x = c("DIRECTORIO", "SECUENCIA_P"),
+                              by.y = c("DIRECTORIO", "SECUENCIA_ENCUESTA"), all.x=T)
+```
+
+
+```{r}
+summary(Datos_energeticos_plt)
+```
+
+```{r}
+Datos_energeticos_plt$Horas_tv <-  rowSums(data.frame(Datos_energeticos_plt$P5521S1,
+                                        Datos_energeticos_plt$P5521S2,
+                                        Datos_energeticos_plt$P5522S1,
+                                        Datos_energeticos_plt$P5522S2), na.rm = T)
+
+summary(Datos_energeticos_plt$Horas_tv)
+```
+
+
+```{r}
+plot(Datos_energeticos_plt$`Num Hijos`, Datos_energeticos_plt$Horas_tv)
+```
+
+
+```{r}
+boxplot(`Num Hijos`~P5510, data = Datos_energeticos_plt)
+```
+```{r}
+boxplot(`Num Hijos`~P5512, data = Datos_energeticos_plt)
+```
+```{r}
+boxplot(`Num Hijos`~P5514, data = Datos_energeticos_plt)
+```
+
+```{r}
+plot(`Num Hijos`~P5521S1, data = Datos_energeticos_plt)
+```
+
+```{r}
+boxplot(`Num Hijos`~P5521S1, data = Datos_energeticos_plt)
+```
+
+```{r}
+boxplot(`Num Hijos`~P5521S2, data = Datos_energeticos_plt)
+```
+
+```{r}
+boxplot(`Num Hijos`~P5522S1, data = Datos_energeticos_plt)
+```
+
+```{r}
+boxplot(`Num Hijos`~P5522S2, data = Datos_energeticos_plt)
+```
+
+
+```{r}
+plot(`Num Hijos`~P5532, data = Datos_energeticos_plt)
+```
+
+
+
+
+
+
+
+
