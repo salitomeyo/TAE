@@ -170,18 +170,13 @@ tail(Base1)
 ```{r}
 Datos_vivienda <- read.table("Datos de la vivienda.csv", sep = ";", header = T)
 
-Datos_vivienda<-Datos_vivienda[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","CANT_HOGARES_VIVIENDA","P1070","P4015","P8520S1","P8520S1A1","P8520S5","P8520S3")]
+Datos_vivienda<-Datos_vivienda[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","CANT_HOGARES_VIVIENDA","P1070","P4015","P8520S1","P8520S1A1","P8520S5","P8520S3", "P8520S4A1")]
 
 head(Datos_vivienda)
 ```
 
 ```{r}
 summary(Datos_vivienda$SECUENCIA_P)
-```
-
-
-```{r}
-Datos_vivienda$CANT_HOGARES_VIVIENDA <- ifelse(Datos_vivienda$CANT_HOGARES_VIVIENDA>1, 1, 0)
 ```
 
 
@@ -362,7 +357,9 @@ Base3 <- merge(Base2, Educacion, by =c("ï..DIRECTORIO","SECUENCIA_P", "ORDEN"),
 
 
 
-# Merge de todas las bases de datos
+# Merge de todas las bases de datos restantes
+
+Bases de personas
 
 
 ```{r}
@@ -372,6 +369,7 @@ Base4[,c("ORDEN")] <- NULL
 ```
 
 
+Bases de hogares
 
 
 ```{r}
@@ -403,7 +401,8 @@ Base_final[,c("P6435","P6051","P5018S1","ï..DIRECTORIO","SECUENCIA_P")] <- NULL
 eliminación de bases
 
 ```{r}
-rm(Educacion, fuerza_trabajo, Salud, ServiciosDelHogar, tecn_inf_comunicacion, financiacion_vivienda, energeticos_hogar,Datos_vivienda,aux_creacion_respuesta,Base1,Base2,Base3)
+rm(Educacion, fuerza_trabajo, Salud, ServiciosDelHogar, tecn_inf_comunicacion, financiacion_vivienda, energeticos_hogar,Datos_vivienda, aux_creacion_respuesta, Base1, Base2, Base3, Base4, Base5, Base6, Caracteristicas_hogar_personas, num_hijos, num_integrantes, condiciones_de_vida)
+
 ```
 
 
@@ -419,6 +418,8 @@ Resumen de las variables:
 ```{r}
 summary(Base_final)
 ```
+
+
 ```{r}
 save(Base_final, file="datos.RData")
 ```
