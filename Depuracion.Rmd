@@ -34,16 +34,20 @@ colnames(Base_final) <- nombres
 ```
 
 ```{r}
-rm(nombres)
+#rm(nombres)
 ```
 
 ```{r}
 str(Base_final)
 ```
 
+
 ```{r}
-str(Base_final)
+# Variables interesantes
+
+c("Num_integrantes", "Num_cuartos", "Estrato", "Material_pisos", "Tipo_vivienda", "Num_Subsidios", "Educacion_madre", "Estado_civil")
 ```
+
 
 ```{r}
 sapply(1:32, function(i){
