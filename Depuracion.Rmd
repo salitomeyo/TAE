@@ -52,9 +52,17 @@ sapply(1:32, function(i){
 })
 ```
 
+```{r}
+barplot(table(Base_final$Num_hijos)) # Barplot de la variable respuesta
+```
 
-
-
+```{r}
+par(mfrow=c(2,2))
+plot(Base_final$Num_hijos~ Base_final$Edad)
+plot(Base_final$Num_hijos~ Base_final$Ingresos_hogar)
+plot(Base_final$Num_hijos~ Base_final$Ultimo_pago_energia)
+plot(Base_final$Num_hijos~ Base_final$Pago_mes_energia)
+```
 * Variables significativas según el boxplot:
 
 - Genero
@@ -68,78 +76,193 @@ sapply(1:32, function(i){
 - Num_cuartos
 - Num_integrantes
 
-
-```{r}
-par(mfrow=c(2,2))
-plot(Base_final$Num_hijos~ Base_final$Edad)
-plot(Base_final$Num_hijos~ Base_final$Ingresos_hogar)
-plot(Base_final$Num_hijos~ Base_final$Ultimo_pago_energia)
-plot(Base_final$Num_hijos~ Base_final$Pago_mes_energia)
-```
-
 ```{r}
 # Variables interesantes
 
-c(
+var_interesantes <- c(
   "Genero",
+  "Edad",
   "Num_integrantes",
   "Num_cuartos",
   "Estrato",
-  "Material_pisos",
   "Tipo_vivienda",
   "Num_Subsidios",
   "Educacion_madre",
   "Estado_civil",
   "Ultimo_pago_energia",
   "Ingresos_hogar",
-  "Contrato_vivienda"
+  "Cant_hogares_vivienda",
+  "Num_hijos"
 )
 ```
 
+### Subset con las varibles interesantes
 
 ```{r}
-barplot(table(Base_final$Num_hijos))
+Base_interesante <- subset(Base_final, select = var_interesantes)
 ```
 
 
 ```{r}
-plot(Base_final$Ingresos_hogar,Base_final$Edad, xlim = c(0,60000000), col = Base_final$Num_hijos, pch=19)
+str(Base_interesante)
 ```
 
-
 ```{r}
-library(ggplot2)
+# Se pasan algunas varibles a factores
 
-ggplot(Base_final) +
- aes(x = Nivel_educativo, y = Num_hijos, fill = Genero) +
- geom_boxplot() +
- scale_fill_hue() +
- theme_minimal() +
- facet_grid(vars(Genero), vars())
-```
-
-
-```{r}
-colors()[1:14]
-```
-
-
-```{r}
-
-Base_final <- Base_final %>% 
+Base_interesante <-  Base_interesante %>% 
   mutate(
-    Genero = factor(Genero)
-  )
+    Genero = factor(Genero),
+    Estrato = factor(Estrato),
+    Tipo_vivienda = factor(Tipo_vivienda),
+    Educacion_madre = factor(Educacion_madre),
+    Estado_civil = factor(Estado_civil)
+)
 
 
-mod1 <- lm(Num_hijos~., data = Base_final)
+str(Base_interesante)
+
+```
 
 
+# Hagamos modelos (POR FIN!!!)
 
 
+```{r}
+# Modelo de regresión lineal multiple
+
+mod1 <- lm(Num_hijos~., data = Base_interesante)
 
 summary(mod1)
 ```
+# Selección de variables con both
+
+```{r}
+require(olsrr)
+
+
+ols_step_both_p(mod1)
+```
+
+```{r}
+mod2 <- lm(Num_hijos~Num_integrantes, data = Base_interesante)
+
+summary(mod2)
+```
+
+```{r}
+plot(mod2)
+```
+
+## Lasso
+
+```{r}
+str(Base_final)
+```
+```{r}
+summary(Base_final)
+```
+
+
+
+```{r}
+# Cambiamos de forma muy sufrida las variables requeridas a factores
+
+Base_final <- Base_final %>% 
+  mutate(
+    Genero = factor(Genero),
+    Estado_civil = factor(Estado_civil),
+    Lugar_nacimiento = factor(Lugar_nacimiento),
+    Vive_hogar_padre = factor(Vive_hogar_padre),
+    Educacion_padre = factor(Educacion_padre),
+    Vive_hogar_madre = factor(Vive_hogar_madre),
+    Educacion_madre = factor(Educacion_madre),
+    Etnia = factor(Etnia),
+    Tipo_vivienda = factor(Tipo_vivienda),
+    Material_pisos = factor(Material_pisos),
+    Energia_electrica = factor(Energia_electrica),
+    Estrato = factor(Estrato),
+    Acueducto = factor(Acueducto),
+    Alcantarillado = factor(Alcantarillado),
+    Nivel_educativo = factor(Nivel_educativo),
+    Estudia = factor(Estudia),
+    Afiliado = factor(Afiliado),
+    Salud_general = factor(Salud_general),
+    Uso_celular = factor(Uso_celular),
+    Gas_natural = factor(Gas_natural),
+    Telefonia_fija = factor(Telefonia_fija),
+    Contrato_vivienda = factor(Contrato_vivienda)
+)
+
+Base_basuras <- Base_final
+Base_basuras <- na.omit(Base_basuras)
+
+
+Base_menos_Nas <- Base_final
+Base_menos_Nas$Basuras_semana <- NULL
+Base_menos_Nas$Pago_mes_energia <- NULL
+Base_menos_Nas <- na.omit(Base_menos_Nas)
+
+```
+
+```{r}
+x <- model.matrix(Num_hijos ~ ., Base_menos_Nas)[,-1]
+
+y <- Base_menos_Nas$Num_hijos
+```
+
+
+```{r}
+require(glmnet)
+
+gridz <- 10^seq(-2,10, length = 100)
+
+lasso.mod <- glmnet(x, y, alpha = 1, lambda = gridz)
+```
+
+```{r}
+require(plotmo)
+plot_glmnet(lasso.mod, xvar = 'lambda', grid.col="lightgray", label = 5, xlim = c(-5, 0.5))
+```
+```{r}
+set.seed(23)
+train <- sample(1:nrow(x), nrow(x)/2)
+test <- -train
+y.test <- y[test]
+cv.out <- cv.glmnet(x[train,], y[train], alpha=1)
+bestlam <-cv.out$lambda.min
+```
+
+```{r}
+out <- glmnet(x, y, alpha=1)
+lasso.coef <-predict(out, type = "coefficients", s=bestlam)[1:90, ]
+
+lasso.coef
+```
+
+```{r}
+require(broom)
+```
+```{r}
+sort(lasso.coef, decreasing = T)
+
+
+lasso.coef[lasso.coef == 0 ]
+```
+
+
+
+# Modelo lineal 
+
+```{r}
+
+mod3 <- lm(Num_hijos~., data = Base_final)
+
+ols_step_both_p(mod3)
+
+```
+
+
 
 ## Juanes
 
