@@ -47,6 +47,12 @@ str(Base_final)
 ```
 
 
+
+```{r}
+sapply(1:32, function(i){
+  boxplot(Base_final$Num_hijos~Base_final[, i], xlab = nombres[i])
+})
+```
 ```{r}
 # Variables interesantes
 
@@ -64,32 +70,6 @@ c(
   "Ingresos_hogar",
   "Contrato_vivienda"
 )
-```
-
-
-```{r}
-
-Base_final <- Base_final %>% 
-  mutate(
-    Genero = factor(Genero)
-  )
-
-
-mod1 <- lm(Num_hijos~., data = Base_final)
-
-
-
-
-
-summary(mod1)
-```
-
-
-
-```{r}
-sapply(1:32, function(i){
-  boxplot(Base_final$Num_hijos~Base_final[, i], xlab = nombres[i])
-})
 ```
 
 
@@ -121,6 +101,23 @@ plot(Base_final$Ingresos_hogar,Base_final$Edad, xlim = c(0,60000000), col = rain
 colors()[1:14]
 ```
 
+
+```{r}
+
+Base_final <- Base_final %>% 
+  mutate(
+    Genero = factor(Genero)
+  )
+
+
+mod1 <- lm(Num_hijos~., data = Base_final)
+
+
+
+
+
+summary(mod1)
+```
 
 ## Juanes
 
