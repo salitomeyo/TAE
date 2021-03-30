@@ -365,7 +365,6 @@ Base_modelar <- Base_final[,c("Genero",
                               "Etnia",
                               "Afiliado",
                               "Lugar_nacimiento",
-                              "Material_pisos",
                               "Nivel_educativo")]
 ```
 

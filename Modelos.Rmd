@@ -1,0 +1,50 @@
+---
+title: "Modelación"
+author: "Jennifer Salazar"
+date: "29/3/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+load("Base_modelar.RData")
+```
+
+
+Modelo de regresión lineal múltiple
+
+
+```{r}
+modelo1 <- lm(Num_hijos~., data=Base_modelar)
+summary(modelo1)
+```
+
+
+
+```{r}
+plot(modelo1)
+```
+
+
+```{r}
+Base_sin_na <- na.omit(Base_modelar)
+```
+
+
+
+```{r}
+modelo1b <- lm(Num_hijos~., data=Base_sin_na)
+summary(modelo1b)
+```
+
+
+
+```{r}
+plot(modelo1b)
+```
+
