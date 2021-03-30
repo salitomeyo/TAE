@@ -48,3 +48,41 @@ summary(modelo1b)
 plot(modelo1b)
 ```
 
+
+
+***
+
+```{r}
+library(leaps)
+```
+
+```{r}
+mod_all <- regsubsets(Num_hijos~., data=Base_modelar, really.big=T)
+```
+
+```{r}
+plot(mod_all, scale = "adjr2")
+abline(v=33)
+```
+
+```{r}
+mod1 <- lm(Num_hijos~Genero+Num_integrantes+Estado_civil, data = Base_modelar)
+
+summary(mod1)
+```
+
+```{r}
+mod1 <- lm(Num_hijos~Genero+Num_integrantes+Num_cuartos+Estado_civil+Ultimo_pago_energia+Contrato_vivienda+Material_pisos, data = Base_modelar)
+
+summary(mod1)
+```
+
+
+
+
+
+
+
+
+
+
