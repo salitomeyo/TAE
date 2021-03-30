@@ -78,11 +78,102 @@ summary(mod1)
 ```
 
 
+# Arbol de clasificacion 
+
+```{r}
+require(rpart)
+require(rpart.plot)
+```
+```{r}
+set.seed(65234)
+
+porctj <- round(dim(Base_modelar)[1] * 0.8)
+
+indx_train <- sample(1:dim(Base_modelar)[1], porctj)
+
+train <- Base_modelar[indx_train, ]
+
+test <- Base_modelar[-indx_train, ]
+
+dim(test)[1] + dim(train)[1]
+```
+
+```{r}
+# ajustemos un arbol
+
+mod1_arboles <- rpart(factor(Num_hijos)~., data = train)
+```
+
+```{r}
+mod1_arboles
+```
+
+
+```{r}
+summary(mod1_arboles)
+```
+
+```{r}
+plot(mod1_arboles)
+text(mod1_arboles)
+```
+```{r}
+# Hacemos las predicciones
+
+pred_mod1_arboles <-  predict(mod1_arboles, newdata = test, type = "class")
+```
+
+```{r}
+# Matriz de confusión
+
+MC <- table(test$Num_hijos, pred_mod1_arboles)
+MC
+# calculamos el error
+acierto<-sum(diag(MC))/sum(MC)
+acierto
+error <- 1-acierto
+error
+```
+
+```{r}
+require(tidyverse)
+
+Base_modelar %>% 
+  count(Num_hijos)
+```
+
+
+```{r}
+require(caret)
+require(e1071)
+
+b <- varImp(mod1_arboles) 
+
+i <- b %>% 
+  order()
+
+cbind(row.names(b)[i], sort(b$Overall, decreasing = F))
+
+```
 
 
 
+# Errores modelo regresión
 
+```{r}
+mod1_reg <- lm(Num_hijos~Genero+Num_integrantes+Estado_civil, data = train)
 
+summary(mod1_reg)
+```
+```{r}
+pred_mod1_reg <- predict(mod1_reg, newdata = test)
+```
 
+```{r}
+MSE <- mean((test$Num_hijos - pred_mod1_reg)^2)
+```
 
+```{r}
+MSE
+```
 
