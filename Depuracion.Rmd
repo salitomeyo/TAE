@@ -345,5 +345,33 @@ lasso.coef[lasso.coef == 0 ]
 
 
 
+```{r}
+Base_modelar <- Base_final[,c("Genero", 
+                              "Edad",
+                              "Num_integrantes",
+                              "Num_cuartos",
+                              "Estrato",
+                              "Tipo_vivienda",
+                              "Num_Subsidios",
+                              "Educacion_madre",
+                              "Estado_civil",
+                              "Ultimo_pago_energia",
+                              "Ingresos_hogar",
+                              "Cant_hogares_vivienda",
+                              "Num_hijos",
+                              "Uso_celular", 
+                              "Vive_hogar_madre", 
+                              "Contrato_vivienda",
+                              "Etnia",
+                              "Afiliado",
+                              "Lugar_nacimiento",
+                              "Material_pisos",
+                              "Nivel_educativo")]
+```
+
+
+```{r}
+save(Base_modelar, file="Base_modelar.RData")
+```
 
 
