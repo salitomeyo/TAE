@@ -397,3 +397,117 @@ error <- 1-acierto
 paste("Tasa de error:", error)
 ```
 
+## Knn
+
+Conversion de las variables categoricas a variables dummy
+
+```{r}
+library(dummies)
+
+# Conjunto de entrenamiento
+
+Base_KNN_dummy_trn <- dummy.data.frame(data=data.frame(trn_prop[ ,-6]))
+Base_KNN_dummy_trn <- cbind(Base_KNN_dummy_trn,"Num_hijos" = trn_prop$Num_hijos)
+str(Base_KNN_dummy_trn)
+
+# Conjunto de prueba
+
+Base_KNN_dummy_tst <- dummy.data.frame(data=tst_prop[ ,-6])
+Base_KNN_dummy_tst <- cbind(Base_KNN_dummy_tst,"Num_hijos" = tst_prop$Num_hijos)
+str(Base_KNN_dummy_tst)
+```
+
+
+
+Normalización de Variables Numéricas
+
+```{r}
+#Conjunto de entrenamiento
+datos_c_trn <- Base_KNN_dummy_trn
+datos_c_trn[,c(1,10)] <- scale(datos_c_trn[,c(1,10)])
+
+#Conjunto de prueba
+datos_c_tst <- Base_KNN_dummy_tst
+datos_c_tst[,c(1,10)] <- scale(datos_c_tst[,c(1,10)])
+
+# Por último revisamos los valores normalizados de las variables que se encontrarán en todos los casos entre 0 y 1.
+
+summary(datos_c_trn)
+```
+
+
+
+Conjuntos de entrenamiento y test
+
+```{r}
+train <- datos_c_trn[ ,-14] # crea train sin la variable respuesta
+test <- datos_c_tst[ ,-14] # crea test sin la variable respuesta
+
+y_train <- datos_c_trn[ ,14]
+y_test <- datos_c_tst[ ,14]
+
+
+summary(y_train)
+```
+
+
+```{r}
+library(tidyverse)
+library(class)
+library(gmodels)
+library(caret)
+```
+
+
+# Ajuste modelo Knn
+
+```{r}
+knn_model <- knn(train, test, cl = y_train, k = 18)
+summary(knn_model)
+```
+
+
+```{r}
+confusionMatrix(data = knn_model, reference = y_test)
+```
+
+
+```{r}
+MC <- table(knn_model, y_test)
+acierto <- sum(diag(MC))/sum(MC)
+acierto
+
+error <- 1- acierto
+error
+
+```
+
+
+```{r}
+library(kknn)
+```
+
+
+```{r}
+modelo <- train.kknn(Num_hijos ~ ., data = datos_c_trn, kmax = 30)
+modelo
+```
+
+
+```{r}
+pred_knn <- predict(modelo, datos_c_tst)
+summary(pred_knn)
+```
+
+
+
+```{r}
+#pred_knn <- round(pred_knn)
+MC <- table(pred_knn, datos_c_tst$Num_hijos)
+acierto <- sum(diag(MC))/sum(MC)
+acierto
+
+error <- 1- acierto
+error
+
+```
