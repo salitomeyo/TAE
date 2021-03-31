@@ -10,7 +10,7 @@ load("Base_modelar.RData")
 
 
 Base_modelo <- Base_modelar
-Base_modelo$Num_hijos[Base_de_ensayo$Num_hijos >= 5] <- 5
+Base_modelo$Num_hijos[Base_modelo$Num_hijos >= 5] <- 5
 
 # Variable finales
 var_imprt <-  c(
@@ -26,7 +26,7 @@ var_imprt <-  c(
 # Se seleccionan solo las variables importantes 
 # Variable respuesta se convierte a factor
 Base_modelo <-Base_modelo[,var_imprt]
-Base_modelo$Num_hijos <- as.factor(Base_modelo_f$Num_hijos) 
+Base_modelo$Num_hijos <- as.factor(Base_modelo$Num_hijos) 
 
 
 
