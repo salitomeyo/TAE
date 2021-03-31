@@ -349,3 +349,35 @@ library(gbm)
 
 
 
+=======
+## Naive Bayes
+
+```{r}
+library(e1071)
+library(caTools)
+library(caret)
+```
+
+```{r}
+split <- sample.split(Base_sin_na, SplitRatio = 0.7)
+train_cl <- subset(Base_sin_na, split == "TRUE")
+test_cl <- subset(Base_sin_na, split == "FALSE")
+```
+
+```{r}
+set.seed(120)  # Setting Seed
+classifier_cl <- naiveBayes(Num_hijos ~ ., data = train_cl)
+classifier_cl
+```
+
+```{r}
+y_pred <- predict(classifier_cl, newdata = test_cl)
+```
+
+```{r}
+cm <- table(test_cl$Num_hijos, y_pred)
+cm
+  
+```
+
+
