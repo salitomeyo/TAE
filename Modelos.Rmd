@@ -359,25 +359,29 @@ library(caret)
 ```
 
 ```{r}
-split <- sample.split(Base_sin_na, SplitRatio = 0.7)
-train_cl <- subset(Base_sin_na, split == "TRUE")
-test_cl <- subset(Base_sin_na, split == "FALSE")
+# set.seed(120)
+# split <- sample.split(Base_sin_na, SplitRatio = 0.7)
+# train_cl <- subset(Base_sin_na, split == "TRUE")
+# test_cl <- subset(Base_sin_na, split == "FALSE")
 ```
 
 ```{r}
-set.seed(120)  # Setting Seed
-classifier_cl <- naiveBayes(Num_hijos ~ ., data = train_cl)
-classifier_cl
+# Setting Seed
+mod_Naive_Bayes <- naiveBayes(Num_hijos ~ ., data = na.omit(trn_prop))
+mod_Naive_Bayes
 ```
 
 ```{r}
-y_pred <- predict(classifier_cl, newdata = test_cl)
+pred_bayes <- predict(mod_Naive_Bayes, newdata = na.omit(tst_prop), type="class")
 ```
 
 ```{r}
-cm <- table(test_cl$Num_hijos, y_pred)
-cm
+MC <- table(na.omit(tst_prop)$Num_hijos, pred_bayes)
+MC
   
 ```
 
 
+```{r}
+confusionMatrix(MC)
+```
