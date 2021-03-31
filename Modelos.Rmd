@@ -50,8 +50,6 @@ plot(modelo1b)
 
 
 
-***
-
 ```{r}
 library(leaps)
 ```
@@ -84,39 +82,62 @@ summary(mod1)
 require(rpart)
 require(rpart.plot)
 ```
+
+
 ```{r}
-set.seed(65234)
 
-porctj <- round(dim(Base_modelar)[1] * 0.8)
+# Se saca una muestra de entrenamiento que conserve las proporciones en la varaible Num_hijos
 
-indx_train <- sample(1:dim(Base_modelar)[1], porctj)
+library(tidyverse)
 
-train <- Base_modelar[indx_train, ]
+trn_prop <- Base_modelar %>%
+  mutate(
+    var_indx = 1:dim(Base_modelar)[1]
+  ) %>% 
+  group_by(Num_hijos) %>% 
+  sample_frac(0.8, replace = F)
 
-test <- Base_modelar[-indx_train, ]
+# Se saca la muestra de test con las que no fueron seleccionadas en la muestra de train
 
-dim(test)[1] + dim(train)[1]
+tst_prop <- Base_modelar[-trn_prop$var_indx, ]
+
+
+# Se elimina la variable de indice
+trn_prop$var_indx <- NULL
+```
+
+```{r}
+# set.seed(65234)
+# 
+# porctj <- round(dim(Base_modelar)[1] * 0.8)
+# 
+# indx_train <- sample(1:dim(Base_modelar)[1], porctj)
+# 
+# train <- Base_modelar[indx_train, ]
+# 
+# test <- Base_modelar[-indx_train, ]
+# 
+# dim(test)[1] + dim(train)[1]
 ```
 
 ```{r}
 # ajustemos un arbol
 
-mod1_arboles <- rpart(factor(Num_hijos)~., data = train)
+mod1_arboles <- rpart(factor(Num_hijos)~., data = trn_prop)
 ```
 
 ```{r}
-mod1_arboles
-```
-
-
-```{r}
-summary(mod1_arboles)
+# mod1_arboles
+# 
+# summary(mod1_arboles)
 ```
 
 ```{r}
 plot(mod1_arboles)
 text(mod1_arboles)
 ```
+
+Gráfico mejorado:
 
 ```{r}
 prp(mod1_arboles, type = 2, extra = 6, split.font = 3,    box.col = c(3:10)[mod1_arboles$frame$yval])
@@ -125,13 +146,13 @@ prp(mod1_arboles, type = 2, extra = 6, split.font = 3,    box.col = c(3:10)[mod1
 ```{r}
 # Hacemos las predicciones
 
-pred_mod1_arboles <-  predict(mod1_arboles, newdata = test, type = "class")
+pred_mod1_arboles <-  predict(mod1_arboles, newdata = tst_prop, type = "class")
 ```
 
 ```{r}
 # Matriz de confusión
 
-MC <- table(test$Num_hijos, pred_mod1_arboles)
+MC <- table(tst_prop$Num_hijos, pred_mod1_arboles)
 MC
 # calculamos el error
 acierto<-sum(diag(MC))/sum(MC)
@@ -149,15 +170,15 @@ Base_modelar %>%
 
 
 ```{r}
-require(caret)
-require(e1071)
-
-b <- varImp(mod1_arboles) 
-
-i <- b %>% 
-  order()
-
-cbind(row.names(b)[i], sort(b$Overall, decreasing = F))
+# require(caret)
+# require(e1071)
+# 
+# b <- varImp(mod1_arboles) 
+# 
+# i <- b %>% 
+#   order()
+# 
+# cbind(row.names(b)[i], sort(b$Overall, decreasing = F))
 
 ```
 
@@ -166,16 +187,18 @@ cbind(row.names(b)[i], sort(b$Overall, decreasing = F))
 # Errores modelo regresión
 
 ```{r}
-mod1_reg <- lm(Num_hijos~Genero+Num_integrantes+Estado_civil, data = train)
+mod1_reg <- lm(Num_hijos~Genero+Num_integrantes+Estado_civil, data = trn_prop, na.action = na.omit)
 
 summary(mod1_reg)
 ```
+
+
 ```{r}
-pred_mod1_reg <- predict(mod1_reg, newdata = test)
+pred_mod1_reg <- predict(mod1_reg, newdata = tst_prop)
 ```
 
 ```{r}
-MSE <- mean((test$Num_hijos - pred_mod1_reg)^2)
+MSE <- mean((tst_prop$Num_hijos - pred_mod1_reg)^2)
 ```
 
 ```{r}
@@ -190,7 +213,7 @@ pred_mod1_round <- round(pred_mod1_reg)
 ```{r}
 # Matriz de confusión
 
-MC <- table(test$Num_hijos, pred_mod1_round)
+MC <- table(tst_prop$Num_hijos, pred_mod1_round)
 MC
 # calculamos el error
 acierto<-sum(diag(MC))/sum(MC)
@@ -202,15 +225,13 @@ error
 # Arboles de regresion
 
 ```{r}
-mod1_reg_arboles <- rpart(Num_hijos~., data = train)
+mod1_reg_arboles <- rpart(Num_hijos~., data = trn_prop, na.action = na.omit)
 ```
 
 ```{r}
-mod1_reg_arboles
-```
-
-```{r}
-summary(mod1_reg_arboles)
+# mod1_reg_arboles
+# 
+# summary(mod1_reg_arboles)
 ```
 
 ```{r}
@@ -220,7 +241,7 @@ prp(mod1_reg_arboles, type = 2, split.font = 3,    box.col = c(3:10)[mod1_reg_ar
 ```{r}
 # Hacemos las predicciones
 
-pred_mod1_reg_arboles <-  predict(mod1_reg_arboles, newdata = test)
+pred_mod1_reg_arboles <-  predict(mod1_reg_arboles, newdata = tst_prop)
 ```
 
 ```{r}
@@ -228,7 +249,7 @@ pred_mod1_reg_arboles <-  predict(mod1_reg_arboles, newdata = test)
 
 pred_mod1_reg_arboles <- round(pred_mod1_reg_arboles)
 
-MC <- table(test$Num_hijos, pred_mod1_reg_arboles)
+MC <- table(tst_prop$Num_hijos, pred_mod1_reg_arboles)
 MC
 # calculamos el error
 acierto<-sum(diag(MC))/sum(MC)
@@ -240,7 +261,8 @@ error
 # Poisson
 
 ```{r}
-HijosPoisson <-glm(Num_hijos ~ ., family = poisson, data = train)
+require(gamlss)
+HijosPoisson <-gamlss(Num_hijos~., data= na.omit(trn_prop), family=PO(mu.link="log"))
 # Resumen del modelo
 summary(HijosPoisson)
 ```
@@ -248,15 +270,15 @@ summary(HijosPoisson)
 ```{r}
 # Hacemos las predicciones
 
-HijosPoisson <-  predict(HijosPoisson, newdata = test)
+HijosPoisson <-  predict(HijosPoisson, newdata = na.omit(tst_prop))
 ```
 
 ```{r}
 # Matriz de confusión
 
-pred_mod1_reg_arboles <- round(pred_mod1_reg_arboles)
+HijosPoisson <- round(HijosPoisson)
 
-MC <- table(test$Num_hijos, pred_mod1_reg_arboles)
+MC <- table(na.omit(tst_prop)$Num_hijos, HijosPoisson)
 MC
 # calculamos el error
 acierto<-sum(diag(MC))/sum(MC)
@@ -266,31 +288,60 @@ error
 ```
 
 
-```{r}
-summary(mod1_reg_arboles)
-```
+# Más arboles
+
+
+
+
 
 ```{r}
-plot(mod1_reg_arboles)
-text(mod1_reg_arboles)
+library(ISLR)
+library(tree)
+library(MASS)
+library(randomForest)
+library(gbm)
 ```
+
+
+# Bosque aleatorio (Random Forest)
+
 
 ```{r}
-# Hacemos las predicciones
-
-pred_mod1_reg_arboles <-  predict(mod1_reg_arboles, newdata = test)
+# set.seed(23)
+# 
+# forest <- randomForest(Num_hijos~., data = na.omit(trn_prop), mtry=5, tree=50, importance=TRUE)
+# forest
+# 
+# pred_forest <- predict(forest, newdata = tst_prop)
 ```
+
+
+
 
 ```{r}
-# Matriz de confusión
-
-pred_mod1_reg_arboles <- round(pred_mod1_reg_arboles)
-
-MC <- table(test$Num_hijos, pred_mod1_reg_arboles)
-MC
-# calculamos el error
-acierto<-sum(diag(MC))/sum(MC)
-acierto
-error <- 1-acierto
-error
+# library(gbm)
+# set.seed(23)
+# boost <- gbm(Num_hijos~., data = na.omit(trn_prop), n.trees = 50, interaction.depth = 4, shrinkage = 0.2, verbose = F, distribution = "laplace")
+# 
+# 
+# pred_boost <- predict(boost, newdata = na.omit(tst_prop))
 ```
+
+
+
+
+
+
+
+```{r}
+# pred_boost <- round(pred_boost)
+# MC <- table(na.omit(tst_prop)$Num_hijos, pred_boost)
+# MC
+# # calculamos el error
+# acierto<-sum(diag(MC))/sum(MC)
+# acierto
+# error <- 1-acierto
+# error
+```
+
+
