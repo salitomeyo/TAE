@@ -368,7 +368,7 @@ library(caret)
 ```{r}
 # Setting Seed
 mod_Naive_Bayes <- naiveBayes(Num_hijos ~ ., data = na.omit(trn_prop))
-mod_Naive_Bayes
+# mod_Naive_Bayes
 ```
 
 ```{r}
@@ -381,7 +381,194 @@ MC
   
 ```
 
+```{r}
+# Se calcula la tasa de acierto
+acierto<-sum(diag(MC))/sum(MC)
+acierto
+error <- 1-acierto
+error
+```
+
+
+=====================================================================================================
+
+# Combinando num_hijos >= a 5 en una sola categoría
 
 ```{r}
-confusionMatrix(MC)
+barplot(prop.table(table(Base_modelar$Num_hijos)))
+```
+```{r}
+(prop <- round(prop.table(table(Base_modelar$Num_hijos)), 6))
+```
+
+```{r}
+sum(prop[6:15])
+```
+
+## Se crea un nuevo dataframe con Num_hijos organizada
+
+```{r}
+Base_de_ensayo <- Base_modelar
+
+Base_de_ensayo$Num_hijos[Base_de_ensayo$Num_hijos >= 5] <- 5
+```
+
+
+```{r}
+table(Base_de_ensayo$Num_hijos)
+```
+
+```{r}
+# Variables en orden de importancia según RF
+var_imprt <-  c(
+    "Num_integrantes",
+    "Estado_civil",
+    "Genero",
+    "Edad",
+    "Vive_hogar_madre",
+    "Ingresos_hogar",
+    "Num_cuartos",
+    "Num_hijos"
+  )
+
+# Se conviarte la variable Num_hijos a factor
+
+Base_modelar_f <- Base_de_ensayo %>% 
+  select(all_of(var_imprt)) %>% 
+  mutate(
+    Num_hijos = factor(Num_hijos)
+  )
+
+
+
+
+#var_Nas <- c("Estrato", "Educacion_madre", "Ultimo_pago_energia", "Uso_celular", "Nivel_educativo")
+# var_Nas <- c("Uso_celular", "Nivel_educativo", "Ultimo_pago_energia")
+# 
+#Base_modelar_f[, var_Nas] <- NULL
+# 
+#Base_modelar_f <-  na.omit(Base_modelar_f)
+
+set.seed(15234) # Semilla
+
+# Se saca una muestra de entrenamiento que conserve las proporciones en la varaible Num_hijos
+
+trn_prop <- Base_modelar_f %>%
+  mutate(
+    var_indx = 1:dim(Base_modelar_f)[1]
+  ) %>% 
+  group_by(Num_hijos) %>% 
+  sample_frac(0.8, replace = F)
+
+# Se saca la muestra de test con las que no fueron seleccionadas en la muestra de train
+
+tst_prop <- Base_modelar_f[-trn_prop$var_indx, ]
+
+
+# Se elimina la variable de indice
+trn_prop$var_indx <- NULL
+```
+
+## Modelo RF
+
+```{r, message=FALSE}
+require(ranger)
+```
+
+```{r}
+# Modelo RF
+mod_RF <- ranger(
+  Num_hijos~., 
+  data = (trn_prop), 
+  num.trees = 500, 
+  mtry = 5, 
+  max.depth = 8,
+  importance = 'impurity'
+)
+```
+
+```{r}
+sort(mod_RF$variable.importance, decreasing = T)
+```
+
+```{r}
+sort(mod_RF$variable.importance, decreasing = T)
+```
+
+
+```{r}
+# Se hacen las predicciones
+pred_mod_RF <- predict(mod_RF, data = (tst_prop))
+```
+
+```{r}
+# Se hace la matriz de confusión
+MC <- table(predicho = pred_mod_RF$predictions, real = (tst_prop)$Num_hijos)
+MC
+```
+```{r}
+# Se calcula la tasa de acierto
+acierto<-sum(diag(MC))/sum(MC)
+acierto
+error <- 1-acierto
+error
+```
+
+
+
+
+
+## Modelo Arbol de clasificación
+
+```{r, message=F}
+require(rpart)
+require(rpart.plot)
+```
+
+
+```{r}
+# Se ajusta el modelo
+
+mod2_arboles <- rpart(Num_hijos~., data = trn_prop)
+```
+
+```{r}
+# Hacemos el gráfico
+
+rpart.plot(mod2_arboles)
+```
+```{r}
+# Hacemos las predicciones
+
+pred_mod2_arboles <-  predict(mod2_arboles, newdata = tst_prop, type = "class")
+
+```
+
+```{r}
+# Matriz de consusión
+
+MC <- table(predicho = pred_mod2_arboles, real = tst_prop$Num_hijos)
+
+MC
+```
+
+```{r}
+#--------------------- SOLO CON LAS VARIABLES IMPORTANTES DEL RF
+
+# calculamos el error
+acierto<-sum(diag(MC))/sum(MC)
+acierto
+error <- 1-acierto
+error
+```
+
+
+```{r}
+#---------------------- CON TODAS LAS VARIABLES
+
+# calculamos el error
+acierto<-sum(diag(MC))/sum(MC)
+acierto
+error <- 1-acierto
+error
 ```
