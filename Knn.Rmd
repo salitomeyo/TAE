@@ -1,0 +1,181 @@
+---
+title: "Ensayo Red Neuronal"
+author: "Jennifer Salazar"
+date: "31/3/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+load("Base_modelar.RData")
+```
+
+Base de datos final para ajustar redes neuronales
+
+```{r}
+Base_ANN <- Base_modelar[,c( "Num_integrantes",
+                             "Estado_civil",
+                             "Genero",
+                             "Edad",
+                             "Vive_hogar_madre",
+                             "Ingresos_hogar",
+                             "Num_cuartos", 
+                             "Num_hijos")]
+```
+
+Resumen del conjunto de datos para ajustar la red Neuronal
+
+```{r}
+summary(Base_ANN)
+```
+
+
+
+Conversion de las variables categoricas a variables dummy
+
+```{r}
+library(dummies)
+
+
+Base_ANN_dummy <- dummy.data.frame(data=Base_ANN)
+str(Base_ANN_dummy)
+```
+
+
+
+```{r}
+Base_ANN_dummy$Num_hijos <- as.factor(Base_ANN_dummy$Num_hijos)
+```
+
+
+Normalización de Variables Numéricas
+
+```{r}
+#Para la normalización de los valores de la variables definimos la siguiente función:
+#normaliza <- function(x) {return ((x-min(x))/(max(x)-min(x)))}
+datos_c <- Base_ANN_dummy
+datos_c[,c(1,10,14,15)] <- scale(datos_c[,c(1,10,14,15)])
+# selección por no ser paramétrico
+medias_c <- attr(datos_c,"scaled:center")
+stdev_c <- attr(datos_c,"scaled:scale")
+
+#Ahora aplicaremos la función creada normaliza a cada una de las columna.
+
+#Base_norm <- as.data.frame(lapply(Base_ANN_dummy, normaliza))
+
+
+# Por último revisamos los valores normalizados de las variables que se encontrarán en todos los casos entre 0 y 1.
+
+summary(datos_c)
+```
+
+
+
+Conjuntos de entrenamiento y test
+
+
+```{r}
+set.seed(23) #necesario si se quiere reproducir de nuevo el mismo código y obtener los mimsos resultados
+index <- sample(nrow(datos_c), round(0.75*nrow(datos_c)))
+train <- datos_c[index,-16] # crea train a partir del indice de la muestra
+test <- datos_c[-index,-16] # crea test a partir del resto de la muestra
+
+y_train <- datos_c[index,16]
+y_test <- datos_c[-index,16]
+
+
+summary(y_train)
+```
+
+
+```{r}
+library(tidyverse)
+library(class)
+library(gmodels)
+library(caret)
+```
+
+
+# Ajuste modelo Knn
+
+```{r}
+knn_model <- knn(train, test, cl = y_train, k = 18)
+summary(knn_model)
+```
+
+
+```{r}
+confusionMatrix(data = knn_model, reference = y_test)
+```
+
+
+```{r}
+MC <- table(knn_model, y_test)
+acierto <- sum(diag(MC))/sum(MC)
+acierto
+
+error <- 1- acierto
+error
+
+```
+
+
+```{r}
+library(kknn)
+```
+
+
+```{r}
+modelo <- train.kknn(y_train ~ ., data = train , kmax = 20)
+modelo
+```
+
+
+```{r}
+pred_knn <- predict(modelo, test)
+summary(pred_knn)
+```
+
+
+
+```{r}
+#pred_knn <- round(pred_knn)
+MC <- table(pred_knn, y_test)
+acierto <- sum(diag(MC))/sum(MC)
+acierto
+
+error <- 1- acierto
+error
+
+```
+
+# Entrenamiento de la Red Neuronal:
+
+
+```{r}
+set.seed(23)
+library(neuralnet)
+
+
+ANN_model <- neuralnet(Num_hijos~., data=train, lifesign = "minimal", linear.output = FALSE)
+
+```
+
+
+```{r}
+plot(ANN_model, rep="best")
+```
+
+
+
+
+
+
+
+
+
+
+
