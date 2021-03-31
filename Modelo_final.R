@@ -39,3 +39,4 @@ RandomForest <- ranger(Num_hijos~.,  data = Base_modelo,   num.trees = 100,  mtr
 
 
 save(RandomForest, file="RandomForest.Rdata")
+saveRDS(RandomForest, "modeloRF.rds")
