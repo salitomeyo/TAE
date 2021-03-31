@@ -1,0 +1,236 @@
+---
+title: "Selección del mejor modelo"
+author: "Jennifer Salazar"
+date: "31/3/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message=FALSE}
+require(rpart)
+require(rpart.plot)
+library(ISLR)
+library(tree)
+library(MASS)
+library(randomForest)
+library(gbm)
+require(ranger)
+library(e1071)
+library(caTools)
+library(caret)
+library(tidyverse)
+library(class)
+library(gmodels)
+library(dummies)
+```
+
+
+
+
+
+# Cargando la base de datos
+
+```{r}
+load("Base_modelar.RData")
+```
+
+
+Se agrupe la variable Num_hijos, cuando hay más de 5 hijos le coloca el valor de 5
+
+
+```{r}
+Base_de_ensayo <- Base_modelar
+
+Base_de_ensayo$Num_hijos[Base_de_ensayo$Num_hijos >= 5] <- 5
+```
+
+```{r}
+table(Base_de_ensayo$Num_hijos)
+
+```
+
+
+```{r}
+matriz_confusion <- function(prediccion, reales){
+  MC <- table(prediccion, reales)
+  acierto <- sum(diag(MC))/sum(MC)
+  
+  return(acierto)
+  
+}
+```
+
+
+
+## Variables con las que decidimos quedarnos finalmente
+
+
+```{r}
+library(tidyverse)
+
+# Variables en orden de importancia según RF
+var_imprt <-  c(
+    "Num_integrantes",
+    "Estado_civil",
+    "Genero",
+    "Edad",
+    "Vive_hogar_madre",
+    "Num_hijos"
+  )
+```
+
+
+## Base de datos con las variables finales
+
+Esta base es la que se utiliza para modelar
+
+```{r}
+# Se convierte la variable Num_hijos a factor
+
+Base_modelar_f <- Base_de_ensayo[,var_imprt]
+Base_modelar_f$Num_hijos <- as.factor(Base_modelar_f$Num_hijos) 
+
+# Base_modelar_f <- Base_de_ensayo %>% 
+#   select(all_of(var_imprt)) %>% 
+#   mutate(
+#     Num_hijos = factor(Num_hijos)
+#   )
+```
+
+
+```{r}
+df <- matrix(rep(NA,80), nrow=20, ncol=4)
+df <- data.frame(df)
+colnames(df) <- c("Arbol_clasificacion","RandomForest", "NaiveBayes", "Knn")
+```
+
+
+
+```{r, message=F, warning=F}
+
+for(i in 1:20){
+
+  set.seed(i) # Semilla
+  
+  # Se saca una muestra de entrenamiento que conserve las proporciones en la varaible Num_hijos
+  
+  trn_prop <- Base_modelar_f %>%
+    mutate(
+      var_indx = 1:dim(Base_modelar_f)[1]
+    ) %>% 
+    group_by(Num_hijos) %>% 
+    sample_frac(0.8, replace = F)
+  
+  # Se saca la muestra de test con las que no fueron seleccionadas en la muestra de
+  # train
+  tst_prop <- Base_modelar_f[-trn_prop$var_indx, ]
+  
+  # Se elimina la variable de indice
+  trn_prop$var_indx <- NULL
+  
+  trn_prop <- trn_prop[sample(1:dim(trn_prop)[1]), ]
+  tst_prop <- tst_prop[sample(1:dim(tst_prop)[1]), ]
+  
+  print(paste("Semilla:", i))
+  
+  # Ajuste de los modelos
+  
+  ## Arbol de clasificación 
+  arbol_clasificacion <- rpart(Num_hijos~., data = trn_prop)
+  pred_arbol_clasificacion <-  predict(arbol_clasificacion, newdata = tst_prop, type=
+                                         "class")
+  
+  tasa_arbol_clasificacion <- matriz_confusion(pred_arbol_clasificacion,
+                                               tst_prop$Num_hijos)
+  
+  print(paste("Tasa acierto arbol clasificacion:", tasa_arbol_clasificacion))
+  
+  # Modelo RF
+  RF <- ranger(Num_hijos~.,  data = (trn_prop),   num.trees = 100,  mtry = 5, 
+               max.depth = 8,  importance = 'impurity')
+  
+  
+  pred_RF <- predict(RF, data = (tst_prop))
+  
+  tasa_RF <- matriz_confusion(pred_RF$predictions, tst_prop$Num_hijos)
+  
+  print(paste("Tasa acierto Ramdon Forest:", tasa_RF))
+  
+  
+  ## Naive Bayes
+  
+  Naive_Bayes <- naiveBayes(Num_hijos ~ ., data = trn_prop)
+  pred_Naive_Bayes <- predict(Naive_Bayes, newdata = tst_prop, type="class")
+  
+  tasa_Naive_Bayes <- matriz_confusion(pred_Naive_Bayes, tst_prop$Num_hijos)
+  
+  print(paste("Tasa acierto Naive Bayes:", tasa_Naive_Bayes))
+  
+  
+  ## Knn
+  # Conjunto de entrenamiento
+  Base_KNN_dummy_trn <- dummy.data.frame(data=data.frame(trn_prop[ ,-6]))
+  Base_KNN_dummy_trn <- cbind(Base_KNN_dummy_trn,"Num_hijos" = trn_prop$Num_hijos)
+  # Conjunto de prueba
+  Base_KNN_dummy_tst <- dummy.data.frame(data=tst_prop[ ,-6])
+  Base_KNN_dummy_tst <- cbind(Base_KNN_dummy_tst,"Num_hijos" = tst_prop$Num_hijos)
+  
+  
+  
+  #Conjunto de entrenamiento
+  datos_c_trn <- Base_KNN_dummy_trn
+  datos_c_trn[,c(1,10)] <- scale(datos_c_trn[,c(1,10)])
+  
+  #Conjunto de prueba
+  datos_c_tst <- Base_KNN_dummy_tst
+  datos_c_tst[,c(1,10)] <- scale(datos_c_tst[,c(1,10)])
+  
+  # Separación de la variable respuesta
+  train <- datos_c_trn[ ,-14] # crea train sin la variable respuesta
+  test <- datos_c_tst[ ,-14] # crea test sin la variable respuesta
+  y_train <- datos_c_trn[ ,14]
+  y_test <- datos_c_tst[ ,14]
+  pred_knn <- knn(train, test, cl = y_train, k = 20)
+  
+  tasa_knn <- matriz_confusion(pred_knn, y_test)
+  
+  print(paste("Tasa acierto Knn:", tasa_knn))
+  
+  tasas <- c(tasa_arbol_clasificacion, tasa_RF, tasa_Naive_Bayes, tasa_knn)
+  
+  df[i,] <- tasas
+  
+  
+}
+
+```
+
+```{r}
+round(colMeans(df),3)
+```
+
+# Modelo RF
+
+```{r}
+
+RF <- ranger(Num_hijos~.,  data = (trn_prop),   num.trees = 100,  mtry = 5, 
+             max.depth = 8,  importance = 'impurity')
+
+
+pred_RF <- predict(RF, data = (tst_prop))
+
+tasa_RF <- matriz_confusion(pred_RF$predictions, tst_prop$Num_hijos)
+
+print(paste("Tasa acierto Ramdon Forest:", tasa_RF))
+```
+100:  arboles "Tasa acierto Ramdon Forest: 0.860418107346135"
+500:  arboles "Tasa acierto Ramdon Forest: 0.860364913027289"
+
+
+
+
+
+
