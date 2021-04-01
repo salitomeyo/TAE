@@ -1,0 +1,39 @@
+---
+title: "Informe"
+author: "Todos"
+date: "31/3/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+>## Introducción
+
+En la actualidad, debido a la globalización es importante para las empresas conocer a sus clientes,la tecnología, sin duda ha permitido recaudar volúmenes enormes de información, sin embargo, en muchas ocasiones precisamente el dato que necesitamos,es el más difícil de obtener.No obstante, así como los avances de la tecnología han crecido de manera exponencial, también lo han hecho las herramientas para enfrentarla.
+
+A continuación se muestra el procedimiento que se sigue para poder predecir el número de hijos de los hogares colombianos mediante modelos estadísticos que usan características propias de dichos hogares.
+
+Se observaron las bases de datos obtenidas tras realizar la Encuesta Nacional de Calidad de Vida - ECV 2019, en ella se encuentran variables importantes que buscan caracterizar la población en diferentes aspectos como por ejemplo la salud, educación, actividades laborales, tenencia de bienes en el hogar, entre otros.
+
+Debido a que la variable de interés (Número de hijos) no aparece de manera explícita, se llevó a cabo un proceso de construcción de la misma. Esto fue posible gracias a algunas de las variables de la base de datos Caracteristicas y composicion del hogar, presente en la encuesta antes mencionada.
+
+Como paso siguiente se realizó de manera exhaustiva en cada una de las bases de la ECV, una preselección de covariables que a criterio de los investigadores, podrían tener alguna relación con la variable respuesta. Con la información anterior se procede a construir la base de datos para el paso siguiente.
+
+Con el fin de depurar la base de datos, mediante gráficos boxplot se realizó un análisis descriptivo de las variables y se observó cuales de las preseleccionadas mostraban una verdadera relación con el Número de hijos; el mismo proceso se hizo con métodos de selección de variables tales como Backward Selection y Lasso. Finalmente, las variables a utilizar fueron las obtenidas mediante los procesos mencionados anteriormente.
+
+Para el modelamiento se tuvieron en cuenta los siguientes procesos: Regresión Lineal Múltiple, Poisson, Clasificador de Bayes, Bosques aleatorios, Árboles de Clasificación, Árboles de Regresión y KNN. En cada uno de ellos se adaptaron las variables 
+
+
+>##Retos
+
+>##Materiales
+
+>##Métodos
+
+>##Resultados
+
+>##Conclusiones
+
+>##Bibliografía
