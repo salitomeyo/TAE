@@ -2,7 +2,9 @@
 title: "Informe"
 author: "Todos"
 date: "31/3/2021"
-output: html_document
+output: 
+  html_document:
+    css: "style.css"
 ---
 
 ```{r setup, include=FALSE}
@@ -71,8 +73,379 @@ En casos generales funciona esta estructura ya que en la mayoría de hogares cue
 
 # Materiales
 
+## Contextualización de las variables utilizadas
 
+### Características y composición del hogar.
 
+Compuesta por 46 variables de las cuales se escogieron
+
+<table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Pregunta</th>
+        </tr>
+        <tr>
+            <td>P6040</td>
+            <td>Genero</td>
+            <td>Sexo:
+                1 Hombre
+                2 Mujer                 
+            </td>
+        </tr>
+        <tr>
+            <td>P6040</td>
+            <td>Edad</td>
+            <td>¿Cuántos años cumplidos tiene … ?</td>
+        </tr>
+        <tr>
+            <td>P6051</td>
+            <td>-</td>  
+            <td>¿Cuál es el parentesco de ___ con el jefe o la jefa de este hogar?
+                1 Jefe (a) del hogar
+                2 Pareja, esposo (a), cónyuge, compañero(a)
+                3 Hijo(a) hijastro(a)
+                4 Nieto (a)
+                5 Padre, madre, padrastro y madrastra
+                6 Suegro o suegra
+                7 Hermano (a), hermanastro (a)
+                8 Yerno, nuera
+                9 Otro pariente del jefe(a)
+                10 Empleado(a) del servicio doméstico
+                11 Parientes del servicio doméstico
+                12 Trabajador
+                13 Pensionista
+                14 Otro pariente                
+            </td>
+        </tr>
+        <tr>
+            <td>P5502</td>
+            <td>Estado_civil</td>
+            <td>Actualmente el jefe del hogar:
+                1 No está casado(a) y vive en pareja hace menos de dos años
+                2 No está casado(a) y vive en pareja hace dos años o más
+                3 Está viudo(a)
+                4 Está separado(a) o divorciado(a)
+                5 Está soltero(a)
+                6 Está casado(a)
+            </td>
+        </tr>
+        <tr>
+            <td>P756</td>
+            <td>Lugar_nacimiento</td>
+            <td>¿Dónde nació el jefe del hogar?
+                1 En este municipio
+                2 En otro municipio
+                3 En otro país    
+            </td>
+        </tr>
+        <tr>
+            <td>P6081</td>
+            <td>Vive_hogar_padre</td>
+            <td>¿El padre del jefe del hogar vive en este hogar?</td>
+        </tr>
+        <tr>
+            <td>P6087</td>
+            <td>Educacion_padre</td>
+            <td>¿Cuál es o fue el nivel de educación más alto alcanzado por el padre del jefe del hogar?</td>
+        </tr>
+        <tr>
+            <td>P6083</td>
+            <td>Vive_hogar_madre</td>
+            <td>¿La madre del jefe del hogar vive en este hogar?</td>
+        </tr>
+        <tr>
+            <td>P6088</td>
+            <td>Educacion_madre</td>
+            <td>¿Cuál es o fue el nivel de educación más alto alcanzado por la madre del jefe del hogar?</td>
+        </tr>
+        <tr>
+            <td>P6080</td>
+            <td>Etnia</td>
+            <td>De acuerdo con su cultura, pueblo o rasgos físicos, _____ es o se reconoce como:
+                1 Indígena
+                2 Gitano (a) (Rom)
+                3 Raizal del archipiélago de San Andrés, Providencia y Santa Catalina
+                4 Palenquero (a) de San Basilio
+                5 Negro (a), mulato (a) (afrodescendiente), afrocolombiano(a)
+                6 Ninguno de los anteriores
+            </td>
+        </tr>
+</table>
+
+### Condiciones de vida del hogar y tenencia de bienes (programas).
+
+Compuesta por 8 variables de las cuales se escogió:
+
+<table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Pregunta</th>
+        </tr>
+        <tr>
+            <td>P784S4A3</td>
+            <td>Num_subsidios</td>
+            <td>¿Cuántos miembros del hogar reciben subsidios?</td>
+        </tr>
+</table>
+
+### Datos de la vivienda.
+
+Compuesta por 35 variables de las cuales se escogieron:
+
+<table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Pregunta</th>
+        </tr>
+        <tr>
+            <td>P1070</td>
+            <td>Tipo_vivienda</td>
+            <td>Tipo de vivienda:
+                1 Casa
+                2 Apartamento
+                3 Cuarto(s)
+                4 Vivienda tradicional indigena
+                5 Otro (carpa, contenedor, vagón, embarcación, cueva, refugio natural, etc
+            </td>
+        </tr>
+        <tr>
+            <td>P4015</td>
+            <td>Material_pisos</td>
+            <td>Material predominante de los pisos:
+                1 Alfombra o tapete de pared a pared
+                2 Madera pulida y lacada, parqué
+                3 Mármol
+                4 Baldosa, vinilo, tableta, ladrillo, laminado
+                5 Madera burda, tabla, tablón, otro vegetal
+                6 Cemento, gravilla
+                7 Tierra, arena
+            </td>
+        </tr>
+        <tr>
+            <td>P8520S1</td>
+            <td>Energia_electrica</td>
+            <td>¿La vivienda cuenta con energía eléctrica?
+                1 Sí
+                2 No
+            </td>
+        </tr>
+        <tr>
+            <td>P8520S1A1</td>
+            <td>Estrato</td>
+            <td>Estrato para tarifa de la energía eléctrica:
+                1 Bajo - Bajo
+                2 Bajo
+                3 Medio - Bajo
+                4 Medio
+                5 Medio - Alto
+                6 Alto
+                8 Planta eléctrica
+                9 No conoce el estrato o no cuenta con recibo de pago.
+                0 Recibos sin estrato o el servicio es pirata
+            </td>
+        </tr>
+        <tr>
+            <td>P8520S5</td>
+            <td>Acueducto</td>
+            <td>¿La vivienda cuenta con acueducto?
+                1 Sí
+                2 No
+            </td>
+        </tr>
+        <tr>
+            <td>P8520S3</td>
+            <td>Alcantarillado</td>
+            <td>¿La vivienda cuenta con alcantarillado?
+                1 Sí
+                2 No
+            </td>
+        </tr>
+        <tr>
+            <td>P8520S4</td>
+            <td>Basuras_semana</td>
+            <td>¿Cuenta con servicio de Recolección de basuras?
+                1 Sí
+                2 No
+            </td>
+        </tr>
+</table>
+
+### Educación.
+
+Compuesta por 58 variables de las cuales se escogieron:
+
+<table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Pregunta</th>
+        </tr>
+        <tr>
+            <td>P8586</td>
+            <td>Estudia</td>
+            <td>¿El jefe del hogar actualmente estudia? (asiste al preescolar, escuela, colegio o universidad)
+                1 Sí
+                2 No
+            </td>
+        </tr>
+        <tr>
+            <td>P8587</td>
+            <td>Nivel_educativo</td>
+            <td>¿Cuál es el nivel educativo más alto alcanzado por el jefe del hogar  y el último año o grado aprobado en este nivel?
+                1 Ninguno
+                2 Preescolar
+                3 Básica Primaria (1º - 5º)
+                4 Básica secundaria (6º--9º)
+                5 Media (10º--13º)
+                6 Técnico sin título
+                7 Técnico con título
+                8 Tecnológico sin título
+                9 Tecnológico con título
+                10 Universitario sin titulo
+                11 Universitario con titulo
+                12 Postgrado sin titulo
+                13 Postgrado con titulo
+            </td>
+        </tr>
+</table>
+
+### Salud.
+
+Compuesta por 103 variables de las cuales se escogieron:
+
+<table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Pregunta</th>
+        </tr>
+        <tr>
+            <td>P6090</td>
+            <td>Afiliado</td>
+            <td>¿El jefe del hogar está afiliado (a), es cotizante o es beneficiario (a) de alguna entidad de seguridad social en salud? (Entidad promotora de salud [EPS] o entidad promotora de salud subsidiada EPS-S)
+                1 Sí
+                2 No
+                9 No sabe, no informa
+            </td>
+        </tr>
+        <tr>
+            <td>P6127</td>
+            <td>Salud_general</td>
+            <td>El estado de salud del jefe del hogar en general, es:
+                1 Muy bueno
+                2 Bueno
+                3 Regular
+                4 Malo
+            </td>
+        </tr>
+</table>
+    
+### Servicios del hogar.
+
+Compuesta por 64 variables de las cuales se escogieron:
+
+<table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Pregunta</th>
+        </tr>
+        <tr>
+            <td>P5666</td>
+            <td>Gas_natural</td>
+            <td>¿En este hogar tienen servicio de Gas Natural conectado a red pública?
+                1 Sí
+                2 No
+            </td>
+        </tr>
+        <tr>
+            <td>P5305</td>
+            <td>Telefonia_fija</td>
+            <td>¿En este hogar tienen servicio telefónico fijo?
+                1 Sí
+                2 No
+            </td>
+        </tr>
+        <tr>
+            <td>I_HOGAR</td>
+            <td>Ingresos_hogar</td>
+            <td>Ingreso Mensual Total del Hogar</td>
+        </tr>
+</table>
+
+### Tenencia y financiación de la vivienda que ocupa el hogar.
+
+Compuesta por 20 variables de las cuales se escogieron:
+
+<table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Pregunta</th>
+        </tr>
+        <tr>
+            <td>P5095</td>
+            <td>Contrato_vivienda</td>
+            <td>¿La vivienda ocupada por este hogar es?
+                1. Propia, totalmente pagada
+                2. Propia, la están pagando
+                3. En arriendo o subarriendo
+                4. Con permiso del propietario, sin pago alguno (usufructuario)
+                5. Posesión sin título (ocupante de hecho)
+                6. Propiedad colectiva
+            </td>
+        </tr>
+</table>
+    
+### Uso de energéticos del hogar.
+
+Compuesta por 45 variables de las cuales se escogieron:
+
+<table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Pregunta</th>
+        </tr>
+        <tr>
+            <td>P5018</td>
+            <td>Ultimo_pago_energia</td>
+            <td>¿Cuánto pagaron EL MES PASADO o la última vez por la electricidad consumida?</td>
+        </tr>
+        <tr>
+            <td>P5018S1</td>
+            <td>-</td>
+            <td>¿A cuántos meses corresponde el pago de la última vez por la electricidad consumida?</td>
+        </tr>
+</table>
+
+### Variables construidas a partir de otras.
+
+<table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Variables utilizadas</th>
+        </tr>
+        <tr>
+            <td>P5018S</td>
+            <td>Pago_mes_energia</td>
+            <td>Esta variable fue creada dividiendo P5018/P5018S1 con el fin de obtener el pago mensual de electricidad</td>
+        </tr>
+        <tr>
+            <td>Num_integrantes</td>
+            <td>Num_integrantes</td>
+            <td>Esta variable fue creada sumando 1 unidad cada vez que el número de ORDEN cambiaba</td>
+        </tr>
+        <tr>
+            <td>Num_hijos</td>
+            <td>Num_hijos</td>
+            <td>Esta variable fue creada sumando 1 cada vez que la pregunta código P6051 toma el valor de 3 o 4 correspondiente a hijo o nieto</td>
+        </tr>
+</table>
 
 # Resultados
 

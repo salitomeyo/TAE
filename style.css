@@ -1,0 +1,32 @@
+table, th, td {
+    border: 1px solid black;
+    text-align: center;
+    padding: 2px;
+}
+
+td:nth-child(1) {
+    width: 20%;
+    }
+  
+  /* the second */
+  td:nth-child(2) {
+    width: 30%;
+  }
+  
+  /* the third */
+  td:nth-child(3) {
+    width: 50%;
+   }
+
+table{
+    width: 90%;
+    padding: 10px;
+    align-self: center;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+body{
+  text-align: justify;
+  align-content: center;
+}
