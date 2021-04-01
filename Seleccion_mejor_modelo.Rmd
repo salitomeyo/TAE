@@ -38,6 +38,7 @@ load("Base_modelar.RData")
 ```
 
 
+
 Se agrupe la variable Num_hijos, cuando hay más de 5 hijos le coloca el valor de 5
 
 
@@ -81,6 +82,9 @@ var_imprt <-  c(
     "Num_hijos"
   )
 ```
+
+
+
 
 
 ## Base de datos con las variables finales
@@ -232,5 +236,88 @@ print(paste("Tasa acierto Ramdon Forest:", tasa_RF))
 
 
 
+
+## Otro analisis
+
+
+```{r}
+Muchos_hijos <- Base_modelar[Base_modelar$Num_hijos >= 5,]
+```
+
+
+```{r}
+Muchos_hijos <- Muchos_hijos[,var_imprt]
+```
+
+
+```{r}
+str(Muchos_hijos)
+```
+
+
+```{r}
+Muchos_hijos$Num_hijos <- as.factor(Muchos_hijos$Num_hijos)
+```
+
+
+```{r, message=F, warning=F}
+
+set.seed(23) # Semilla
+
+# Se saca una muestra de entrenamiento que conserve las proporciones en la varaible Num_hijos
+
+trn_prop <- Muchos_hijos %>%
+  mutate(
+    var_indx = 1:dim(Muchos_hijos)[1]
+  ) %>% 
+  group_by(Num_hijos) %>% 
+  sample_frac(0.8, replace = F)
+
+# Se saca la muestra de test con las que no fueron seleccionadas en la muestra de
+# train
+tst_prop <- Muchos_hijos[-trn_prop$var_indx, ]
+
+# Se elimina la variable de indice
+trn_prop$var_indx <- NULL
+
+trn_prop <- trn_prop[sample(1:dim(trn_prop)[1]), ]
+tst_prop <- tst_prop[sample(1:dim(tst_prop)[1]), ]
+
+## Knn
+# Conjunto de entrenamiento
+Base_KNN_dummy_trn <- dummy.data.frame(data=data.frame(trn_prop[ ,-6]))
+Base_KNN_dummy_trn <- cbind(Base_KNN_dummy_trn,"Num_hijos" = trn_prop$Num_hijos)
+# Conjunto de prueba
+Base_KNN_dummy_tst <- dummy.data.frame(data=tst_prop[ ,-6])
+Base_KNN_dummy_tst <- cbind(Base_KNN_dummy_tst,"Num_hijos" = tst_prop$Num_hijos)
+
+
+
+#Conjunto de entrenamiento
+datos_c_trn <- Base_KNN_dummy_trn
+datos_c_trn[,c(1,10)] <- scale(datos_c_trn[,c(1,10)])
+
+#Conjunto de prueba
+datos_c_tst <- Base_KNN_dummy_tst
+datos_c_tst[,c(1,10)] <- scale(datos_c_tst[,c(1,10)])
+
+# Separación de la variable respuesta
+train <- datos_c_trn[ ,-14] # crea train sin la variable respuesta
+test <- datos_c_tst[ ,-14] # crea test sin la variable respuesta
+y_train <- datos_c_trn[ ,14]
+y_test <- datos_c_tst[ ,14]
+pred_knn <- knn(train, test, cl = y_train, k = 20)
+
+tasa_knn <- matriz_confusion(pred_knn, y_test)
+
+print(paste("Tasa acierto Knn:", tasa_knn))
+
+```
+
+
+```{r}
+MC <- table(pred_knn, y_test)
+MC
+```
 
 
