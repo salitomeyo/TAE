@@ -9,6 +9,446 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Informe
+
+##Introducción
+
+###Motivación
+
+En la actualidad, debido a la globalización es importante para las empresas conocer a sus clientes, la tecnología, sin duda ha permitido recaudar volúmenes enormes de información, sin embargo, en muchas ocasiones precisamente la información requerida por una empresa es difícil de obtener o representa información sensible para los usuarios, ya que invade su privacidad. No obstante, con los avances en analítica se han creado herramientas para lograr obtener la información necesaria de los usuarios sin invadir su intimidad y está ha podido utilizarse para estimar valores sobre el resto de la población aun sin tener que preguntar directamente sobre la misma.
+
+Entre los datos que en algunos contextos pueden ser censurados u omitidos está el número de hijos en un hogar, lo que hace que sea una variable de la que no se dispone directamente; por lo tanto el problema en particular en el que se está interesado es en la predicción del número de hijos en base a las características de los hogares colombianos.
+
+Para esto usamos la encuesta de la ECV del DANE de 2019. De ella se seleccionaron algunas variables y mediante análisis estadísticos se obtuvieron modelos que pudieran dar solución al problema. Por último se seleccionó uno de ellos mediante criterios que se expondrán más adelante.
+
+## Definición del usuario: (quien usará la herramienta y para qué)
+
+Inmobiliarias, empresas crediticias, en las cuales el número de hijos es una información sensible ya que este puede suponerse como un impedimento ya sea a la hora de conseguir o rentar apartamento o para conseguir préstamos ya que se concibe que el mantenimiento de los hijos es elevado y este sube cuantos más hijos posee el prestatario por lo que resulta más complicado para los padres de familia acceder a los mismos. 
+
+Agencias o constructoras inmobiliarias en ocasiones tienen mucha información histórica de los clientes, sobretodo de los jefes de hogar, obteniendo así información relevante de las características de un hogar. En base a estas características podemos predecir el número de hijos del mismo, lo cual pueden utilizar dichas empresas para lanzar nuevos proyectos y ofrecer atención más personalizada a los hogares. Adicionalmente, algunas empresas que facilitan el arriendo como intermediarios pueden tener políticas de arriendo como el hecho de que no se admiten hijos en los hogares, esto es común en residencias estudiantiles, entre otros.
+
+## Contextualización del conjunto de datos:
+
+El número de hijos en un hogar es una variable muy simple y poco estudiada en algunos contextos, por eso los volúmenes de datos que se encuentran en la web muchas veces no disponen de este tipo de información, pero para entidades como inmobiliarias, empresa crediticias, etc; puede serles de sumo interés, por ello bajo trabajos de investigación se llega a la conclusión de que estas variables pueden ser deducidas a partir de otras que siguen en el mismo contexto, en este caso particular el número de hijos puede ser deducida a partir de conjuntos de datos relacionados con información acerca de los hogares del país, en cómo es su estructura, a partir de información puntual de cada uno de los integrantes, sin previamente haber recibido información de cuántos de esos integrantes son hijos, por tanto una de las bases de datos que se considera tienen más relación con las viviendas y hogares de Colombia es la encuesta de Calidad de vida, donde la más actualizada hasta la fecha es la realizada en el año 2019.
+
+La Encuesta de Calidad de Vida (ECV) es una investigación que realiza el DANE, con el objetivo de recoger información sobre diferentes aspectos y dimensiones del bienestar de los hogares, incluyendo aspectos como el acceso a bienes y servicios públicos, privados o comunales, salud, educación, cuidado de niños y niñas menores de 5 años, entre otros. Esta información posibilita efectuar análisis posteriores de los factores que explican los diferentes niveles de vida existentes en la población colombiana.
+
+Por ello mediante este conjunto de datos que tiene un gran volumen se intenta extraer aquellas variables que se consideran más representativas para intentar predecir el número de hijos que tienen cada uno de los hogares; Antes de ello se debe de definir para este investigación que es un hogar y que es el número de hijos, para realizar todos los análisis posteriores en función de esta variable (Número de hijos en el hogar), la definición se presenta a continuación:
+
+## Definición del número de hijos (En base a la imagen que mando Juan Esteban Sanchez Pulgarin)
+
+Debido a que la variable de interés (Número de hijos) no aparece de manera explícita, se llevó a cabo un proceso de construcción de la misma. Esto fue posible gracias a algunas de las variables de la base de datos Características y composición del hogar, presente en la encuesta antes mencionada que permiten conocer la relación de cada individuo con el jefe del hogar
+
+Se define el número de hijos de acuerdo con los hogares colombianos promedio definidos por el DANE, en los cuales se tienen:
+
+Parejas con hijos.
+Una persona sola.
+Padre o madre y sus hijos.
+Parejas sin hijos.
+Hogar extenso-compuesto, definido como hogares nucleares (alguna de las opciones anteriormente mencionadas) más otros parientes.
+
+Se muestra a continuación una imagen que ejemplifica mejor lo antes mencionado:
+
+En base a esto se considera como el número de hijos, a los hijos, hijastros y nietos del jefe del hogar sin discriminar por edad, ya que esta es la forma que en general funciona mejor en base a la mayoría de estructuras de los hogares en Colombia.
+
+En casos generales funciona esta estructura ya que en la mayoría de hogares cuenta con padres y si estos no están presentes, los abuelos de los hijos lo están, ya que en casos donde se considera que si hay varios grupos familiares en una misma vivienda, como lo son por ejemplo varios hermanos con sus respectivos hijos, estos se dividirán en diferentes hogares ya que son varios núcleos familiares en una misma vivienda los cuales deben ser tomados como hogares de manera independiente, por lo tanto estructuras como estas no sesgan la elección de la variable del número de hijos, además que cabe aclarar que la encuesta de calidad de vida hace esta misma división, ya que en una misma vivienda se ven presentes varios hogares(siendo 5 el máximo), por lo tanto esta variable fue seleccionada como el criterio más correcto en base a la estructura de la encuesta de calidad de vida y en la perspectiva de los investigadores.
+
+## Definición de hogar
+
+Según el DANE se entiende como hogar a una persona o grupo de personas que ocupan la totalidad o parte de una vivienda y que se han asocian para compartir su lugar de descanso, alimentos y demás necesidades básicas (si se trata de hogar-unidad doméstica) . Pueden ser familiares o no entre sí.
+
+Un hogar no puede dividirse en más de una vivienda, pero dentro de cada vivienda, puede haber más de un hogar, conformado por una o más personas con o sin vínculos de parentesco.
+
+## Contextualización de las variables utilizadas:
+
+###Características y composición del hogar.
+
+Compuesta por 46 variables de las cuales se escogieron:
+
+<table style="border: 1px solid black; width:100%">
+  <tr>
+    <th>Código</th>
+    <th>Nombre</th>
+    <th>Pregunta</th>
+  </tr>
+  <tr>
+    <td>P6020</td>
+    <td>Genero</td>
+    <td>Sexo: 1. Hombre 2. Mujer</td>
+  </tr>
+  <tr>
+    <td>P6040</td>
+    <td>Edad</td>
+    <td>¿Cuántos años cumplidos tiene … ?</td>
+  </tr>
+    <td>P6051</td>
+    <td>-</td>
+    <td>¿Cuál es el parentesco de ___ con el jefe o la jefa de este hogar?
+1 Jefe (a) del hogar
+2 Pareja, esposo (a), cónyuge, compañero(a)
+3 Hijo(a) hijastro(a)
+4 Nieto (a)
+5 Padre, madre, padrastro y madrastra
+6 Suegro o suegra
+7 Hermano (a), hermanastro (a)
+8 Yerno, nuera
+9 Otro pariente del jefe(a)
+10 Empleado(a) del servicio doméstico
+11 Parientes del servicio doméstico
+12 Trabajador
+13 Pensionista
+14 Otro pariente</td>
+</table>
+
+P5502
+Estado_civil
+Actualmente el jefe del hogar:
+
+1 No está casado(a) y vive en pareja hace menos de dos años
+2 No está casado(a) y vive en pareja hace dos años o más
+3 Está viudo(a)
+4 Está separado(a) o divorciado(a)
+5 Está soltero(a)
+6 Está casado(a)
+P756
+Lugar_nacimiento
+¿Dónde nació el jefe del hogar?
+
+1- En este municipio
+2- En otro municipio
+3- En otro país
+P6081
+Vive_hogar_padre
+¿El padre del jefe del hogar vive en este hogar?
+P6087
+Educacion_padre
+¿Cuál es o fue el nivel de educación más alto alcanzado por el padre del jefe del hogar?
+P6083
+Vive_hogar_madre
+¿La madre del jefe del hogar vive en este hogar?
+P6088
+Educacion_madre
+¿Cuál es o fue el nivel de educación más alto alcanzado por la madre del jefe del hogar?
+P6080
+Etnia
+De acuerdo con su cultura, pueblo o rasgos físicos, _____ es o se reconoce como:
+
+1 Indígena
+2 Gitano (a) (Rom)
+3 Raizal del archipiélago de San Andrés, Providencia y Santa Catalina
+4 Palenquero (a) de San Basilio
+5 Negro (a), mulato (a) (afrodescendiente), afrocolombiano(a)
+6 Ninguno de los anteriores
+
+
+
+### Condiciones de vida del hogar y tenencia de bienes (programas).
+
+Compuesta por 8 variables de las cuales se escogió:
+
+Código 
+Nombre
+Pregunta
+P784S4A3
+Num_subsidios
+¿Cuántos miembros del hogar reciben subsidios?
+
+
+### Datos de la vivienda.
+
+Compuesta por 35 variables de las cuales se escogieron:
+
+Código
+Nombre
+Pregunta
+CANT_HOGARES_VIVIENDA
+Cant_hogares_vivienda
+¿Comparte con otros hogares la misma vivienda?
+P1070
+Tipo_vivienda
+Tipo de vivienda:
+
+1 Casa
+2 Apartamento
+3 Cuarto(s)
+4 Vivienda tradicional indigena
+5 Otro (carpa, contenedor, vagón, embarcación, cueva, refugio natural, etc
+P4015
+Material_pisos
+Material predominante de los pisos:
+
+1 Alfombra o tapete de pared a pared
+2 Madera pulida y lacada, parqué
+3 Mármol
+4 Baldosa, vinilo, tableta, ladrillo, laminado
+5 Madera burda, tabla, tablón, otro vegetal
+6 Cemento, gravilla
+7 Tierra, arena
+P8520S1
+Energia_electrica
+¿La vivienda cuenta con energía eléctrica?
+1 Sí
+2 No
+P8520S1A1
+Estrato
+Estrato para tarifa de la energía eléctrica:
+
+1 Bajo - Bajo
+2 Bajo
+3 Medio - Bajo
+4 Medio
+5 Medio - Alto
+6 Alto
+8 Planta eléctrica
+9 No conoce el estrato o no cuenta con recibo de pago.
+0 Recibos sin estrato o el servicio es pirata
+P8520S5
+Acueducto
+¿La vivienda cuenta con acueducto?
+1 Sí
+2 No
+P8520S3
+Alcantarillado
+¿La vivienda cuenta con alcantarillado?
+
+1 Sí
+2 No
+P8520S4
+Basuras_semana
+¿Cuenta con servicio de Recolección de basuras?
+
+1 Sí
+2 No
+
+
+### Educación.
+
+Compuesta por 58 variables de las cuales se escogieron:
+
+Código
+Nombre
+Pregunta
+P8586
+Estudia
+¿El jefe del hogar actualmente estudia? (asiste al preescolar, escuela, colegio o universidad)
+
+1 Sí
+2 No
+P8587
+Nivel_educativo
+¿Cuál es el nivel educativo más alto alcanzado por el jefe del hogar  y el último año o grado aprobado en este nivel?
+
+1 Ninguno
+2 Preescolar
+3 Básica Primaria (1º - 5º)
+4 Básica secundaria (6º--9º)
+5 Media (10º--13º)
+6 Técnico sin título
+7 Técnico con título
+8 Tecnológico sin título
+9 Tecnológico con título
+10 Universitario sin titulo
+11 Universitario con titulo
+12 Postgrado sin titulo
+13 Postgrado con titulo
+
+
+### Salud.
+
+Compuesta por 103 variables de las cuales se escogieron:
+
+Código
+Nombre
+Pregunta
+P6090
+Afiliado
+¿El jefe del hogar está afiliado (a), es cotizante o es beneficiario (a) de alguna entidad de seguridad social en salud? (Entidad promotora de salud [EPS] o entidad promotora de salud subsidiada EPS-S)
+1 Sí
+2 No
+9 No sabe, no informa
+P6127
+Salud_general
+El estado de salud del jefe del hogar en general, es:
+1 Muy bueno
+2 Bueno
+3 Regular
+4 Malo
+
+
+### Servicios del hogar.
+
+Compuesta por 64 variables de las cuales se escogieron:
+Código
+Nombre
+Pregunta
+P5000
+Num_cuartos
+Incluyendo sala y comedor, ¿de cuántos cuartos o piezas dispone este hogar?
+P5666
+Gas_natural
+¿En este hogar tienen servicio de Gas Natural conectado a red pública?
+1 Sí
+2 No
+P5305
+Telefonia_fija
+¿En este hogar tienen servicio telefónico fijo?
+1 Sí
+2 No
+I_HOGAR
+Ingresos_hogar
+Ingreso Mensual Total del Hogar
+
+
+### Tenencia y financiación de la vivienda que ocupa el hogar.
+
+Compuesta por 20 variables de las cuales se escogieron:
+
+Código
+Nombre
+Pregunta
+P5095
+Contrato_vivienda
+¿La vivienda ocupada por este hogar es?
+
+1. Propia, totalmente pagada
+2. Propia, la están pagando
+3. En arriendo o subarriendo
+4. Con permiso del propietario, sin pago alguno (usufructuario)
+5. Posesión sin título (ocupante de hecho)
+6. Propiedad colectiva
+
+
+### Uso de energéticos del hogar.
+
+Compuesta por 45 variables de las cuales se escogieron:
+
+Código
+Nombre
+Pregunta
+P5018
+Ultimo_pago_energia
+¿Cuánto pagaron EL MES PASADO o la última vez por la electricidad consumida?
+P5018S1
+
+
+¿A cuántos meses corresponde el pago de la última vez por la electricidad consumida?
+
+
+### Variables construidas a partir de otras.
+
+
+Código
+Nombres
+Variables utilizadas
+P5018S
+Pago_mes_energia
+Esta variable fue creada dividiendo P5018/P5018S1 con el fin de obtener el pago mensual de electricidad
+Num_integrantes
+Num_integrantes
+Esta variable fue creada sumando 1 unidad cada vez que el número de ORDEN cambiaba
+Num_hijos
+Num_hijos
+Esta variable fue creada sumando 1 cada vez que la pregunta código P6051 toma el valor de 3 o 4 correspondiente a hijo o nieto 
+
+## Explicar paso a paso el preprocesamiento
+
+Creación de la variable número de hijos (Está arriba)
+Selección de variables ( Está arriba)
+Unión de las bases de datos:
+
+Se creó una única base de datos con la variable de interés (Número de hijos) y las demás variables seleccionadas. Dado que las posibles variables explicativas provenían de diferentes tablas, se procedió a realizar un merge entre ellas, usando como variable de referencia la columna “Directorio” y “Secuencia” que son las dos variables que identifican a un hogar, y teniendo especial cuidado en la unión de tablas donde las preguntas pueden ser por vivienda, hogar o integrantes y se debía llevar a una misma estructura de hogares.
+
+Medidas de localización y escala
+
+Se realizó un  análisis descriptivo a cada variable donde se identificó el rango y media de las variables continuas y discretas respectivamente, y la proporción de cada clase en las variables categóricas, además de la identificación de las variables con valores faltantes.
+
+Remoción de variables con una cantidad de NAs superior a 1/3 del total de los datos
+
+Del paso anterior se decidió remover de la base de datos a aquellas variables cuyos valores faltantes superar un tercio de la cantidad de registros en la base de datos.
+
+Gráficos descriptivos 
+
+Para finalizar la etapa de preprocesamiento, se crearon gráficos de puntos  y Boxplots del Número de hijos vs las variables continuas y categóricas, respectivamente, con el fin de analizar la posible influencia o relación de cada predictora con la respuesta.
+
+
+## Detallar los modelos probados 
+
+Para el modelamiento se tuvieron en cuenta los siguientes: Regresión Lineal Múltiple, Poisson, Clasificador de Bayes, Bosques aleatorios, Árboles de Clasificación, Árboles de Regresión y KNN. En cada uno de ellos se adaptaron las variables
+
+¿Por qué elegimos estos modelos?
+
+Los modelos escogidos son de regresión y clasificación, en cada uno se adaptó la variable respuesta, en los de clasificación se obtienen las predicciones como el número de hijos puntual, en las de regresión se obtienen aproximaciones decimales las cual previamente debían de ser redondeadas para ser comparadas con los valores reales, en general por este último procedimiento se podía notar que en general funcionaba mucho mejor los modelos de clasificación (su tasa de aciertos era la más alta) por lo tanto finalmente estos fueron considerados como los favoritos y continuaron en el proceso de selección de modelos, además cabe aclarar que cada modelo le fue ingresado las variables como se debía según su proceso de ajuste, por ejemplo en el modelo de Knn las variables explicativas fueron ingresadas estandarizadas las que son numéricas y se crearon variables dummy para las categóricas, en general el desempeño de este modelo fue muy bueno, pero su tiempo de ejecución fue superior a otros modelos y este fue uno de los criterios utilizados en la selección de modelos.
+
+Para la selección de modelos a ajustar se tuvo en cuenta que dado que la mayoría de las variables escogidas como significativas corresponden a variables categóricas se debieron escoger modelos que permitieran el correcto manejo de las mismas. 
+
+## Justificar porque se seleccionaron las variables que finalmente quedaron 
+
+Como paso siguiente se realizó de manera exhaustiva en cada una de las bases de la ECV, una preselección de covariables que a criterio de los investigadores, podrían tener alguna relación con la variable respuesta. Con la información anterior se procede a construir la base de datos para el paso siguiente.
+
+Con el fin de depurar la base de datos, mediante gráficos boxplot se realizó un análisis descriptivo de las variables y se observó cuáles de las preseleccionadas mostraban una verdadera relación con el Número de hijos; el mismo proceso se hizo con métodos de selección de variables tales como Selección hacia atrás y Lasso. Finalmente, las variables a utilizar fueron las obtenidas mediante los procesos mencionados anteriormente.
+
+## Justificar porque escogimos el modelo final
+
+El modelo final se escogió ya que no solo presenta una de las tasas de acierto más altas entre todos los modelos desarrollados, sino que a su vez nos permitió reducir la dimensionalidad del conjunto de datos, ya que este valoraba y utilizaba unas 5 variables principalmente para la modelación y predicción, además de que estas variables no contaban con valores faltantes permitiéndonos contar con el conjunto de datos completo que es una cantidad muy apreciable de registros.
+
+## Describa el abordaje del problema y su solución
+
+En resumen la manera como se decidió abordar este problema de clasificación (aprendizaje supervisado) fue la siguiente:
+
+Se realizó una buena investigación y contextualización del conjunto de datos, mediante este se tuvo la oportunidad de establecer el número de hijos mediante la combinación de algunas variables presentes en un conjunto de datos particular abordado en la encuesta, además de seleccionar las variables más relevantes para realizar un análisis y la modelación.
+
+Se procedió a la selección de variables las cuales posteriormente fueron unidas mediante indicadores de hogares, este procedimiento fue realizado de manera muy cuidadosa para no obtener información incorrecta, después de este paso se llegó a una base de datos con las variables consideradas por lo investigadores como de interés.
+
+Previo a lo anterior, se procedió a realizar análisis descriptivos sobre el conjunto de datos, que ayudaran a una mejor comprensión de las variables y a seleccionar cuales de estas eran más relevantes para predecir el número de hijos, se realizaron gráficos y demás análisis.
+
+Previo a esto se usaron técnicas estadísticas para la selección de variables mediante la formulación de modelos, los cuales arrojan en su mayoría las variables seleccionadas mediante el análisis descriptivo.  
+
+Luego de este proceso de selección de variables se obtuvo un conjunto de datos con menos variables pero con el mismo número de registros, para así con este empezar la modelación.
+
+Para la modelación se tomó en cuenta como un problema de clasificación donde el número de hijos corresponde a cada nivel de la variable respuesta como categoría.
+
+Los modelos seleccionados fueron considerados como los más adecuados para este problema en particular y son populares en el mundo del aprendizaje estadístico, se realizaron ajustes con cada uno y se realizó validación cruzada para poder evaluar el rendimiento de cada uno de ellos (mediante tasas de acierto y error).
+
+Después de varios ajustes de modelos, estos hicieron una valoración de unas variables más que otras, dado que se obtenían los mismos resultados con todas las variables que con un conjunto de variables menor, por lo tanto se decidió nuevamente hacer una reducción de variables, de tal manera que se obtuvieron modelos más parsimoniosos (Buenos resultados con menos variables) llegando finalmente a modelos con 5 variables.
+
+De los modelos ajustados inicialmente se consideraron como los mejores 4 de estos que posteriormente se ponen en competencia mediante distintas muestras aleatorias divididas en conjunto de entrenamiento y validación de tal manera que el mejor modelo es aquel que le fuera mejor en el conjunto de validación en las diferentes muestras. 
+
+Resultó un modelo como el mejor después de este procedimiento teniendo una alta tasa de aciertos, con lo cual finalmente se ajustó el mismo modelo con el conjunto de datos completo, con el fin de generar mejores predicciones por el hecho de contar con un mayor número de información.
+
+Para la valoración del gran modelo finalmente obtenido se dará la oportunidad de su uso a diferentes usuarios mediante una aplicación web, la cual tiene un gran potencial para predecir el número de hijos de un hogar según la estructura del mismo.
+
+## Bibliografía
+
+Bonilla Jaime, G., & Garcia Valdez, E. (2009). Impacto de las condiciones socioeconomicas familiares en las decisiones de fertilidad (numero de hijos), utilizando un modelo de regresión poisson: período de estudio 2005-2006 (Bachelor's thesis).
+Forero, Nohora, & Gamboa, Luis Fernando. (2009). Family Size in Colombia: Guessing or Planning? Intended vs. Actual Family Size in Colombia. Desarrollo y Sociedad, (64), 85-118. Retrieved March 31, 2021, Recuperada de http://www.scielo.org.co/scielo.php?script=sci_arttext&pid=S0120-35842009000200004&lng=en&tlng=en. 
+
+García, D. & Jaramillo, A. (6 de Enero de 2019). El cambio social que se gesta en los hogares colombianos. El Tiempo. https://www.eltiempo.com/economia/sectores/que-implica-que-los-hogares-colombianos-sean-mas-pequenos-analisis-censo-2018-311776
+
+Robayo, E. P. (2019). Tipología del hogar en Colombia  (2000-2015): Características Sociodemográficas de las mujeres. (Tesis de Maestría, Universidad Externado de Colombia). Recuperada de https://bdigital.uexternado.edu.co/bitstream/001/2223/1/DKA-spa-2019-Tipologias_de_hogar_en_Colombia_2000_2015_caracteristicas_sociodemograficas_de_las_mujeres 
+
+Wright, M. N. & Ziegler, A. (2017). ranger: A fast implementation of random forests for high dimensional data in C++ and R. J Stat Softw 77:1-17. https://doi.org/10.18637/jss.v077.i01.
+
+
+
+
+--------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 >## Introducción
 
 En la actualidad, debido a la globalización es importante para las empresas conocer a sus clientes,la tecnología, sin duda ha permitido recaudar volúmenes enormes de información, sin embargo, en muchas ocasiones precisamente el dato que necesitamos,es el más difícil de obtener.No obstante, así como los avances de la tecnología han crecido de manera exponencial, también lo han hecho las herramientas para enfrentarla.
