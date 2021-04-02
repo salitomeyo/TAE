@@ -8,7 +8,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE,warning = FALSE)
 ```
 
 # Introducción
@@ -48,8 +48,6 @@ Según el DANE se entiende como hogar a una persona o grupo de personas que ocup
 Un hogar no puede dividirse en más de una vivienda, pero dentro de cada vivienda, puede haber más de un hogar, conformado por una o más personas con o sin vínculos de parentesco.
 
 __Número de hijos__
-
-Debido a que la variable de interés (Número de hijos) no aparece de manera explícita, se llevó a cabo un proceso de construcción de la misma. Esto fue posible gracias a algunas de las variables de la base de datos Características y composición del hogar, presente en la encuesta antes mencionada que permiten conocer la relación de cada individuo con el jefe del hogar
 
 Se define el número de hijos de acuerdo con los hogares colombianos promedio definidos por el DANE, en los cuales se tienen:
 
@@ -447,7 +445,219 @@ Compuesta por 45 variables de las cuales se escogieron:
         </tr>
 </table>
 
-# Resultados
+# Metodología
+
+## Preprocesamiento de los datos
+
+### Creación de la variable número de hijos 
+
+Debido a que la variable de interés (Número de hijos) no aparece de manera explícita, se llevó a cabo un proceso de construcción de la misma. Esto fue posible gracias a algunas de las variables de la base de datos Características y composición del hogar, presente en la encuesta antes mencionada que permiten conocer la relación de cada individuo con el jefe del hogar.
+
+Como primer paso se realiza la lectura de las bases de datos:
+
+```{r}
+Caracteristicas_hogar_personas <- read.table("Caracteristicas y composicion del hogar.csv", sep = ";", header = T)
+```
+
+
+Debido a que la variable P6051 muestra el parentesco de los integrantes de la familia con el jefe de hogar solo será utilizada para la creación de la variable número de hijos, es decir, no se tiene en cuenta como covariable para el ajuste de modelos:
+
+```{r}
+#Selección de las variables necesarias
+aux_creacion_respuesta<-Caracteristicas_hogar_personas[,c("ï..DIRECTORIO","SECUENCIA_P","P6051")]
+```
+
+Para obtener el número de hijos por hogar se filtra las filas si tienen una relacion de hijo/hija o nieto/nieta con el jefe de hogar y se cuenta el número de hijos por hogar. Los hogares se describen con el código único de ï..DIRECTORIO, SECUENCIA_P
+
+```{r}
+require(dplyr)
+
+# P6051 = 3 : Hijo/hija/hijastro
+# P6051 = 4 : Nieto/nieta
+
+num_hijos <- aux_creacion_respuesta %>%
+  filter(P6051 == 3 | P6051 == 4) %>%
+  group_by(ï..DIRECTORIO, SECUENCIA_P) %>%
+  count(SECUENCIA_P)
+```
+
+
+```{r,echo=FALSE}
+require(kableExtra)
+kable(head(num_hijos))%>%
+  kable_styling(full_width = F)
+```
+
+El número de hogares que tiene al menos un hijo `r dim(num_hijos)[1]`.
+
+A continuación se procede a calcular el número de integrantes que pertenecen a cada hogar:
+
+
+```{r}
+require(dplyr)
+num_integrantes <- Caracteristicas_hogar_personas %>%
+  group_by(ï..DIRECTORIO, SECUENCIA_P) %>%
+  count(SECUENCIA_P)
+```
+
+
+```{r,echo=FALSE}
+require(kableExtra)
+kable(head(num_integrantes))%>%
+  kable_styling(full_width = F)
+```
+
+El número de hogares es `r dim(num_integrantes)[1]`.
+
+Finalmente, con la función _merge_ se obtiene el número de hijos en cada hogar uniendo las bases de datos _num_integrantes_ y _num_hijos_ como sigue:
+
+```{r}
+num_hijos_final <- merge(num_integrantes, num_hijos, by =c("ï..DIRECTORIO","SECUENCIA_P"), all.x=TRUE)
+
+num_hijos_final$n.y[is.na(num_hijos_final$n.y)] <- 0
+colnames(num_hijos_final) <- c("ï..DIRECTORIO","SECUENCIA_P", "Num Integrantes", "Num Hijos")
+```
+
+```{r,echo=FALSE}
+require(kableExtra)
+kable(head(num_hijos_final,10))%>%
+  kable_styling(full_width = F)
+```
+
+
+### Selección de variables
+
+A continuación se muestra la base que se obtuvo con las variables preseleccionadas que aparecen listadas en la contextualización de los datos:
+
+```{r,eval=FALSE}
+
+# Características del hogar
+
+Caracteristicas_hogar_personas <- read.table("Caracteristicas y composicion del hogar.csv", sep = ";", header = T)
+Caracteristicas_hogar_personas<-Caracteristicas_hogar_personas[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P6020", "P6040","P6051", "P5502", "P756","P6081", "P6087","P6083","P6088","P6080")]
+
+# Condiciones de vida del hogar y tenencia de bienes (programas)
+
+condiciones_de_vida <- read.table("Condiciones de vida del hogar y tenencia de bienes (programas).csv", sep=";", header = T)
+condiciones_de_vida <- condiciones_de_vida[, c("ï..DIRECTORIO","SECUENCIA_ENCUESTA","ORDEN","P784S4A3")]
+
+# Datos de la vivienda
+
+Datos_vivienda <- read.table("Datos de la vivienda.csv", sep = ";", header = T)
+Datos_vivienda<-Datos_vivienda[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","CANT_HOGARES_VIVIENDA","P1070","P4015","P8520S1","P8520S1A1","P8520S5","P8520S3", "P8520S4A1")]
+
+# Educación
+
+Educacion<- read.table("Educacion.csv", sep = ";", header = T)
+Educacion<-Educacion[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P8587","P8586")]
+
+# Fuerza de trabajo 
+
+fuerza_trabajo <- read.table("Fuerza de trabajo.csv", sep=";", header = T)
+fuerza_trabajo <- fuerza_trabajo[, c("ï..DIRECTORIO","SECUENCIA_P","ORDEN", "P6435")]
+
+# Salud
+
+Salud<- read.table("Salud.csv", sep = ";", header = T)
+Salud<-Salud[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P6090","P6127")]
+
+# Servicios del hogar
+
+ServiciosDelHogar<- read.table("Servicios del hogar.csv", sep = ";", dec=",", header = T)
+ServiciosDelHogar<-ServiciosDelHogar[,c("ï..DIRECTORIO","SECUENCIA_ENCUESTA","ORDEN","P5000","P5666","P5305", "I_HOGAR")]
+
+# Tecnología e información y comunicación
+
+tecn_inf_comunicacion <- read.table("Tecnologías de información y comunicación.csv", sep=";", header = T) 
+tecn_inf_comunicacion <- tecn_inf_comunicacion[, c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P769")]
+
+# Tenencia y financiación de la vivienda que ocupa el hogar
+
+financiacion_vivienda <- read.table("Tenencia y financiación de la vivienda que ocupa el hogar.csv", sep=";", header = T)
+financiacion_vivienda <- financiacion_vivienda[,c("ï..DIRECTORIO","SECUENCIA_ENCUESTA","ORDEN","P5095")]
+
+# Uso de energéticos del hogar
+
+energeticos_hogar <- read.table("Uso de energéticos del hogar.csv", sep=";", header = T)
+energeticos_hogar <- energeticos_hogar[,c("ï..DIRECTORIO","SECUENCIA_ENCUESTA","ORDEN", "P5018", "P5018S1")]
+```
+
+### Unión de las bases de datos:
+
+Se creó una única base de datos con la variable de interés (Número de hijos) y las demás variables seleccionadas. Dado que las posibles variables explicativas provenían de diferentes tablas, se procedió a realizar un merge entre ellas, usando como variable de referencia la columna “Directorio” y “Secuencia” que son las dos variables que identifican a un hogar, y teniendo especial cuidado en la unión de tablas donde las preguntas pueden ser por vivienda, hogar o integrantes y se debía llevar a una misma estructura de hogares.
+
+```{r,eval=FALSE}
+
+# Merge de la base de datos de caracteristicas del hogar con condiciones de vida
+
+Base1 <- merge(Caracteristicas_hogar_personas, condiciones_de_vida, by.x = c("ï..DIRECTORIO","SECUENCIA_P"), by.y = c("ï..DIRECTORIO","SECUENCIA_ENCUESTA"), all.x =TRUE)
+
+# Merge de Base1 con datos vivienda
+
+Base2 <- merge(Base1, Datos_vivienda, by="ï..DIRECTORIO", all.x=T)
+
+# Merge de Base2 con educación
+
+Base3 <- merge(Base2, Educacion, by =c("ï..DIRECTORIO","SECUENCIA_P", "ORDEN"), all.x=TRUE)
+
+# Merge de todas las bases de datos restantes
+
+## Bases de personas
+
+Base4 <- Reduce(function(...) merge (..., by=c("ï..DIRECTORIO","SECUENCIA_P", "ORDEN"), all=T), list(Base3, fuerza_trabajo, Salud, tecn_inf_comunicacion))
+Base4[,c("ORDEN")] <- NULL
+
+## Bases de hogares
+
+Base5 <- Reduce(function(...) merge (..., by= c("ï..DIRECTORIO","SECUENCIA_ENCUESTA", "ORDEN"), all=T), list(ServiciosDelHogar, financiacion_vivienda, energeticos_hogar))
+Base5[,c("ORDEN")] <- NULL
+```
+
+Una vez obtenida la base 4 agrupada por i..DIRECTORIO y SECUENCIA_P y la base 5 agrupada por i..DIRECTORIO y SECUENCIA_ENCUESTA se procede a agruparlas igualando SECUENCIA_P con SECUENCIA_ENCUESTA.
+
+```{r,eval=FALSE}
+Base6 <- merge(Base4, Base5, by.x =c("ï..DIRECTORIO","SECUENCIA_P"),
+               by.y =c("ï..DIRECTORIO","SECUENCIA_ENCUESTA"), all=TRUE)
+```
+
+Finalmente, se agrupa la base anterior con la base que contiene el número de hijos, obteniendo:
+
+```{r,eval=FALSE}
+
+# Base final
+
+Base_final <- merge(Base6, num_hijos_final, by =c("ï..DIRECTORIO","SECUENCIA_P"), all.x=TRUE)
+Base_final[,c("P6435","P6051","P5018S1","ï..DIRECTORIO","SECUENCIA_P")] <- NULL
+
+```
+
+```{r,echo=FALSE}
+load(file = "datos.RData")
+kable(head(Base_final))%>%
+  kable_styling()%>%
+  scroll_box(width = "100%", height = "320px")
+```
+
+### Medidas de localización y escala
+
+Se realizó un  análisis descriptivo a cada variable donde se identificó el rango y media de las variables continuas y discretas respectivamente, y la proporción de cada clase en las variables categóricas, además de la identificación de las variables con valores faltantes.
+
+```{r}
+require(knitr)
+kable(summary(Base_final))%>%
+  kable_sty
+```
+
+Se decidió remover de la base de datos a aquellas variables cuyos valores faltantes superar un tercio de la cantidad de registros en la base de datos.
+
+
+
+### Gráficos descriptivos 
+
+Para finalizar la etapa de preprocesamiento, se crearon gráficos de puntos  y Boxplots del Número de hijos vs las variables continuas y categóricas, respectivamente, con el fin de analizar la posible influencia o relación de cada predictora con la respuesta.
+
+
+
 
 # Conclusiones
 
@@ -462,6 +672,3 @@ Compuesta por 45 variables de las cuales se escogieron:
 * Robayo, E. P. (2019). Tipología del hogar en Colombia  (2000-2015): Características Sociodemográficas de las mujeres. (Tesis de Maestría, Universidad Externado de Colombia). Recuperada de https://bdigital.uexternado.edu.co/bitstream/001/2223/1/DKA-spa-2019-Tipologias_de_hogar_en_Colombia_2000_2015_caracteristicas_sociodemograficas_de_las_mujeres 
 
 * Wright, M. N. & Ziegler, A. (2017). ranger: A fast implementation of random forests for high dimensional data in C++ and R. J Stat Softw 77:1-17. https://doi.org/10.18637/jss.v077.i01.
-
-
-
