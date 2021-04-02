@@ -806,7 +806,7 @@ lasso.mod <- glmnet(x, y, alpha = 1, lambda = gridz)
 #plot_glmnet(lasso.mod, xvar = 'lambda', grid.col="lightgray", #label = 5, xlim = c(-5, 0.5))
 ```
 
-Se hace validación cruzada para seleccionar el _lambda_ óptimo para aplicar lasso.
+Se hace validación cruzada para seleccionar el $\lambda$ óptimo para aplicar lasso.
 
 ```{r}
 set.seed(23)
@@ -820,95 +820,49 @@ out <- glmnet(x, y, alpha=1)
 lasso.coef <-predict(out, type = "coefficients", s=bestlam)[1:90, ]
 ```
 
-```{r}
+```{r,echo=FALSE}
 require(broom)
 ```
 
+##### Insertar tabla
 
+Con los anteriores procesos, se obtiene la siguiente base, que se usará en la parte de modelamiento
 
-Estado_civil
-Lugar_nacimiento
-Genero
-Etnia
-Tipo_vivienda
-Contrato_vivienda
-Material_pisos
-Uso_celular
-Vive_hogar_madre
-Num_subsidios
-Afiliado
-Nivel_educativo
-Num_cuartos
-
-```{r}
-#sort(abs(lasso.coef), decreasing = T)[1:20]
-```
-
-tabla
-
-```{r}
-#lasso.coef[lasso.coef == 0 ]
-```
-
-
-```{r}
-#x <- model.matrix(Num_hijos ~ ., Base_basuras)[,-1]
-
-#y <- Base_basuras$Num_hijos
-```
-
-
-```{r}
-#require(glmnet)
-
-#gridz <- 10^seq(-2,10, length = 100)
-
-#lasso.mod <- glmnet(x, y, alpha = 1, lambda = gridz)
+```{r,echo=FALSE}
+Base_modelar <- Base_final[,c("Genero", 
+                              "Edad",
+                              "Num_integrantes",
+                              "Num_cuartos",
+                              "Estrato",
+                              "Tipo_vivienda",
+                              "Num_Subsidios",
+                              "Educacion_madre",
+                              "Estado_civil",
+                              "Ultimo_pago_energia",
+                              "Ingresos_hogar",
+                              "Cant_hogares_vivienda",
+                              "Num_hijos",
+                              "Uso_celular", 
+                              "Vive_hogar_madre", 
+                              "Contrato_vivienda",
+                              "Etnia",
+                              "Afiliado",
+                              "Lugar_nacimiento",
+                              "Nivel_educativo")]
 ```
 
 ```{r}
-#require(plotmo)
-#plot_glmnet(lasso.mod, xvar = 'lambda', grid.col="lightgray", #label = 5, xlim = c(-5, 0.5))
+kable(head(Base_modelar))%>%
+  kable_styling(bootstrap_options = c("striped", "hover"))%>%
+  row_spec(c(0,1,2,3,4,5,6),align = "center")%>%
+  scroll_box(height = "320px")
 ```
 
 
-```{r}
-#set.seed(23)
-#train <- sample(1:nrow(x), nrow(x)/2)
-#test <- -train
-#y.test <- y[test]
-#cv.out <- cv.glmnet(x[train,], y[train], alpha=1)
-#bestlam <-cv.out$lambda.min
-```
-
-```{r}
-#out <- glmnet(x, y, alpha=1)
-#lasso.coef <-predict(out, type = "coefficients", s=bestlam)[1:93, ]
-
-#lasso.coef
-```
-
-```{r}
-#require(broom)
-```
 
 
-Num_integrantes
-Estado civil
-Lugar_nacimiento
-Etnia
-Genero
-Tipo_vivienda
-Contrato_vivienda
-Uso_celular
-Num_subsidios
-Vive_hogar_madre
-Estrato
-Afiliado
 
-```{r}
-#sort(abs(lasso.coef), decreasing = T)[1:20]
-```
+
 
 # Conclusiones
 
