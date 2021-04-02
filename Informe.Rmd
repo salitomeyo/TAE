@@ -719,9 +719,9 @@ kable(head(Base_interesante))%>%
   scroll_box(width = "100%", height = "320px")
 ```
 
-Las variables categoricas de Base_interesante se convierten a factor y se crea un modelo de regresión lineal multiple para poder utilizar seleccion por pasos
+Las variables categoricas de Base_interesante se convierten a factor y se crea un modelo de regresión lineal multiple para poder utilizar regresión por pasos
 
-### Seleccion por pasos
+### Regresión por pasos
 
 ```{r, echo=FALSE}
 # Se pasan algunas variables a factores
@@ -740,18 +740,18 @@ Base_interesante <-  Base_interesante %>%
 mod1 <- lm(Num_hijos~., data = Base_interesante)
 ```
 
-Para la preseleccion de variables tambien se utilizaron métodos de selección de variables tales como Selección por pasos y Lasso.
+Para la preseleccion de variables tambien se utilizaron métodos de selección de variables tales como regresión por pasos y Lasso.
 
 ```{r}
 require(olsrr)
 ols_step_both_p(mod1)
 ```
 
-### Seleccion de las variables de interes con lasso
+### Selección de las variables de interés con lasso
 
-Se toma la Base_final que posee 32 variables y se convierten las variables categoricas a factor.
+Se toma la Base_final que posee 32 variables y se convierten las variables categóricas a factor. Se eliminan las variables con mayor número de NA y se eliminan las filas con NA.
 
-```{r, echo=False}
+```{r, echo=FALSE}
 Base_final <- Base_final %>% 
   mutate(
     Genero = factor(Genero),
@@ -787,27 +787,26 @@ Base_menos_Nas$Pago_mes_energia <- NULL
 Base_menos_Nas <- na.omit(Base_menos_Nas)
 ```
 
-
+Se crea una matriz de diseño para aplicar regresión Lasso
 
 ```{r}
 x <- model.matrix(Num_hijos ~ ., Base_menos_Nas)[,-1]
-
 y <- Base_menos_Nas$Num_hijos
-```
 
-```{r}
+# Aplicación de la técnica de regularización
+
 require(glmnet)
 
 gridz <- 10^seq(-2,10, length = 100)
-
 lasso.mod <- glmnet(x, y, alpha = 1, lambda = gridz)
 ```
 
-```{r}
-require(plotmo)
-plot_glmnet(lasso.mod, xvar = 'lambda', grid.col="lightgray", label = 5, xlim = c(-5, 0.5))
+```{r, echo=FALSE}
+#require(plotmo)
+#plot_glmnet(lasso.mod, xvar = 'lambda', grid.col="lightgray", #label = 5, xlim = c(-5, 0.5))
 ```
 
+Se hace validación cruzada para seleccionar el _lambda_ óptimo para aplicar lasso.
 
 ```{r}
 set.seed(23)
@@ -816,18 +815,15 @@ test <- -train
 y.test <- y[test]
 cv.out <- cv.glmnet(x[train,], y[train], alpha=1)
 bestlam <-cv.out$lambda.min
-```
 
-```{r}
 out <- glmnet(x, y, alpha=1)
 lasso.coef <-predict(out, type = "coefficients", s=bestlam)[1:90, ]
-
-lasso.coef
 ```
 
 ```{r}
 require(broom)
 ```
+
 
 
 Estado_civil
@@ -845,54 +841,55 @@ Nivel_educativo
 Num_cuartos
 
 ```{r}
-sort(abs(lasso.coef), decreasing = T)[1:20]
+#sort(abs(lasso.coef), decreasing = T)[1:20]
+```
+
+tabla
+
+```{r}
+#lasso.coef[lasso.coef == 0 ]
 ```
 
 
 ```{r}
-lasso.coef[lasso.coef == 0 ]
+#x <- model.matrix(Num_hijos ~ ., Base_basuras)[,-1]
+
+#y <- Base_basuras$Num_hijos
 ```
 
 
 ```{r}
-x <- model.matrix(Num_hijos ~ ., Base_basuras)[,-1]
+#require(glmnet)
 
-y <- Base_basuras$Num_hijos
+#gridz <- 10^seq(-2,10, length = 100)
+
+#lasso.mod <- glmnet(x, y, alpha = 1, lambda = gridz)
+```
+
+```{r}
+#require(plotmo)
+#plot_glmnet(lasso.mod, xvar = 'lambda', grid.col="lightgray", #label = 5, xlim = c(-5, 0.5))
 ```
 
 
 ```{r}
-require(glmnet)
-
-gridz <- 10^seq(-2,10, length = 100)
-
-lasso.mod <- glmnet(x, y, alpha = 1, lambda = gridz)
+#set.seed(23)
+#train <- sample(1:nrow(x), nrow(x)/2)
+#test <- -train
+#y.test <- y[test]
+#cv.out <- cv.glmnet(x[train,], y[train], alpha=1)
+#bestlam <-cv.out$lambda.min
 ```
 
 ```{r}
-require(plotmo)
-plot_glmnet(lasso.mod, xvar = 'lambda', grid.col="lightgray", label = 5, xlim = c(-5, 0.5))
-```
+#out <- glmnet(x, y, alpha=1)
+#lasso.coef <-predict(out, type = "coefficients", s=bestlam)[1:93, ]
 
-
-```{r}
-set.seed(23)
-train <- sample(1:nrow(x), nrow(x)/2)
-test <- -train
-y.test <- y[test]
-cv.out <- cv.glmnet(x[train,], y[train], alpha=1)
-bestlam <-cv.out$lambda.min
+#lasso.coef
 ```
 
 ```{r}
-out <- glmnet(x, y, alpha=1)
-lasso.coef <-predict(out, type = "coefficients", s=bestlam)[1:93, ]
-
-lasso.coef
-```
-
-```{r}
-require(broom)
+#require(broom)
 ```
 
 
@@ -910,7 +907,7 @@ Estrato
 Afiliado
 
 ```{r}
-sort(abs(lasso.coef), decreasing = T)[1:20]
+#sort(abs(lasso.coef), decreasing = T)[1:20]
 ```
 
 # Conclusiones
