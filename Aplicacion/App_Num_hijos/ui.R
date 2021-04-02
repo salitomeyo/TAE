@@ -3,7 +3,12 @@ library(shiny)
 
 shinyUI(fluidPage(
                   
+    # Estilo css              
     includeCSS("www/style.css"),
+    # tags$head(
+    # tags$style(HTML("body{
+    # background-image: url( fondo_cyan.jpg );
+    #                 }"))),
 
     # Titulo de la aplicación -------------------------------------------------
     
@@ -14,74 +19,86 @@ shinyUI(fluidPage(
             
     ),
     
-    tags$head(
-    tags$style(HTML("body{
-    background-image: url( fondo_cyan.jpg );
-                    }"))),
-    
-    titlePanel("Número de hijos de los hogares  colombianos"),
-    
-    
-    navlistPanel(widths = c(1, 11), 
-    
-    tabPanel("Home", icon = icon("child"),  
-    # División de la página en dos --------------------------------------------
 
-    sidebarLayout(
+    # Panel de navegación -----------------------------------------------------
+    
+    tabsetPanel(
         
 
-        # Lado Izquierdo ----------------------------------------------------------
+        # Panel de inicio ---------------------------------------------------------
         
-        sidebarPanel(
+        tabPanel("Home", icon = icon("child"),
+                 
+
+            # División de la página verticalmente -------------------------------------
             
-            numericInput(inputId = "Num_integrantes",
-                         label = "Ingrese el número de integrantes de su hogar",
-                         value= 1,
-                         step = 1,
-                         min=1,
-                         max =19),
+            verticalLayout(
+                
+                titlePanel("Número de hijos de los hogares  colombianos"),
+                
+                # Predicción ----------------------------------------------------------
+                
             
-            selectInput(inputId = "Genero",
-                         label = "Ingrese el género del jefe del hogar",
-                         choices = c("Masculino", "Femenino"),
-                         selected = c("Femenino")),
-            
-            selectInput(inputId = "Vive_hogar_madre",
-                        label = "¿La madre del jefe del hogar vive en el hogar?",
-                        choices = c("Si", "No", "fallecida"),
-                        selected = c("Si")),
-            
-            numericInput(inputId = "Edad",
-                         label = "Ingrese la edad del jefe del hogar",
-                         value= 48,
-                         step = 1,
-                         min = 13,
-                         max = 106),
-            
-            selectInput(inputId = "Estado_civil",
-                        label = "¿Cuál es el estado civil del jefe del hogar?",
-                        choices = c("No está casado(a) y vive en pareja hace menos de dos años",
-                                    "No está casado(a) y vive en pareja hace dos años o más",
-                                    "Está viudo(a)",
-                                    "Está separado(a) o divorciado(a)",
-                                    "Está soltero(a)",
-                                    "Está casado(a)"),
-                        selected = c("No está casado(a) y vive en pareja hace menos de dos años"))
-            
+                tableOutput("df"),
+                textOutput("Resultado"),
+                
+                
+                # Cuestionario ----------------------------------------------------------
+                
+                fluidRow(
+                    
+                    column(width = 2,
+                          
+                        numericInput(inputId = "Num_integrantes",
+                                     label = "Ingrese el número de integrantes de su hogar",
+                                     value= 1,
+                                     step = 1,
+                                     min=1,
+                                     max =19),
+                    ),
+                    
+                    column(width = 2,
+                        selectInput(inputId = "Genero",
+                                     label = "Ingrese el género del jefe del hogar",
+                                     choices = c("Masculino", "Femenino"),
+                                     selected = c("Femenino")),
+                    ),
+                    
+                    column(width = 2,
+                        numericInput(inputId = "Edad",
+                                     label = "Ingrese la edad del jefe del hogar",
+                                     value= 48,
+                                     step = 1,
+                                     min = 13,
+                                     max = 106),
+                    ),
+                    
+                    column(width = 2,
+                        selectInput(inputId = "Vive_hogar_madre",
+                                    label = "¿La madre del jefe del hogar vive en el hogar?",
+                                    choices = c("Si", "No", "fallecida"),
+                                    selected = c("Si")),
+                    ),
+                    
+                    column(width = 3,
+                        selectInput(inputId = "Estado_civil",
+                                    label = "¿Cuál es el estado civil del jefe del hogar?",
+                                    choices = c("No está casado(a) y vive en pareja hace menos de dos años",
+                                                "No está casado(a) y vive en pareja hace dos años o más",
+                                                "Está viudo(a)",
+                                                "Está separado(a) o divorciado(a)",
+                                                "Está soltero(a)",
+                                                "Está casado(a)"),
+                                    selected = c("No está casado(a) y vive en pareja hace menos de dos años"))
+                    )
+                )
+                
+            )
         ),
-
-        # Lado derecho ----------------------------------------------------------
         
-        mainPanel(
-            tableOutput("df"),
-            textOutput("Resultado")
+        tabPanel("Video", icon = icon("youtube")
+        
         )
-        
-    )),
-    
-    tabPanel("Video", icon = icon("youtube")
-    
-    )
     
     )
 ))
