@@ -111,8 +111,6 @@ df <- data.frame(df)
 colnames(df) <- c("Arbol_clasificacion","RandomForest", "NaiveBayes", "Knn")
 ```
 
-
-
 ```{r, message=F, warning=F}
 
 for(i in 1:20){
@@ -233,12 +231,7 @@ print(paste("Tasa acierto Ramdon Forest:", tasa_RF))
 100:  arboles "Tasa acierto Ramdon Forest: 0.860418107346135"
 500:  arboles "Tasa acierto Ramdon Forest: 0.860364913027289"
 
-
-
-
-
 ## Otro analisis
-
 
 ```{r}
 Muchos_hijos <- Base_modelar[Base_modelar$Num_hijos >= 5,]
@@ -320,4 +313,7 @@ MC <- table(pred_knn, y_test)
 MC
 ```
 
+```{r}
+save(df, file="Matriz_coef.RData")
+```
 
