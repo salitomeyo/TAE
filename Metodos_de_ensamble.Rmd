@@ -1,0 +1,364 @@
+---
+title: "Arboles"
+author: "Miguel Ángel Londoño Ciceros"
+date: "30/3/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+load("Base_modelar.RData")
+```
+
+
+=====================================================================================================
+
+# Combinando num_hijos >= a 5 en una sola categoría
+
+```{r, message=FALSE}
+require(tidyverse)
+```
+
+```{r}
+barplot(prop.table(table(Base_modelar$Num_hijos)))
+```
+
+```{r}
+(prop <- round(prop.table(table(Base_modelar$Num_hijos)), 6))
+```
+
+```{r}
+sum(prop[6:15])
+```
+
+## Se crea un nuevo dataframe con Num_hijos organizada
+
+```{r}
+Base_de_ensayo <- Base_modelar
+
+Base_de_ensayo$Num_hijos[Base_de_ensayo$Num_hijos >= 5] <- 5
+```
+
+
+```{r}
+table(Base_de_ensayo$Num_hijos)
+```
+
+```{r}
+# Variables en orden de importancia según RF
+# var_imprt <-  c(
+#     "Num_integrantes",
+#     "Estado_civil",
+#     "Genero",
+#     "Edad",
+#     "Vive_hogar_madre",
+#     "Ingresos_hogar",
+#     "Num_cuartos",
+#     "Num_hijos"
+#   )
+
+var_imprt <-  c(
+    "Num_integrantes",
+    "Estado_civil",
+    "Genero",
+    "Edad",
+    "Vive_hogar_madre",
+    "Num_hijos"
+)
+
+
+# Se conviarte la variable Num_hijos a factor
+
+Base_modelar_f <- Base_de_ensayo %>% 
+  select(all_of(var_imprt)) %>% 
+  #filter(Num_hijos > 0)  %>% 
+  mutate(
+    Num_hijos = factor(Num_hijos)
+  )
+
+#var_Nas <- c("Estrato", "Educacion_madre", "Ultimo_pago_energia", "Uso_celular", "Nivel_educativo", "Vive_hogar_madre")
+#var_Nas <- c("Uso_celular", "Educacion_madre", "Ultimo_pago_energia", "Estrato")
+# 
+#Base_modelar_f[, var_Nas] <- NULL
+# 
+#Base_modelar_f <-  na.omit(Base_modelar_f)
+
+set.seed(15234) # Semilla
+
+# Se saca una muestra de entrenamiento que conserve las proporciones en la varaible Num_hijos
+
+trn_prop <- Base_modelar_f %>%
+  mutate(
+    var_indx = 1:dim(Base_modelar_f)[1]
+  ) %>% 
+  group_by(Num_hijos) %>% 
+  sample_frac(0.8, replace = F)
+
+# Se saca la muestra de test con las que no fueron seleccionadas en la muestra de train
+
+tst_prop <- Base_modelar_f[-trn_prop$var_indx, ]
+
+
+# Se elimina la variable de indice
+trn_prop$var_indx <- NULL
+
+trn_prop <- trn_prop[sample(1:dim(trn_prop)[1]), ]
+tst_prop <- tst_prop[sample(1:dim(tst_prop)[1]), ]
+```
+
+```{r}
+require(lightgbm)
+```
+```{r}
+X_train <- trn_prop[, -6] 
+
+X_test <- tst_prop[, -6]
+```
+
+
+```{r}
+dtrain <- lgb.Dataset(X_train, trn_prop$Num_hijos)
+
+dtest <- lgb.Dataset(X_test, tst_prop)
+```
+
+```{r}
+parametros <- list(
+  "objective" = "multiclass",
+  "num_class" = 6,
+  "num_leaves" = 60,
+  "max_depth" = -1,
+  "learning_rate" = 0.01,
+  "bagging_fraction" = 0.9,  # subsample
+  "feature_fraction" = 0.9,  # colsample_bytree
+  "bagging_freq" = 5,        # subsample_freq
+  "bagging_seed" = 2018,
+  "verbosity" = -1
+)
+```
+
+
+```{r}
+lgb_model <- lgb.train(params = parametros, data = dtrain, nrounds = 2000, valids = list("test" = dtest))
+```
+
+
+## RF_mental
+
+```{r}
+RF_mental <-  function(vector){
+  
+  Num_personas <- as.numeric(vector[1])
+  EC <- vector[2]
+  V_madre <- vector[5]
+  
+  if(EC %in% c(3, 4, 5)){
+    Num_personas <- Num_personas - 1
+  }else if(EC %in% c(1, 2, 6)){
+    Num_personas <- Num_personas - 2
+  }
+  
+  if(V_madre == 1){
+    Num_personas <- Num_personas - 1
+  }
+  
+  return(Num_personas)
+  
+}
+```
+
+```{r}
+Y.test <- tst_prop$Num_hijos
+
+tst_prop$Num_hijos <- NULL
+```
+
+
+```{r}
+pred_RF_mental <- apply(tst_prop, 1, RF_mental)
+```
+
+```{r}
+MC <- table(predicho = pred_RF_mental, real = Y.test)
+MC
+```
+
+```{r}
+acierto<-sum(diag(MC))/sum(MC)
+acierto
+error <- 1-acierto
+error
+```
+
+
+## Modelo RF
+
+```{r, message=FALSE}
+require(ranger)
+```
+
+
+```{r}
+# Modelo RF
+mod_RF <- ranger(
+  Num_hijos~., 
+  data = (trn_prop), 
+  num.trees = 100, 
+  mtry = 5, 
+  max.depth = 8,
+  importance = 'impurity'
+)
+```
+
+
+```{r}
+sort(mod_RF$variable.importance, decreasing = T)
+```
+
+
+```{r}
+sort(mod_RF$variable.importance, decreasing = T)
+```
+
+```{r}
+# Se hacen las predicciones
+pred_mod_RF <- predict(mod_RF, data = (tst_prop))
+```
+
+```{r}
+# Se hace la matriz de confusión
+MC <- table(predicho = pred_mod_RF$predictions, real = (tst_prop)$Num_hijos)
+MC
+```
+
+# Sin nivel de educación y Num_cuartos y Ingresos_hogar
+
+```{r}
+# Se calcula la tasa de acierto
+acierto<-sum(diag(MC))/sum(MC)
+acierto
+error <- 1-acierto
+error
+
+# Salida
+# [1] 0.8600989
+# [1] 0.1399011
+```
+
+# Sin nivel de educación y Num_cuartos
+
+```{r}
+# Se calcula la tasa de acierto
+acierto<-sum(diag(MC))/sum(MC)
+acierto
+error <- 1-acierto
+error
+```
+
+```{r}
+
+```
+
+
+# Sin nivel de educación
+
+```{r}
+# Se calcula la tasa de acierto
+acierto<-sum(diag(MC))/sum(MC)
+acierto
+error <- 1-acierto
+error
+
+```
+
+# Con nivel de educación
+
+```{r}
+# Se calcula la tasa de acierto
+acierto<-sum(diag(MC))/sum(MC)
+acierto
+error <- 1-acierto
+error
+
+```
+
+
+***
+
+## Modelo Arbol de clasificación
+
+```{r, message=F}
+require(rpart)
+require(rpart.plot)
+```
+
+
+```{r}
+# Se ajusta el modelo
+
+mod2_arboles <- rpart(Num_hijos~., data = trn_prop)
+```
+
+```{r}
+# Hacemos el gráfico
+
+prp(mod2_arboles, type = 2, split.font = 3,    box.col = c(3:10)[mod2_arboles$frame$yval])
+
+#rpart.plot(mod2_arboles)
+```
+
+```{r}
+mod2_arboles$variable.importance
+```
+
+
+```{r}
+# Hacemos las predicciones
+
+pred_mod2_arboles <-  predict(mod2_arboles, newdata = tst_prop, type = "class")
+
+```
+
+```{r}
+# Matriz de consusión
+
+MC <- table(predicho = pred_mod2_arboles, real = tst_prop$Num_hijos)
+
+MC
+```
+
+```{r}
+
+# calculamos el error
+acierto<-sum(diag(MC))/sum(MC)
+acierto
+error <- 1-acierto
+error
+```
+
+```{r}
+#--------------------- SOLO CON LAS VARIABLES IMPORTANTES DEL RF
+
+# calculamos el error
+acierto<-sum(diag(MC))/sum(MC)
+acierto
+error <- 1-acierto
+error
+```
+
+
+```{r}
+#---------------------- CON TODAS LAS VARIABLES
+
+# calculamos el error
+acierto<-sum(diag(MC))/sum(MC)
+acierto
+error <- 1-acierto
+error
+```
+
+***
