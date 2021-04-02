@@ -3,7 +3,8 @@ library(shiny)
 
 shinyUI(fluidPage(
                   
-    # Estilo css              
+
+    # Estilo css
     includeCSS("www/style.css"),
     # tags$head(
     # tags$style(HTML("body{
@@ -29,6 +30,8 @@ shinyUI(fluidPage(
         
         tabPanel("Home", icon = icon("child"),
                  
+                 
+                 
 
             # División de la página verticalmente -------------------------------------
             
@@ -43,11 +46,14 @@ shinyUI(fluidPage(
                 textOutput("Resultado"),
                 
                 
+                
+                
                 # Cuestionario ----------------------------------------------------------
                 
                 fluidRow(
                     
                     column(width = 2,
+                        tags$img(src = "Num_integrantes.png",  height=50, width=80),
                           
                         numericInput(inputId = "Num_integrantes",
                                      label = "Ingrese el número de integrantes de su hogar",
