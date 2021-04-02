@@ -2,9 +2,17 @@ library(shiny)
 
 
 shinyUI(fluidPage(
+                  
 
     # Titulo de la aplicación -------------------------------------------------
-
+    
+    tags$div(class = "jumbotron", 
+             tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
+             
+             tags$h1("Hola", style = "color:white")
+            
+    ),
+    
     titlePanel("Número de hijos de los hogares  colombianos"),
     
     
