@@ -3,7 +3,8 @@ library(shiny)
 
 shinyUI(fluidPage(
                   
-    # Estilo css              
+
+    # Estilo css
     includeCSS("www/style.css"),
     # tags$head(
     # tags$style(HTML("body{
@@ -29,28 +30,39 @@ shinyUI(fluidPage(
         
         tabPanel("Home", icon = icon("child"),
                  
+                 
+                 
 
             # División de la página verticalmente -------------------------------------
             
             verticalLayout(
                 
-                titlePanel("Número de hijos de los hogares  colombianos"),
+                titlePanel(
+                    "Número de hijos de los hogares  colombianos"
+                ),
                 
                 # Predicción ----------------------------------------------------------
                 
             
                 tableOutput("df"),
                 textOutput("Resultado"),
-                
+                br(),
+                br(),
+                hr(),
                 
                 # Cuestionario ----------------------------------------------------------
                 
                 fluidRow(
                     
                     column(width = 2,
-                          
+                        tags$img(src = "Num_integrantes.png",  height=80, width=80, align = "center"),
+                        
+                        tags$h5("Ingrese el número de integrantes de su hogar"),
+                        
+                        hr(),
+                        
                         numericInput(inputId = "Num_integrantes",
-                                     label = "Ingrese el número de integrantes de su hogar",
+                                     label = "",
                                      value= 1,
                                      step = 1,
                                      min=1,
@@ -58,15 +70,30 @@ shinyUI(fluidPage(
                     ),
                     
                     column(width = 2,
+                           
+                        tags$img(src = "Cumple.jpg",  height=80, width=80, align = "center"),
+                           
+                        tags$h5("Ingrese el género del jefe del hogar              "),
+                        
+                        hr(),
+
                         selectInput(inputId = "Genero",
-                                     label = "Ingrese el género del jefe del hogar",
+                                     label = "",
                                      choices = c("Masculino", "Femenino"),
                                      selected = c("Femenino")),
                     ),
                     
                     column(width = 2,
+                           
+                        tags$img(src = "Cumple.jpg",  height=80, width=80, align = "center"),
+                        
+                        tags$h5("Ingrese el género del jefe del hogar"),
+                        br(),
+                        
+                        hr(),
+                        
                         numericInput(inputId = "Edad",
-                                     label = "Ingrese la edad del jefe del hogar",
+                                     label = "",
                                      value= 48,
                                      step = 1,
                                      min = 13,
@@ -74,15 +101,29 @@ shinyUI(fluidPage(
                     ),
                     
                     column(width = 2,
+                        
+                       tags$img(src = "Cumple.jpg",  height=80, width=80, align = "center"),
+                       
+                       tags$h5("¿La madre del jefe del hogar vive en el hogar?"),  
+                       
+                       hr(),
+                        
                         selectInput(inputId = "Vive_hogar_madre",
-                                    label = "¿La madre del jefe del hogar vive en el hogar?",
+                                    label = "",
                                     choices = c("Si", "No", "fallecida"),
                                     selected = c("Si")),
                     ),
                     
                     column(width = 3,
+                           
+                       tags$img(src = "Cumple.jpg",  height=80, width=80, align = "center"),
+                       
+                       tags$h5("¿Cuál es el estado civil del jefe del hogar?"),
+                       
+                       hr(),
+                           
                         selectInput(inputId = "Estado_civil",
-                                    label = "¿Cuál es el estado civil del jefe del hogar?",
+                                    label = "",
                                     choices = c("No está casado(a) y vive en pareja hace menos de dos años",
                                                 "No está casado(a) y vive en pareja hace dos años o más",
                                                 "Está viudo(a)",
@@ -91,7 +132,10 @@ shinyUI(fluidPage(
                                                 "Está casado(a)"),
                                     selected = c("No está casado(a) y vive en pareja hace menos de dos años"))
                     )
-                )
+                ),
+                
+                
+                submitButton("Obtener predicción", icon = icon("chart-line"), width = '30%')
                 
             )
         ),
