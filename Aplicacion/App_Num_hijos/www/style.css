@@ -1,5 +1,38 @@
-.jumbotron {
+@import url("https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css");
+
+.jumbo {
+    position: absolute;
+    width: 100%;
     height: 300px;
-    background-image: url("Edificios.jpg");
+    left: 0px;
+    top: 0px;
+
+    background: url("Edificios.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
     background-size: cover;
+    background-color: #464646;
+    align-content: center;
+}
+
+body{
+    text-align: center;
+}
+
+.informacion{
+    position: absolute;
+    top: 300px;
+}
+
+button{
+    width : 40%;
+    height: 50px;
+    border-radius: 10px;
+    background-color: hotpink;
+}
+
+.imagen{  
+    height:100px; 
+    width:100px;
+    padding-left: 2%;
 }

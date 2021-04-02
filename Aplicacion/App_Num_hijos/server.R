@@ -63,10 +63,6 @@ shinyServer(function(input, output) {
         
         prediccion <- predict(RandomForest, datos_entrada)
         
-        output$df <- renderTable({
-            datos_entrada
-        })
-        
         output$Resultado <- renderText({
             paste("Predicción: ", prediccion$predictions)
         })
