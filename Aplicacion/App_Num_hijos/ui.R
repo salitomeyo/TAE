@@ -3,11 +3,12 @@ library(shiny)
 
 shinyUI(fluidPage(
                   
+    includeCSS("www/style.css"),
 
     # Titulo de la aplicación -------------------------------------------------
     
     tags$div(class = "jumbotron", 
-             tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
+             # tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
              
              tags$h1("Hola", style = "color:white")
             
