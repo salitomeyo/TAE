@@ -17,10 +17,31 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE,warning = FALSE)
 
 En la actualidad, debido a la globalización es importante para las empresas conocer a sus clientes, la tecnología, sin duda ha permitido recaudar volúmenes enormes de información, sin embargo, en muchas ocasiones precisamente la información requerida por una empresa es difícil de obtener o representa información sensible para los usuarios, ya que invade su privacidad. No obstante, con los avances en analítica se han creado herramientas para lograr obtener la información necesaria de los usuarios sin invadir su intimidad y está ha podido utilizarse para estimar valores sobre el resto de la población aun sin tener que preguntar directamente sobre la misma.
 
-Entre los datos que en algunos contextos pueden ser censurados u omitidos está el número de hijos en un hogar, lo que hace que sea una variable de la que no se dispone directamente; por lo tanto el problema en particular en el que se está interesado es en la predicción del número de hijos en base a las características de los hogares colombianos.
-Para esto usamos la encuesta de la ECV del DANE de 2019. De ella se seleccionaron algunas variables y mediante análisis estadísticos se obtuvieron modelos que pudieran dar solución al problema. Por último se seleccionó uno de ellos mediante criterios que se expondrán más adelante.
+Entre los datos que en algunos contextos pueden ser censurados u omitidos está el número de hijos en un hogar, lo que hace que sea una variable de la que no se dispone directamente; por lo tanto el problema en particular en el que se está interesado es la predicción del número de hijos en base a las características de los hogares colombianos.
 
-<div/>
+Se decidió abordar este problema como un problema de clasificación (aprendizaje supervisado). Para esto se tuvo en cuenta los siguiente:
+
+Se realizó una buena investigación y contextualización del conjunto de datos que fueron obtenidos de la ECV realizada por el DANE en 2019, mediante este se tuvo la oportunidad de establecer el número de hijos mediante la combinación de algunas variables presentes en un conjunto de datos particular abordado en la encuesta, además de seleccionar las variables más relevantes para realizar un análisis y la modelación.
+
+Se procedió a la selección de variables las cuales posteriormente fueron unidas mediante indicadores de hogares, este procedimiento fue realizado de manera muy cuidadosa para no obtener información incorrecta, después de este paso se llegó a una base de datos con las variables consideradas por lo investigadores como de interés.
+
+Previo a lo anterior, se procedió a realizar análisis descriptivos sobre el conjunto de datos, que ayudaran a una mejor comprensión de las variables y a seleccionar cuales de estas eran más relevantes para predecir el número de hijos, se realizaron gráficos y demás análisis.
+
+Como paso siguiente se usaron técnicas estadísticas para la selección de variables mediante la formulación de modelos, los cuales en su mayoría coincidieron con los resultados las variables seleccionadas mediante el análisis descriptivo.  
+
+Luego de este proceso de selección de variables se obtuvo un conjunto de datos con menos variables pero con el mismo número de registros, para así con este empezar la modelación.
+
+Para la modelación se tomó en cuenta como un problema de clasificación donde el número de hijos corresponde a cada nivel de la variable respuesta como categoría.
+
+Los modelos seleccionados fueron considerados como los más adecuados para este problema en particular y son populares en el mundo del aprendizaje estadístico, se realizaron ajustes con cada uno y se realizó validación cruzada para poder evaluar el rendimiento de cada uno de ellos (mediante tasas de acierto y error).
+
+Después de ajustar varios modelos, se analizó la posibilidad de encontrar el mismo resultado con menos variables, encontrando que se obtenía la misma tasa de acierto aunque el número de variables utilizadas era menor; por lo tanto, se decidió nuevamente hacer una reducción de variables, de tal manera que se obtuvieron modelos más parsimoniosos (Buenos resultados con menos variables) llegando finalmente a modelos con 5 variables.
+
+De los modelos ajustados inicialmente se consideraron los cuatro mejores. Posteriormente estos modelos se ponen en competencia mediante distintas muestras aleatorias divididas en conjunto de entrenamiento y validación de tal manera que el mejor modelo sea aquel que obtenga mejores resultados en el conjunto de validación en las diferentes muestras. 
+
+Bosques Aleatorios resultó ser el mejor después de este procedimiento teniendo una alta tasa de aciertos. Después se ajustó el mismo modelo con el conjunto de datos completo, con el fin de generar mejores predicciones por el hecho de contar con un mayor número de información.
+
+Como parte final, se aplicará el modelo obtenido en una página web que permitirá la interacción con sus posibles usuarios, esto mostrará su potencial para predecir el número de hijos de un hogar según la estructura del mismo.
 
 # Retos
 
@@ -459,7 +480,6 @@ Como primer paso se realiza la lectura de las bases de datos:
 Caracteristicas_hogar_personas <- read.table("Caracteristicas y composicion del hogar.csv", sep = ";", header = T)
 ```
 
-
 Debido a que la variable P6051 muestra el parentesco de los integrantes de la familia con el jefe de hogar solo será utilizada para la creación de la variable número de hijos, es decir, no se tiene en cuenta como covariable para el ajuste de modelos:
 
 ```{r}
@@ -470,14 +490,15 @@ aux_creacion_respuesta<-Caracteristicas_hogar_personas[,c("ï..DIRECTORIO","SECU
 Para obtener el número de hijos por hogar se filtra las filas si tienen una relacion de hijo/hija o nieto/nieta con el jefe de hogar y se cuenta el número de hijos por hogar. Los hogares se describen con el código único de ï..DIRECTORIO, SECUENCIA_P
 
 ```{r}
+require(tidyverse)
 require(dplyr)
 
 # P6051 = 3 : Hijo/hija/hijastro
 # P6051 = 4 : Nieto/nieta
 
 num_hijos <- aux_creacion_respuesta %>%
-  filter(P6051 == 3 | P6051 == 4) %>%
-  group_by(ï..DIRECTORIO, SECUENCIA_P) %>%
+  filter(P6051 == 3 | P6051 == 4)%>%
+  group_by(ï..DIRECTORIO, SECUENCIA_P)%>%
   count(SECUENCIA_P)
 ```
 
@@ -715,7 +736,7 @@ require(kableExtra)
 
 Base_interesante <- subset(Base_final, select = var_interesantes)
 kable(head(Base_interesante))%>%
-  kable_styling("Striped")%>%
+  kable_styling("striped")%>%
   scroll_box(width = "100%", height = "320px")
 ```
 
@@ -1539,7 +1560,17 @@ for(i in 1:20){
 }
 ```
 
-##### tabla que algún dia va a cargar
+
+```{r,echo=FALSE}
+load("Matriz_coef.Rdata")
+df<- round(df,4)
+df <- rbind(df,colMeans(df))
+rownames(df) <- c(seq(1,20,1),"Media")
+
+kable(df,align = "c")%>%
+  kable_styling("striped",full_width = F)%>%
+  row_spec(21, background = "#82C9B8")
+```
 
 
 El modelo final se escogió ya que no solo presenta una de las tasas de acierto más altas entre todos los modelos desarrollados, sino que a su vez nos permitió reducir la dimensionalidad del conjunto de datos, ya que este valoraba y utilizaba 5 variables principalmente para la modelación y predicción, además de que estas variables no contaban con valores faltantes permitiéndonos contar con el conjunto de datos completo que es una cantidad muy apreciable de registros.
