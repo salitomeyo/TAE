@@ -801,11 +801,6 @@ gridz <- 10^seq(-2,10, length = 100)
 lasso.mod <- glmnet(x, y, alpha = 1, lambda = gridz)
 ```
 
-```{r, echo=FALSE}
-#require(plotmo)
-#plot_glmnet(lasso.mod, xvar = 'lambda', grid.col="lightgray", #label = 5, xlim = c(-5, 0.5))
-```
-
 Se hace validación cruzada para seleccionar el $\lambda$ óptimo para aplicar lasso.
 
 ```{r}
@@ -824,7 +819,159 @@ lasso.coef <-predict(out, type = "coefficients", s=bestlam)[1:90, ]
 require(broom)
 ```
 
-##### Insertar tabla
+<table>
+    <tr>
+      <th>Variables</th>
+      <th>Regresion por pasos</th>
+      <th>Lasso</th>
+    </tr>
+    <tr>
+      <td>Genero</td>
+      <td>X</td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Edad</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Estado_civil</td>
+      <td>X</td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Lugar_nacimiento</td>
+      <td></td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Vive_hogar_padre</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Educacion_padre</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Vive_hogar_madre</td>
+      <td></td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Educacion_madre</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Etnia</td>
+      <td></td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Num_subsidios</td>
+      <td></td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Cant_hogares_vivienda</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Tipo_vivienda</td>
+      <td>X</td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Material_pisos</td>
+      <td></td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Energia_electrica</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Estrato</td>
+      <td>X</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Acueducto</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Alcantarillado</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Nivel_educativo</td>
+      <td></td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Estudia</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Afiliado</td>
+      <td></td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Salud_general</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Uso_celular</td>
+      <td></td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Num_cuartos</td>
+      <td>X</td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Gas_natural</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Telefonia_fija</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Ingresos_hogar</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Contrato_vivienda</td>
+      <td></td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Ultimo_pago_energia</td>
+      <td>X</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Num_integrantes</td>
+      <td>X</td>
+      <td></td>
+    </tr>
+</table>
+
 
 Con los anteriores procesos, se obtiene la siguiente base, que se usará en la parte de modelamiento
 
@@ -851,15 +998,431 @@ Base_modelar <- Base_final[,c("Genero",
                               "Nivel_educativo")]
 ```
 
-```{r}
+```{r, echo=FALSE}
 kable(head(Base_modelar))%>%
   kable_styling(bootstrap_options = c("striped", "hover"))%>%
   row_spec(c(0,1,2,3,4,5,6),align = "center")%>%
   scroll_box(height = "320px")
 ```
 
+## Modelamiento
 
+Los modelos escogidos son de regresión y clasificación, en cada uno se adaptó la variable respuesta, en los de clasificación se obtienen las predicciones como el número de hijos puntual, en las de regresión se obtienen aproximaciones decimales las cual previamente debían de ser redondeadas para ser comparadas con los valores reales, en general por este último procedimiento se podía notar que en general funcionaba mucho mejor los modelos de clasificación (su tasa de aciertos era la más alta) por lo tanto finalmente estos fueron considerados como los favoritos y continuaron en el proceso de selección de modelos, además cabe aclarar que cada modelo le fue ingresado las variables como se debía según su proceso de ajuste, por ejemplo en el modelo de Knn las variables explicativas fueron ingresadas estandarizadas las que son numéricas y se crearon variables dummy para las categóricas, en general el desempeño de este modelo fue muy bueno, pero su tiempo de ejecución fue superior a otros modelos y este fue uno de los criterios utilizados en la selección de modelos.
 
+Para la selección de modelos a ajustar se tuvo en cuenta que dado que la mayoría de las variables escogidas como significativas corresponden a variables categóricas se debieron escoger modelos que permitieran el correcto manejo de las mismas.
+
+```{r, echo=FALSE}
+load("Base_modelar.RData")
+```
+
+A continuación se utilizarán diferentes modelos para después escoger aquel que mejor se ajuste a las necesidades. Se crea un nuevo dataframe con Num_hijos organizada
+
+```{r}
+barplot(prop.table(table(Base_modelar$Num_hijos)),
+        main = "Proporción del número de hijos",
+        xlab = "Número de hijos",
+        col = "cyan4")
+grid()
+```
+
+Se observa que la mayoría de familias tienen entre 0 y 2 hijos, sin embargo, hay una proporción considerable de hogares que poseen 3, 4 y 5 hijos. A partir de los 6 hijos la proporción decae, por lo que se podría pensar en agrupar a los hogares en 5 categorias comprendidas como: 0, 1, 2, 3, 4, 5+.  
+
+```{r}
+Base_de_ensayo <- Base_modelar
+Base_de_ensayo$Num_hijos[Base_de_ensayo$Num_hijos >= 5] <- 5
+```
+
+```{r, echo=FALSE}
+require(kableExtra)
+
+tabla <- data.frame(table(Base_de_ensayo$Num_hijos))
+kable(tabla, align="c",col.names=c("Número de hijos", "Frecuencia"))%>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+### Bosques Aleatorios para seleccion de variables
+
+Se organiza la base de datos para poder aplicar el modelo
+
+```{r}
+library(tidyverse)
+
+# Se omiten las filas que poseen NA
+Base_modelar_f <- na.omit(Base_de_ensayo)
+# Se convierte la variable Num_hijos a factor
+Base_modelar_f$Num_hijos <- as.factor(Base_modelar_f$Num_hijos) 
+
+set.seed(15234) # Semilla
+
+# Se saca una muestra de entrenamiento que conserve las proporciones en la variable Num_hijos
+trn_prop <- Base_modelar_f %>%
+  mutate(
+    var_indx = 1:dim(Base_modelar_f)[1]
+  ) %>% 
+  group_by(Num_hijos) %>% 
+  sample_frac(0.8, replace = F)
+
+# Se saca la muestra de test con las que no fueron seleccionadas en la muestra de train
+tst_prop <- Base_modelar_f[-trn_prop$var_indx, ]
+
+# Se elimina la variable de indice
+trn_prop$var_indx <- NULL
+```
+
+```{r, echo=FALSE}
+library(ISLR)
+library(tree)
+library(MASS)
+library(randomForest)
+library(gbm)
+```
+
+```{r, message=FALSE, echo=FALSE}
+require(ranger)
+```
+
+Con la función ranger aplicamos Bosques aleatorios
+
+```{r}
+# Modelo RF
+mod_RF <- ranger(
+  Num_hijos~., 
+  data = (trn_prop), 
+  num.trees = 500, 
+  mtry = 5, 
+  max.depth = 8,
+  importance = 'impurity'
+)
+```
+
+```{r,echo=FALSE}
+par(mar=c(10,5,1,1))
+barplot(sort(mod_RF$variable.importance, decreasing = T),las=2,col = "cyan4",cex.lab=0.1)
+grid()
+```
+
+Utilizamos los pesos de importancia asignados por el Bosque Aleatorio para escoger las variables que se utilizaran en el resto de modelos pero ademas se tiene en cuenta la cantidad de NA de las variables.
+
+```{r}
+colSums(is.na(Base_de_ensayo))
+```
+
+Aunque Ingresos_hogar y Nivel_educativo en primera instancia tienen una importancia elevada para el modelo se decide eliminar Nivel_educativo ya que posee datos faltantes, adicionalmente se elimina Ingresoso_hogar ya que a criterio de los investigadores esta variable puede generar controversia a la hora de ser contestada.
+
+#### Variables escogidas
+
+```{r}
+library(tidyverse)
+
+# Variables en orden de importancia según RF
+var_imprt <-  c(
+    "Num_integrantes",
+    "Estado_civil",
+    "Genero",
+    "Edad",
+    "Vive_hogar_madre",
+    "Num_hijos"
+  )
+
+# Se convierte la variable Num_hijos a factor
+Base_modelar_f <- Base_de_ensayo[,var_imprt]
+Base_modelar_f$Num_hijos <- as.factor(Base_modelar_f$Num_hijos) 
+
+set.seed(15234) # Semilla
+
+# Se saca una muestra de entrenamiento que conserve las proporciones en la variable Num_hijos
+trn_prop <- Base_modelar_f %>%
+  mutate(
+    var_indx = 1:dim(Base_modelar_f)[1]
+  ) %>% 
+  group_by(Num_hijos) %>% 
+  sample_frac(0.8, replace = F)
+
+# Se saca la muestra de test con las que no fueron seleccionadas en la muestra de train
+tst_prop <- Base_modelar_f[-trn_prop$var_indx, ]
+
+# Se elimina la variable de indice
+trn_prop$var_indx <- NULL
+```
+
+### Modelo de regresión lineal múltiple
+
+Se debe convertir la variable respuesta nuevamente a numerica para poder aplicar regresión lineal.
+
+```{r}
+modelo1 <- lm(as.numeric(as.character(Num_hijos))~., data=trn_prop)
+```
+El error del modelo es `r summary(modelo1)$sigma`
+
+Análisis de residuales.
+
+```{r, echo=FALSE}
+par(mfrow=c(2,2))
+plot(modelo1)
+```
+
+Se puede apreciar que no se cumplen los supuestos en los residuales. 
+
+```{r, echo=FALSE}
+pred_mod1_reg <- predict(modelo1, newdata = tst_prop)
+pred_mod1_round <- round(pred_mod1_reg)
+```
+
+Matriz de confusión
+
+```{r, echo=FALSE}
+MC <- table(tst_prop$Num_hijos, pred_mod1_round)
+kable(MC)%>%
+  kable_styling(full_width = FALSE)
+```
+
+```{r, echo=FALSE}
+acierto<-sum(diag(MC))/sum(MC)
+error <- 1-acierto
+```
+
+La tasa de acierto es  `r acierto`, la tasa de error es `r error`
+
+### Arbol de clasificación 
+
+```{r, echo=FALSE}
+require(rpart)
+require(rpart.plot)
+```
+
+Se ajusta un arbol
+
+```{r}
+mod1_arboles <- rpart(Num_hijos~., data = trn_prop)
+```
+
+```{r, echo=FALSE}
+prp(mod1_arboles, type = 2, extra = 6, split.font = 3,    box.col = c(3:10)[mod1_arboles$frame$yval])
+```
+
+Se hacen las predicciones y se obtiene la siguiente matriz de confusión
+
+```{r, echo=FALSE}
+pred_mod1_arboles <-  predict(mod1_arboles, newdata = tst_prop, type = "class")
+```
+
+```{r, echo=FALSE}
+MC <- table(tst_prop$Num_hijos, pred_mod1_arboles)
+kable(MC)%>%
+  kable_styling(full_width = FALSE)
+```
+
+```{r, echo=FALSE}
+acierto<-sum(diag(MC))/sum(MC)
+error <- 1-acierto
+```
+
+La tasa de acierto es  `r acierto`, la tasa de error es `r error`
+
+### Arboles de regresión
+
+```{r}
+mod1_reg_arboles <- rpart(as.numeric(as.character(Num_hijos))~., data = trn_prop)
+```
+
+```{r, echo=FALSE}
+prp(mod1_reg_arboles, type = 2, split.font = 3,    box.col = c(3:10)[mod1_reg_arboles$frame$yval])
+```
+
+Se hacen las predicciones y se obtiene la matriz de confusión
+
+```{r, echo=FALSE}
+pred_mod1_reg_arboles <-  predict(mod1_reg_arboles, newdata = tst_prop)
+```
+
+```{r, echo=FALSE}
+pred_mod1_reg_arboles <- round(pred_mod1_reg_arboles)
+MC <- table(tst_prop$Num_hijos, pred_mod1_reg_arboles)
+kable(MC)%>%
+  kable_styling(full_width = FALSE)
+```
+
+```{r, echo=FALSE}
+acierto<-sum(diag(MC))/sum(MC)
+error <- 1-acierto
+```
+
+La tasa de acierto es  `r acierto`, la tasa de error es `r error`
+
+### Regresión Poisson
+
+```{r, echo=FALSE}
+require(gamlss)
+```
+
+```{r}
+HijosPoisson <-gamlss(as.numeric(as.character(Num_hijos))~., data= trn_prop, family=PO(mu.link="log"))
+```
+
+Hacemos las predicciones y obtenemos la matriz de confusión
+
+```{r, echo=FALSE}
+HijosPoisson <-  predict(HijosPoisson, newdata = tst_prop)
+```
+
+```{r, echo=FALSE}
+HijosPoisson <- round(HijosPoisson)
+MC <- table(na.omit(tst_prop)$Num_hijos, HijosPoisson)
+kable(MC)%>%
+  kable_styling(full_width = FALSE)
+```
+
+```{r}
+acierto<-sum(diag(MC))/sum(MC)
+error <- 1-acierto
+```
+
+La tasa de acierto es  `r acierto`, la tasa de error es `r error`
+
+### Bosque Aleatorio
+
+```{r}
+mod_RF <- ranger(
+  Num_hijos~., 
+  data = (trn_prop), 
+  num.trees = 500, 
+  mtry = 5, 
+  max.depth = 8,
+  importance = 'impurity'
+)
+```
+
+Se hacen las predicciones y se obtiene la matriz de confusión
+
+```{r, echo=FALSE}
+pred_mod_RF <- predict(mod_RF, data = (tst_prop))
+```
+
+```{r, echo=FALSE}
+MC <- table(predicho = pred_mod_RF$predictions, real = (tst_prop)$Num_hijos)
+kable(MC)%>%
+  kable_styling(full_width = FALSE)
+```
+
+```{r, echo=FALSE}
+acierto<-sum(diag(MC))/sum(MC)
+error <- 1-acierto
+```
+
+La tasa de acierto es  `r acierto`, la tasa de error es `r error`
+
+### Naive Bayes
+
+```{r, echo=FALSE}
+library(e1071)
+library(caTools)
+library(caret)
+```
+
+```{r}
+mod_Naive_Bayes <- naiveBayes(Num_hijos ~ ., data = trn_prop)
+```
+
+Se hacen las predicciones y se obtiene la matriz de confusión
+
+```{r, echo=FALSE}
+pred_bayes <- predict(mod_Naive_Bayes, newdata = tst_prop, type="class")
+```
+
+```{r, echo=FALSE}
+MC <- table(tst_prop$Num_hijos, pred_bayes)
+kable(MC)%>%
+  kable_styling(full_width = FALSE)
+```
+
+```{r, echo=FALSE}
+acierto<-sum(diag(MC))/sum(MC)
+error <- 1-acierto
+```
+
+La tasa de acierto es  `r acierto`, la tasa de error es `r error`
+
+### Knn
+
+```{r, echo=FALSE}
+library(kknn)
+```
+
+Conversion de las variables categoricas a variables dummy
+
+```{r}
+library(dummies)
+
+# Conjunto de entrenamiento
+Base_KNN_dummy_trn <- dummy.data.frame(data=data.frame(trn_prop[ ,-6]))
+Base_KNN_dummy_trn <- cbind(Base_KNN_dummy_trn,"Num_hijos" = trn_prop$Num_hijos)
+
+# Conjunto de prueba
+Base_KNN_dummy_tst <- dummy.data.frame(data=tst_prop[ ,-6])
+Base_KNN_dummy_tst <- cbind(Base_KNN_dummy_tst,"Num_hijos" = tst_prop$Num_hijos)
+```
+
+Se normalizan las Variables Numéricas
+
+```{r}
+#Conjunto de entrenamiento
+datos_c_trn <- Base_KNN_dummy_trn
+datos_c_trn[,c(1,10)] <- scale(datos_c_trn[,c(1,10)])
+
+#Conjunto de prueba
+datos_c_tst <- Base_KNN_dummy_tst
+datos_c_tst[,c(1,10)] <- scale(datos_c_tst[,c(1,10)])
+```
+
+Conjuntos de entrenamiento y test
+
+```{r}
+train <- datos_c_trn[ ,-14] # crea train sin la variable respuesta
+test <- datos_c_tst[ ,-14] # crea test sin la variable respuesta
+
+y_train <- datos_c_trn[ ,14]
+y_test <- datos_c_tst[ ,14]
+```
+
+```{r, echo=FALSE}
+library(tidyverse)
+library(class)
+library(gmodels)
+library(caret)
+```
+
+#### Ajuste modelo Knn
+
+Se entrena el modelo knn para que escoja el numero k optimo siendo el valor maximo k=30.
+
+```{r, eval=FALSE}
+modelo <- train.kknn(Num_hijos ~ ., data = datos_c_trn, kmax = 30)
+modelo
+```
+
+```{r, eval=FALSE}
+pred_knn <- predict(modelo, datos_c_tst)
+```
+
+Con el k optimo se realiza el modelo se hacen las predicciones y se obtiene la matriz de confusión
+
+```{r}
+knn_model <- knn(train, test, cl = y_train, k = 18)
+summary(knn_model)
+```
+
+```{r, echo=FALSE}
+MC <- table(knn_model, y_test)
+kable(MC)%>%
+  kable_styling(full_width = FALSE)
+```
+
+```{r, echo=FALSE}
+acierto<-sum(diag(MC))/sum(MC)
+error <- 1-acierto
+```
+
+La tasa de acierto es  `r acierto`, la tasa de error es `r error`
 
 
 
