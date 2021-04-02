@@ -527,6 +527,8 @@ kable(head(num_hijos_final,10))%>%
 
 ### Selección de variables
 
+Como paso siguiente se realizó de manera exhaustiva en cada una de las bases de la ECV, una preselección de covariables que a criterio de los investigadores, podrían tener alguna relación con la variable respuesta. Con la información anterior se procede a construir la base de datos para el paso siguiente.
+
 A continuación se muestra la base que se obtuvo con las variables preseleccionadas que aparecen listadas en la contextualización de los datos:
 
 ```{r,eval=FALSE}
@@ -645,19 +647,271 @@ Se realizó un  análisis descriptivo a cada variable donde se identificó el ra
 ```{r}
 require(knitr)
 kable(summary(Base_final))%>%
-  kable_sty
+  kable_styling()%>%
+  scroll_box(width = "100%", height = "320px")
 ```
 
 Se decidió remover de la base de datos a aquellas variables cuyos valores faltantes superar un tercio de la cantidad de registros en la base de datos.
 
-
-
 ### Gráficos descriptivos 
 
-Para finalizar la etapa de preprocesamiento, se crearon gráficos de puntos  y Boxplots del Número de hijos vs las variables continuas y categóricas, respectivamente, con el fin de analizar la posible influencia o relación de cada predictora con la respuesta.
+Con el fin de depurar la base de datos, mediante gráficos se realizó un análisis descriptivo de las variables.
+
+```{r, echo=FALSE}
+nombres <- c(
+  "Genero","Edad","Estado_civil","Lugar_nacimiento","Vive_hogar_padre","Educacion_padre","Vive_hogar_madre","Educacion_madre","Etnia","Num_Subsidios","Cant_hogares_vivienda","Tipo_vivienda","Material_pisos","Energia_electrica","Estrato","Acueducto","Alcantarillado","Basuras_semana","Nivel_educativo","Estudia","Afiliado","Salud_general","Uso_celular","Num_cuartos","Gas_natural","Telefonia_fija","Ingresos_hogar","Contrato_vivienda","Ultimo_pago_energia","Pago_mes_energia","Num_integrantes","Num_hijos"
+)
+colnames(Base_final) <- nombres
+```
+
+Para finalizar la etapa de preprocesamiento, se crearon gráficos Boxplots del Número de hijos vs las variables categóricas, respectivamente, con el fin de analizar la posible influencia o relación de cada predictora con la respuesta.
+
+```{r, eval=FALSE}
+sapply(1:32, function(i){
+  boxplot(Base_final$Num_hijos~Base_final[, i], xlab = nombres[i])
+})
+```
+
+![](boxplot1.png)
+![](boxplot2.png)
+![](boxplot3.png)
+![](boxplot4.png)
+![](boxplot5.png)
+Y para las variables numericas se utilizan graficos de puntos vs Num_hijos para analizar la posible influencia o relación de cada predictora con la respuesta.
+
+```{r, eval=FALSE}
+par(mfrow=c(2,2))
+plot(Base_final$Num_hijos~ Base_final$Edad)
+plot(Base_final$Num_hijos~ Base_final$Ingresos_hogar)
+plot(Base_final$Num_hijos~ Base_final$Ultimo_pago_energia)
+plot(Base_final$Num_hijos~ Base_final$Pago_mes_energia)
+```
+![](graficoPuntos.png)
+
+####  Variables escogidas a partir de los graficos descriptivos
+
+```{r}
+var_interesantes <- c(
+  "Genero",
+  "Edad",
+  "Num_integrantes",
+  "Num_cuartos",
+  "Estrato",
+  "Tipo_vivienda",
+  "Num_Subsidios",
+  "Educacion_madre",
+  "Estado_civil",
+  "Ultimo_pago_energia",
+  "Ingresos_hogar",
+  "Cant_hogares_vivienda",
+  "Num_hijos"
+)
+```
+
+Se realiza un subset con las variables interesantes
+
+```{r, echo=FALSE}
+require(kableExtra)
+
+Base_interesante <- subset(Base_final, select = var_interesantes)
+kable(head(Base_interesante))%>%
+  kable_styling()%>%
+  scroll_box(width = "100%", height = "320px")
+```
+
+Las variables categoricas de Base_interesante se convierten a factor y se crea un modelo de regresión lineal multiple para poder utilizar seleccion por pasos
+
+### Seleccion por pasos
+
+```{r, echo=FALSE}
+# Se pasan algunas variables a factores
+
+Base_interesante <-  Base_interesante %>% 
+  mutate(
+    Genero = factor(Genero),
+    Estrato = factor(Estrato),
+    Tipo_vivienda = factor(Tipo_vivienda),
+    Educacion_madre = factor(Educacion_madre),
+    Estado_civil = factor(Estado_civil)
+)
+```
+
+```{r}
+mod1 <- lm(Num_hijos~., data = Base_interesante)
+```
+
+Para la preseleccion de variables tambien se utilizaron métodos de selección de variables tales como Selección por pasos y Lasso.
+
+```{r}
+require(olsrr)
+ols_step_both_p(mod1)
+```
+
+### Seleccion de las variables de interes con lasso
+
+Se toma la Base_final que posee 32 variables y se convierten las variables categoricas a factor.
+
+```{r, echo=False}
+Base_final <- Base_final %>% 
+  mutate(
+    Genero = factor(Genero),
+    Estado_civil = factor(Estado_civil),
+    Lugar_nacimiento = factor(Lugar_nacimiento),
+    Vive_hogar_padre = factor(Vive_hogar_padre),
+    Educacion_padre = factor(Educacion_padre),
+    Vive_hogar_madre = factor(Vive_hogar_madre),
+    Educacion_madre = factor(Educacion_madre),
+    Etnia = factor(Etnia),
+    Tipo_vivienda = factor(Tipo_vivienda),
+    Material_pisos = factor(Material_pisos),
+    Energia_electrica = factor(Energia_electrica),
+    Estrato = factor(Estrato),
+    Acueducto = factor(Acueducto),
+    Alcantarillado = factor(Alcantarillado),
+    Nivel_educativo = factor(Nivel_educativo),
+    Estudia = factor(Estudia),
+    Afiliado = factor(Afiliado),
+    Salud_general = factor(Salud_general),
+    Uso_celular = factor(Uso_celular),
+    Gas_natural = factor(Gas_natural),
+    Telefonia_fija = factor(Telefonia_fija),
+    Contrato_vivienda = factor(Contrato_vivienda)
+)
+
+Base_basuras <- Base_final
+Base_basuras <- na.omit(Base_basuras)
+
+Base_menos_Nas <- Base_final
+Base_menos_Nas$Basuras_semana <- NULL
+Base_menos_Nas$Pago_mes_energia <- NULL
+Base_menos_Nas <- na.omit(Base_menos_Nas)
+```
 
 
 
+```{r}
+x <- model.matrix(Num_hijos ~ ., Base_menos_Nas)[,-1]
+
+y <- Base_menos_Nas$Num_hijos
+```
+
+```{r}
+require(glmnet)
+
+gridz <- 10^seq(-2,10, length = 100)
+
+lasso.mod <- glmnet(x, y, alpha = 1, lambda = gridz)
+```
+
+```{r}
+require(plotmo)
+plot_glmnet(lasso.mod, xvar = 'lambda', grid.col="lightgray", label = 5, xlim = c(-5, 0.5))
+```
+
+
+```{r}
+set.seed(23)
+train <- sample(1:nrow(x), nrow(x)/2)
+test <- -train
+y.test <- y[test]
+cv.out <- cv.glmnet(x[train,], y[train], alpha=1)
+bestlam <-cv.out$lambda.min
+```
+
+```{r}
+out <- glmnet(x, y, alpha=1)
+lasso.coef <-predict(out, type = "coefficients", s=bestlam)[1:90, ]
+
+lasso.coef
+```
+
+```{r}
+require(broom)
+```
+
+
+Estado_civil
+Lugar_nacimiento
+Genero
+Etnia
+Tipo_vivienda
+Contrato_vivienda
+Material_pisos
+Uso_celular
+Vive_hogar_madre
+Num_subsidios
+Afiliado
+Nivel_educativo
+Num_cuartos
+
+```{r}
+sort(abs(lasso.coef), decreasing = T)[1:20]
+```
+
+
+```{r}
+lasso.coef[lasso.coef == 0 ]
+```
+
+
+```{r}
+x <- model.matrix(Num_hijos ~ ., Base_basuras)[,-1]
+
+y <- Base_basuras$Num_hijos
+```
+
+
+```{r}
+require(glmnet)
+
+gridz <- 10^seq(-2,10, length = 100)
+
+lasso.mod <- glmnet(x, y, alpha = 1, lambda = gridz)
+```
+
+```{r}
+require(plotmo)
+plot_glmnet(lasso.mod, xvar = 'lambda', grid.col="lightgray", label = 5, xlim = c(-5, 0.5))
+```
+
+
+```{r}
+set.seed(23)
+train <- sample(1:nrow(x), nrow(x)/2)
+test <- -train
+y.test <- y[test]
+cv.out <- cv.glmnet(x[train,], y[train], alpha=1)
+bestlam <-cv.out$lambda.min
+```
+
+```{r}
+out <- glmnet(x, y, alpha=1)
+lasso.coef <-predict(out, type = "coefficients", s=bestlam)[1:93, ]
+
+lasso.coef
+```
+
+```{r}
+require(broom)
+```
+
+
+Num_integrantes
+Estado civil
+Lugar_nacimiento
+Etnia
+Genero
+Tipo_vivienda
+Contrato_vivienda
+Uso_celular
+Num_subsidios
+Vive_hogar_madre
+Estrato
+Afiliado
+
+```{r}
+sort(abs(lasso.coef), decreasing = T)[1:20]
+```
 
 # Conclusiones
 
