@@ -55,7 +55,7 @@ shinyUI(fluidPage(
                 fluidRow(
                     
                     column(width = 2,
-                        tags$img(src = "Num_integrantes.png",  height=80, width=80, align = "center"),
+                        tags$img(src = "Num_integrantes.jpg",  height=80, width=80, align = "center"),
                         
                         tags$h5("Ingrese el número de integrantes de su hogar"),
                         
@@ -87,7 +87,7 @@ shinyUI(fluidPage(
                            
                         tags$img(src = "Cumple.jpg",  height=80, width=80, align = "center"),
                         
-                        tags$h5("Ingrese el género del jefe del hogar"),
+                        tags$h5("Ingrese la edad del jefe del hogar"),
                         
                         hr(),
                         
@@ -101,7 +101,7 @@ shinyUI(fluidPage(
                     
                     column(width = 2,
                         
-                       tags$img(src = "Cumple.jpg",  height=80, width=80, align = "center"),
+                       tags$img(src = "vive_madre_hogar.jpg",  height=80, width=80, align = "center"),
                        
                        tags$h5("¿La madre del jefe del hogar vive en el hogar?"),  
                        
