@@ -97,7 +97,10 @@ shinyUI(fluidPage(
                                                 "Está casado(a)"),
                                     selected = c("No está casado(a) y vive en pareja hace menos de dos años"))
                     )
-                )
+                ),
+                
+                
+                submitButton("Obtener predicción", icon = icon("chart-line"), width = '30%')
                 
             )
         ),
