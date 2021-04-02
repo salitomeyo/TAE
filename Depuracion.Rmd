@@ -48,7 +48,15 @@ str(Base_final)
 
 ```{r}
 sapply(1:32, function(i){
-  boxplot(Base_final$Num_hijos~Base_final[, i], xlab = nombres[i])
+  boxplot(Base_final$Num_hijos~Base_final[, i], xlab = nombres[i], ylab = "Número de hijos", col=c("#a6d9cd", "#94d1c3", "#82c9b9","#70c2af","#5ebaa5","#4db39b","#45a18b","#3d8f7c","#367d6c","#2e6b5d","#26594d","#1f473e","#17362e"))
+  grid()
+})
+```
+
+```{r}
+sapply(1:32, function(i){
+  boxplot(Base_final$Num_hijos~Base_final[, i], xlab = nombres[i], ylab = "Número de hijos", col=c("#82c99b", "#94d1c3", "#82c9b9","#4db370","#5ebaa5","#3d8f5a","#45a18b","#2e6b43","#367d6c","#1f472d","#26594d","#0f2416","#17362e"))
+  grid()
 })
 ```
 
@@ -58,10 +66,10 @@ barplot(table(Base_final$Num_hijos)) # Barplot de la variable respuesta
 
 ```{r}
 par(mfrow=c(2,2))
-plot(Base_final$Num_hijos~ Base_final$Edad)
-plot(Base_final$Num_hijos~ Base_final$Ingresos_hogar)
-plot(Base_final$Num_hijos~ Base_final$Ultimo_pago_energia)
-plot(Base_final$Num_hijos~ Base_final$Pago_mes_energia)
+plot(Base_final$Num_hijos~ Base_final$Edad,pch=19, col="cyan4")
+plot(Base_final$Num_hijos~ Base_final$Ingresos_hogar,pch=19,col="cyan4")
+plot(Base_final$Num_hijos~ Base_final$Ultimo_pago_energia,pch=19,col="cyan4")
+plot(Base_final$Num_hijos~ Base_final$Pago_mes_energia,pch=19, col="Cyan4")
 ```
 * Variables significativas según el boxplot:
 
