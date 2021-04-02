@@ -15,7 +15,7 @@ colnames(df) <- c("Num_integrantes",
 
 
 load("RandomForest.Rdata")
-modeloRF=readRDS("modeloRF.rds")
+#modeloRF=readRDS("modeloRF.rds")
 
 prediccion <- predict(RandomForest, df)
 prediccion$predictions
