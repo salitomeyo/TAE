@@ -71,9 +71,9 @@ shinyUI(fluidPage(
                     
                     column(width = 2,
                            
-                        tags$img(src = "Cumple.jpg",  height=80, width=80, align = "center"),
+                        tags$img(src = "genero.jpg",  height=80, width=80, align = "center"),
                            
-                        tags$h5("Ingrese el género del jefe del hogar              "),
+                        tags$h5("Ingrese el género del jefe del hogar"),
                         
                         hr(),
 
@@ -88,7 +88,6 @@ shinyUI(fluidPage(
                         tags$img(src = "Cumple.jpg",  height=80, width=80, align = "center"),
                         
                         tags$h5("Ingrese el género del jefe del hogar"),
-                        br(),
                         
                         hr(),
                         
@@ -116,9 +115,9 @@ shinyUI(fluidPage(
                     
                     column(width = 3,
                            
-                       tags$img(src = "Cumple.jpg",  height=80, width=80, align = "center"),
+                       tags$img(src = "Estado_civil.jpg",  height=80, width=80, align = "center"),
                        
-                       tags$h5("¿Cuál es el estado civil del jefe del hogar?"),
+                       tags$h5("¿Cuál es el estado civil del jefe del hogar"),
                        
                        hr(),
                            
