@@ -13,6 +13,11 @@ shinyUI(fluidPage(
             
     ),
     
+    tags$head(
+    tags$style(HTML("body{
+    background-image: url( fondo_cyan.jpg );
+                    }"))),
+    
     titlePanel("Número de hijos de los hogares  colombianos"),
     
     
