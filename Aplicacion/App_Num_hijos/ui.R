@@ -18,8 +18,12 @@ shinyUI(fluidPage(
         # Panel de navegación -----------------------------------------------------
         tabsetPanel(
             
+            tabPanel("Home"
+                     
+                     ),
+            
             # Panel de inicio ---------------------------------------------------------
-            tabPanel("Home", icon = icon("child"),
+            tabPanel("App", icon = icon("child"),
                      
                    
                 # División de la página verticalmente -------------------------------------
