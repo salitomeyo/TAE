@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE,warning = FALSE)
 
 <div style="text-align: justify">
 
-En la actualidad, debido a la globalización es importante para las empresas conocer a sus clientes, la tecnología, sin duda ha permitido recaudar volúmenes enormes de información, sin embargo, en muchas ocasiones precisamente la información requerida por una empresa es difícil de obtener o representa información sensible para los usuarios, ya que invade su privacidad. No obstante, con los avances en analítica se han creado herramientas para lograr obtener la información necesaria de los usuarios sin invadir su intimidad y está ha podido utilizarse para estimar valores sobre el resto de la población aun sin tener que preguntar directamente sobre la misma.
+En la actualidad, debido a la globalización es importante para las empresas conocer a sus clientes, la tecnología, sin duda ha permitido recaudar volúmenes enormes de información, sin embargo, en muchas ocasiones precisamente la información requerida por una empresa es difícil de obtener o representa información sensible para los usuarios, ya que invade su privacidad. No obstante, con los avances en analítica se han creado herramientas para lograr obtener la información necesaria de los usuarios sin invadir su intimidad y está ha podido utilizarse para estimar valores sobre el resto de la población, aun sin tener que preguntar directamente sobre la misma.
 
 Entre los datos que en algunos contextos pueden ser censurados u omitidos está el número de hijos en un hogar, lo que hace que sea una variable de la que no se dispone directamente; por lo tanto el problema en particular en el que se está interesado es la predicción del número de hijos en base a las características de los hogares colombianos.
 
@@ -23,23 +23,23 @@ Se decidió abordar este problema como un problema de clasificación (aprendizaj
 
 Se realizó una buena investigación y contextualización del conjunto de datos que fueron obtenidos de la ECV realizada por el DANE en 2019, mediante este se tuvo la oportunidad de establecer el número de hijos mediante la combinación de algunas variables presentes en un conjunto de datos particular abordado en la encuesta, además de seleccionar las variables más relevantes para realizar un análisis y la modelación.
 
-Se procedió a la selección de variables las cuales posteriormente fueron unidas mediante indicadores de hogares, este procedimiento fue realizado de manera muy cuidadosa para no obtener información incorrecta, después de este paso se llegó a una base de datos con las variables consideradas por lo investigadores como de interés.
+Se procedió a la selección de variables, las cuales posteriormente fueron unidas mediante indicadores de hogares, este procedimiento fue realizado de manera muy cuidadosa para no obtener información incorrecta, después de este paso se llegó a una base de datos con las variables consideradas por lo investigadores como de interés.
 
-Previo a lo anterior, se procedió a realizar análisis descriptivos sobre el conjunto de datos, que ayudaran a una mejor comprensión de las variables y a seleccionar cuales de estas eran más relevantes para predecir el número de hijos, se realizaron gráficos y demás análisis.
+Previo a lo anterior, se procedió a realizar un análisis descriptivo sobre el conjunto de datos, que ayudaran a una mejor comprensión de las variables y a seleccionar cuales de estas eran más relevantes para predecir el número de hijos, se realizaron gráficos y demás análisis.
 
 Como paso siguiente se usaron técnicas estadísticas para la selección de variables mediante la formulación de modelos, los cuales en su mayoría coincidieron con los resultados las variables seleccionadas mediante el análisis descriptivo.  
 
-Luego de este proceso de selección de variables se obtuvo un conjunto de datos con menos variables pero con el mismo número de registros, para así con este empezar la modelación.
+Luego de este proceso de selección de variables se obtuvo un conjunto de datos con menos variables pero con el mismo número de registros, y asi empezar a modelar la variable objetivo.
 
-Para la modelación se tomó en cuenta como un problema de clasificación donde el número de hijos corresponde a cada nivel de la variable respuesta como categoría.
+Para la modelación se tendra el problema como uno de clasificación, donde el número de hijos corresponde a cada nivel de la variable respuesta como categoría.
 
-Los modelos seleccionados fueron considerados como los más adecuados para este problema en particular y son populares en el mundo del aprendizaje estadístico, se realizaron ajustes con cada uno y se realizó validación cruzada para poder evaluar el rendimiento de cada uno de ellos (mediante tasas de acierto y error).
+Los modelos seleccionados fueron considerados como los más adecuados para este problema en particular y son populares en el mundo del aprendizaje estadístico, se realizaron ajustes con cada uno y se realizó validación cruzada, para poder evaluar el rendimiento de cada uno de ellos (mediante tasas de acierto y error).
 
-Después de ajustar varios modelos, se analizó la posibilidad de encontrar el mismo resultado con menos variables, encontrando que se obtenía la misma tasa de acierto aunque el número de variables utilizadas era menor; por lo tanto, se decidió nuevamente hacer una reducción de variables, de tal manera que se obtuvieron modelos más parsimoniosos (Buenos resultados con menos variables) llegando finalmente a modelos con 5 variables.
+Después de ajustar varios modelos, se analizó la posibilidad de encontrar el mismo resultado con menos variables, encontrando que se obtenía la misma tasa de acierto, aunque, el número de variables utilizadas era menor; por lo tanto, se decidió nuevamente hacer una reducción de variables, de tal manera que se obtuvieron modelos más parsimoniosos (Buenos resultados con menos variables) llegando finalmente a modelos con cinco variables.
 
-De los modelos ajustados inicialmente se consideraron los cuatro mejores. Posteriormente estos modelos se ponen en competencia mediante distintas muestras aleatorias divididas en conjunto de entrenamiento y validación de tal manera que el mejor modelo sea aquel que obtenga mejores resultados en el conjunto de validación en las diferentes muestras. 
+De los modelos ajustados inicialmente se consideraron los cuatro mejores. Posteriormente estos modelos se ponen en competencia mediante distintas muestras aleatorias, divididas en conjunto de entrenamiento y validación; de tal manera, que el mejor modelo sea aquel que obtenga mejores resultados en el conjunto de validación en las diferentes muestras. 
 
-Bosques Aleatorios resultó ser el mejor después de este procedimiento teniendo una alta tasa de aciertos. Después se ajustó el mismo modelo con el conjunto de datos completo, con el fin de generar mejores predicciones por el hecho de contar con un mayor número de información.
+Bosques Aleatorios resultó ser el mejor después de este procedimiento, teniendo una alta tasa de aciertos. Después, se ajustó el mismo modelo con el conjunto de datos completo, con el fin de generar mejores predicciones por el hecho de contar con un mayor número de información.
 
 Como parte final, se aplicará el modelo obtenido en una página web que permitirá la interacción con sus posibles usuarios, esto mostrará su potencial para predecir el número de hijos de un hogar según la estructura del mismo.
 
@@ -47,18 +47,18 @@ Como parte final, se aplicará el modelo obtenido en una página web que permiti
 
 ## Contextualización del conjunto de datos:
 
-El número de hijos en un hogar es una variable muy simple y poco estudiada en algunos contextos, por eso los volúmenes de datos que se encuentran en la web muchas veces no disponen de este tipo de información, pero para entidades como inmobiliarias, empresa crediticias, etc; puede serles de sumo interés, por ello bajo trabajos de investigación se llega a la conclusión de que estas variables pueden ser deducidas a partir de otras que siguen en el mismo contexto, en este caso particular el número de hijos puede ser deducida a partir de conjuntos de datos relacionados con información acerca de los hogares del país, en cómo es su estructura, a partir de información puntual de cada uno de los integrantes, sin previamente haber recibido información de cuántos de esos integrantes son hijos, por tanto una de las bases de datos que se considera tienen más relación con las viviendas y hogares de Colombia es la encuesta de Calidad de vida, donde la más actualizada hasta la fecha es la realizada en el año 2019.
+El número de hijos en un hogar es una variable muy simple y poco estudiada en algunos contextos, por eso los volúmenes de datos que se encuentran en la web muchas veces no disponen de este tipo de información, pero para entidades como inmobiliarias, empresas crediticias, etc; puede serles de sumo interés, por ello, bajo trabajos de investigación se llega a la conclusión de que estas variables pueden ser deducidas a partir de otras que siguen en el mismo contexto, en este caso particular el número de hijos puede ser deducida a partir de conjuntos de datos relacionados con información acerca de los hogares del país, por lo tanto, una de las bases de datos que se considera tienen más relación con las viviendas y hogares de Colombia es la encuesta de Calidad de vida, donde la más actualizada hasta la fecha es la realizada en el año 2019.
 
 La Encuesta de Calidad de Vida (ECV) es una investigación que realiza el DANE, con el objetivo de recoger información sobre diferentes aspectos y dimensiones del bienestar de los hogares, incluyendo aspectos como el acceso a bienes y servicios públicos, privados o comunales, salud, educación, cuidado de niños y niñas menores de 5 años, entre otros. Esta información posibilita efectuar análisis posteriores de los factores que explican los diferentes niveles de vida existentes en la población colombiana.
 
-Por ello mediante este conjunto de datos que tiene un gran volumen se intenta extraer aquellas variables que se consideran más representativas para intentar predecir el número de hijos que tienen cada uno de los hogares; Antes de ello se debe de definir para este investigación que es un hogar y que es el número de hijos, para realizar todos los análisis posteriores en función de esta variable (Número de hijos en el hogar).
+Por ello mediante este conjunto de datos que tiene un gran volumen se intenta extraer aquellas variables que se consideran más representativas para intentar predecir el número de hijos que tienen cada uno de los hogares; Antes de ello, se debe de definir para esta investigación que es un hogar y que es el número de hijos, para realizar todos los análisis posteriores en función de esta variable (Número de hijos en el hogar).
 
 
 ### Definiciones importantes
 
 __Usuario__
 
-Inmobiliarias, empresas crediticias, en las cuales el número de hijos es una información sensible ya que este puede suponerse como un impedimento ya sea a la hora de conseguir o rentar apartamento o para conseguir préstamos ya que se concibe que el mantenimiento de los hijos es elevado y este sube cuantos más hijos posee el prestatario por lo que resulta más complicado para los padres de familia acceder a los mismos. 
+Inmobiliarias, empresas crediticias, en las cuales el número de hijos es una información sensible, ya que esto puede suponerse como un impedimento ya sea a la hora de conseguir o rentar apartamento, o para conseguir préstamos; ya que se concibe que el mantenimiento de los hijos es elevado y este sube cuantos más hijos posee el prestatario, por lo que resulta más complicado para los padres de familia acceder a los mismos. 
 
 Agencias o constructoras inmobiliarias en ocasiones tienen mucha información histórica de los clientes, sobretodo de los jefes de hogar, obteniendo así información relevante de las características de un hogar. En base a estas características podemos predecir el número de hijos del mismo, lo cual pueden utilizar dichas empresas para lanzar nuevos proyectos y ofrecer atención más personalizada a los hogares. Adicionalmente, algunas empresas que facilitan el arriendo como intermediarios pueden tener políticas de arriendo como el hecho de que no se admiten hijos en los hogares, esto es común en residencias estudiantiles, entre otros.
 
@@ -70,7 +70,7 @@ Un hogar no puede dividirse en más de una vivienda, pero dentro de cada viviend
 
 __Número de hijos__
 
-Se define el número de hijos de acuerdo con los hogares colombianos promedio definidos por el DANE, en los cuales se tienen:
+Se define el número de hijos de acuerdo con los hogares colombianos promedio, definidos por el DANE, en los cuales se tienen:
 
 * Parejas con hijos.
 * Una persona sola.
@@ -86,9 +86,9 @@ Se muestra a continuación una imagen que ejemplifica mejor lo antes mencionado:
 
 </center>
 
-En base a esto se considera como el número de hijos, a los hijos, hijastros y nietos del jefe del hogar sin discriminar por edad, ya que esta es la forma que en general funciona mejor en base a la mayoría de estructuras de los hogares en Colombia.
+En base a esto se considera como el número de hijos, a los hijos, hijastros y nietos del jefe del hogar, sin discriminar por edad, ya que está es la forma que en general funciona mejor, en base a la mayoría de estructuras de los hogares en Colombia.
 
-En casos generales funciona esta estructura ya que en la mayoría de hogares cuenta con padres y si estos no están presentes, los abuelos de los hijos lo están, ya que en casos donde se considera que si hay varios grupos familiares en una misma vivienda, como lo son por ejemplo varios hermanos con sus respectivos hijos, estos se dividirán en diferentes hogares ya que son varios núcleos familiares en una misma vivienda los cuales deben ser tomados como hogares de manera independiente, por lo tanto estructuras como estas no sesgan la elección de la variable del número de hijos, además que cabe aclarar que la encuesta de calidad de vida hace esta misma división, ya que en una misma vivienda se ven presentes varios hogares(siendo 5 el máximo), por lo tanto esta variable fue seleccionada como el criterio más correcto en base a la estructura de la encuesta de calidad de vida y en la perspectiva de los investigadores.
+En casos generales funciona esta estructura ya que en la mayoría de hogares cuenta con padres y si estos no están presentes, los abuelos de los hijos lo están, cuando se considera que hay varios grupos familiares en una misma vivienda, como lo son por ejemplo, varios hermanos con sus respectivos hijos, estos se dividirán en diferentes hogares; ya que son varios núcleos familiares en una misma vivienda, los cuales deben ser tomados como hogares de manera independiente, por lo tanto, estructuras como estas no sesgan la elección de la variable __número de hijos__, además que, cabe aclarar que la encuesta de calidad de vida hace esta misma división, ya que en una misma vivienda se ven presentes varios hogares(siendo 5 el máximo), por lo tanto, esta variable fue seleccionada con los hijos/hijastros y nietos del jefe del hogar; en base a la estructura de la encuesta de calidad de vida y en la perspectiva de los investigadores.
 
 # Materiales
 
@@ -472,7 +472,7 @@ Compuesta por 45 variables de las cuales se escogieron:
 
 ### Creación de la variable número de hijos 
 
-Debido a que la variable de interés (Número de hijos) no aparece de manera explícita, se llevó a cabo un proceso de construcción de la misma. Esto fue posible gracias a algunas de las variables de la base de datos Características y composición del hogar, presente en la encuesta antes mencionada que permiten conocer la relación de cada individuo con el jefe del hogar.
+Debido a que la variable de interés (Número de hijos) no aparece de manera explícita, se llevó a cabo un proceso de construcción de la misma. Esto fue posible gracias a algunas de las variables de la base de datos Características y composición del hogar, presente en la ECV(2019) que permiten conocer la relación de cada individuo con el jefe del hogar.
 
 Como primer paso se realiza la lectura de las bases de datos:
 
@@ -487,7 +487,7 @@ Debido a que la variable P6051 muestra el parentesco de los integrantes de la fa
 aux_creacion_respuesta<-Caracteristicas_hogar_personas[,c("ï..DIRECTORIO","SECUENCIA_P","P6051")]
 ```
 
-Para obtener el número de hijos por hogar se filtra las filas si tienen una relacion de hijo/hija o nieto/nieta con el jefe de hogar y se cuenta el número de hijos por hogar. Los hogares se describen con el código único de ï..DIRECTORIO, SECUENCIA_P
+Para obtener el número de hijos por hogar se filtran las filas, si tienen una relacion de hijo/hija o nieto/nieta con el jefe de hogar y se cuenta el número de hijos por hogar. Los hogares se describen con el código único de ï..DIRECTORIO, SECUENCIA_P
 
 ```{r}
 require(tidyverse)
@@ -506,12 +506,12 @@ num_hijos <- aux_creacion_respuesta %>%
 ```{r,echo=FALSE}
 require(kableExtra)
 kable(head(num_hijos))%>%
-  kable_styling(full_width = F)
+  kable_styling("striped", full_width = F)
 ```
 
-El número de hogares que tiene al menos un hijo `r dim(num_hijos)[1]`.
+El número de hogares que tiene al menos un hijo es de: `r dim(num_hijos)[1]` hogares.
 
-A continuación se procede a calcular el número de integrantes que pertenecen a cada hogar:
+A continuación, se procede a calcular el número de integrantes que pertenecen a cada hogar:
 
 
 ```{r}
@@ -525,24 +525,25 @@ num_integrantes <- Caracteristicas_hogar_personas %>%
 ```{r,echo=FALSE}
 require(kableExtra)
 kable(head(num_integrantes))%>%
-  kable_styling(full_width = F)
+  kable_styling("striped",full_width = F)
 ```
 
 El número de hogares es `r dim(num_integrantes)[1]`.
 
-Finalmente, con la función _merge_ se obtiene el número de hijos en cada hogar uniendo las bases de datos _num_integrantes_ y _num_hijos_ como sigue:
+Finalmente, con la función _merge_ se obtiene el número de hijos en cada hogar, uniendo las bases de datos _num_integrantes_ y _num_hijos_ como sigue:
 
 ```{r}
 num_hijos_final <- merge(num_integrantes, num_hijos, by =c("ï..DIRECTORIO","SECUENCIA_P"), all.x=TRUE)
 
-num_hijos_final$n.y[is.na(num_hijos_final$n.y)] <- 0
+num_hijos_final$n.y[is.na(num_hijos_final$n.y)] <- 0 # Los datos faltantes indican que el hogar no tiene hijos
+
 colnames(num_hijos_final) <- c("ï..DIRECTORIO","SECUENCIA_P", "Num Integrantes", "Num Hijos")
 ```
 
 ```{r,echo=FALSE}
 require(kableExtra)
 kable(head(num_hijos_final,10))%>%
-  kable_styling(full_width = F)
+  kable_styling("striped",full_width = F)
 ```
 
 
