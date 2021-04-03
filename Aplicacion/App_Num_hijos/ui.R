@@ -34,7 +34,70 @@ shinyUI(fluidPage(
             
 
             # Panel de inicio ---------------------------------------------------------
-            tabPanel("Home", icon = icon("home")
+            tabPanel("Home", icon = icon("home"),
+                     
+                     br(),
+                     br(),
+                     
+                     
+                     tags$h1('¡Bienvenido, usuario!'),
+                     
+                     tags$p('Esta aplicación está diseñada para que usted ingrese los 
+                     datos del hogar al cual pertenece o del cual desea adquirir 
+                     información, la información requerida está enfocada principalmente
+                     en el jefe de la misma, los datos que administrara no son íntimos 
+                     o con los cuales se pueda sentir incomodo, además de que es poca 
+                     la información que proporcionara para tener la oportunidad de 
+                     obtener una predicción del número de hijos del hogar del cual 
+                     proporciono la información.'),
+                     
+                     tags$p('Le damos gracias por hacer uso de aplicación y esperamos que la 
+                     aplicación haya sido de su agrado y pueda usarla de manera 
+                     responsable y haga uso adecuado de la información que aquí 
+                     se le brinde.'),
+                     
+                     tags$p('La aplicación que ha tenido la oportunidad de acceder, está 
+                     basada en un modelo de predicción Random Forest es cual fue 
+                     entrenado con un conjunto de datos de las encuestas de calidad 
+                     de vida del año 2019 en el país de Colombia, el cual tienen 
+                     exhaustiva información de todas las características de los 
+                     hogares y en las cuales se tuvo la oportunidad de escoger como 
+                     más importantes las que son pedidas en la misma aplicación.'),
+                     
+                     
+                     br(),
+                     br(),
+                     hr(),
+                     
+                     tags$h2('Información acerca de los investigadores encargados 
+                     del ajuste del modelo de predicción y creación de la aplicación'),
+                     
+                     br(),
+                     br(),
+                     br(),
+                     
+                     tags$img(src= "Cumple.png",class="imagen"),
+                     tags$h5("Cristina Mercedes Ortega Benavides"),
+                     tags$h5("Estudiante de Estadística"),
+                     
+                     
+                     tags$img(src= "Cumple.png",class="imagen"),
+                     tags$h5("Miguel Angel Londoño Ciceros"),
+                     tags$h5("Estudiante de Estadística"),
+                     
+                     tags$img(src= "Cumple.png",class="imagen"),
+                     tags$h5("Jennifer Salazar Galvis"),
+                     tags$h5("Estudiante de Estadística"),
+                     
+                     tags$img(src= "Cumple.png",class="imagen"),
+                     tags$h5("Juan Esteban Sanchez Pulgarin"),
+                     tags$h5("Estudiante de Estadística"),
+                     
+                     
+                     tags$img(src= "Cumple.png",class="imagen"),
+                     tags$h5("Salome Aristizabal Giraldo"),
+                     tags$h5("Estudiante de Ingenieria de Sistemas")
+                     
                      
                      ),
             
