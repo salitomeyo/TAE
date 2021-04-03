@@ -2,9 +2,11 @@
 title: "Informe"
 author: "Todos"
 date: "31/3/2021"
-output: 
+output:
   html_document:
+  #rmdformats::material:
     css: "style.css"
+    
 ---
 
 ```{r setup, include=FALSE}
@@ -43,7 +45,9 @@ Bosques Aleatorios resultó ser el mejor después de este procedimiento, teniend
 
 Como parte final, se aplicará el modelo obtenido en una página web que permitirá la interacción con sus posibles usuarios, esto mostrará su potencial para predecir el número de hijos de un hogar según la estructura del mismo.
 
+
 # Retos
+
 
 ## Contextualización del conjunto de datos:
 
@@ -90,7 +94,9 @@ En base a esto se considera como el número de hijos, a los hijos, hijastros y n
 
 En casos generales funciona esta estructura ya que en la mayoría de hogares cuenta con padres y si estos no están presentes, los abuelos de los hijos lo están, cuando se considera que hay varios grupos familiares en una misma vivienda, como lo son por ejemplo, varios hermanos con sus respectivos hijos, estos se dividirán en diferentes hogares; ya que son varios núcleos familiares en una misma vivienda, los cuales deben ser tomados como hogares de manera independiente, por lo tanto, estructuras como estas no sesgan la elección de la variable __número de hijos__, además que, cabe aclarar que la encuesta de calidad de vida hace esta misma división, ya que en una misma vivienda se ven presentes varios hogares(siendo 5 el máximo), por lo tanto, esta variable fue seleccionada con los hijos/hijastros y nietos del jefe del hogar; en base a la estructura de la encuesta de calidad de vida y en la perspectiva de los investigadores.
 
+
 # Materiales
+
 
 ## Contextualización de las variables utilizadas
 
@@ -466,7 +472,9 @@ Compuesta por 45 variables de las cuales se escogieron:
         </tr>
 </table>
 
+
 # Metodología
+
 
 ## Preprocesamiento de los datos
 
@@ -658,7 +666,7 @@ Base_final[,c("P6435","P6051","P5018S1","ï..DIRECTORIO","SECUENCIA_P")] <- NULL
 ```{r,echo=FALSE}
 load(file = "datos.RData")
 kable(head(Base_final))%>%
-  kable_styling("striped")%>%
+  kable_styling("striped", full_width = F)%>%
   scroll_box(width = "100%", height = "330px")
 ```
 
@@ -694,21 +702,273 @@ sapply(1:32, function(i){
 })
 ```
 
-![](boxplot1.png)
-![](boxplot2.png)
-![](boxplot3.png)
-![](boxplot4.png)
-![](boxplot5.png)
+
+```{r, echo=F}
+require(ggplot2)
+
+gra1 <- ggplot(Base_final,aes(x=factor(Genero),y=Num_hijos,fill=factor(Genero)))+
+  geom_boxplot()+
+  xlab("Genero")+ylab("Número de hijos") +
+   scale_x_discrete(labels = c("Masculino", "Femenino")) +
+   scale_fill_brewer()+
+   theme(legend.position = "NONE")
+
+gra2 <- ggplot(Base_final,aes(x=factor(Estado_civil),y=Num_hijos,fill=factor(Estado_civil)))+
+  geom_boxplot()+
+  xlab("Estado civil del jefe del hogar")+ylab("Número de hijos") +
+  labs(fill = "Estado Civil") +
+  scale_fill_brewer(labels = c("1 No está casado(a) y vive 
+  en pareja hace menos
+  de dos años", "2 No está casado(a) y vive 
+  en pareja hace
+  dos años o más", "3 Está viudo(a)", "4 Está separado(a)
+  o divorciado(a)", "5 Está soltero(a)", "6 Está casado(a)"))
+
+gra3 <- ggplot(Base_final,aes(x=factor(Lugar_nacimiento),y=Num_hijos,fill=factor(Lugar_nacimiento)))+
+  geom_boxplot()+
+  xlab("Lugar de nacimiento del jefe del hogar")+ylab("Número de hijos") +
+  labs(fill = "Lugar de nacimiento") +
+  scale_fill_brewer(labels = c("1 En este municipio", "2 En otro municipio", "3 En otro país"))
+
+gra4 <- ggplot(Base_final,aes(x=factor(Vive_hogar_padre),y=Num_hijos,fill=factor(Vive_hogar_padre)))+
+  geom_boxplot()+
+  xlab("el padre del jefe del hogar vive con el")+ylab("Número de hijos")  +
+  labs(fill = "Vive con el padre") +
+  scale_fill_brewer(labels = c("1 Si", "2 No", "3 Fallecido"))
+
+gra5 <- ggplot(Base_final,aes(x=factor(Educacion_padre),y=Num_hijos,fill=factor(Educacion_padre)))+
+  geom_boxplot()+
+  xlab("Educación del padre del jefe de hogar")+ylab("Número de hijos") +
+  labs(fill = "Educación del padre") +
+  scale_fill_brewer(labels = c("1 Algunos años de primaria", "2 Toda la primaria",
+"3 Algunos años de secundaria", "4 Toda la secundaria", "5 Uno o mas años 
+de técnica o tecnológica", "6 Técnica o tecnológica completa", "7 Uno o mas años
+de universidad", "8 Universitaria completa", "9 Ninguno", "10 No sabe")) +
+  theme(legend.position = "bottom")
+
+
+gra6 <- ggplot(Base_final,aes(x=factor(Vive_hogar_madre),y=Num_hijos,fill=factor(Vive_hogar_madre)))+
+  geom_boxplot()+
+  xlab("La madre del jefe del hogar vive con él")+ylab("Número de hijos")  +
+  labs(fill = "Vive con la madre") +
+  scale_fill_brewer(labels = c("1 Si", "2 No", "3 Fallecida"))
+
+gra7 <- ggplot(Base_final,aes(x=factor(Educacion_madre),y=Num_hijos,fill=factor(Educacion_madre)))+
+  geom_boxplot()+
+  xlab("Educación de la madre del jefe de hogar")+ylab("Número de hijos") +
+  labs(fill = "Educación de la madre") +
+  scale_fill_brewer(labels = c("1 Algunos años de primaria", "2 Toda la primaria",
+"3 Algunos años de secundaria", "4 Toda la secundaria", "5 Uno o mas años 
+de técnica o tecnológica", "6 Técnica o tecnológica completa", "7 Uno o mas años
+de universidad", "8 Universitaria completa", "9 Ninguno", "10 No sabe")) +
+  theme(legend.position = "bottom")
+
+gra8 <- ggplot(Base_final,aes(x=factor(Etnia),y=Num_hijos,fill=factor(Etnia)))+
+  geom_boxplot()+
+  xlab("Etnia del jefe del hogar")+ylab("Número de hijos") +
+  labs(fill = "Etnia") +
+  scale_fill_brewer(labels = c("1 Indígena", "2 Gitano(a)", "3 Raizal", "4 Palenquero(a)
+  de San Basilio", "5 Negro (a),
+  mulato (a)
+  (afrodescendiente)
+  afrocolombiano(a)", "6 Ninguno de los anteriores"))
+
+gra9 <- ggplot(Base_final,aes(x=factor(Num_Subsidios),y=Num_hijos,fill=factor(Num_Subsidios)))+
+  geom_boxplot()+
+  xlab("Número de subsidios del hogar")+ylab("Número de hijos") +
+  scale_fill_brewer() +
+  theme(legend.position = "NONE")
+
+gra10 <- ggplot(Base_final,aes(x=factor(Cant_hogares_vivienda),y=Num_hijos,fill=factor(Cant_hogares_vivienda)))+
+  geom_boxplot()+
+  xlab("Cantidad de hogares en la vivienda")+ylab("Número de hijos") +
+  scale_fill_brewer() +
+  theme(legend.position = "NONE")
+
+gra11 <- ggplot(Base_final,aes(x=factor(Tipo_vivienda),y=Num_hijos,fill=factor(Tipo_vivienda)))+
+  geom_boxplot()+
+  xlab("Tipo de vivienda del hogar")+ylab("Número de hijos") +
+  labs(fill = "Tipo de vivienda") +
+  scale_fill_brewer(labels = c("1 Casa", "2 Apartamento", "3 Cuarto(s)", "4 Vivienda tradicional
+  indigena", "5 Otro"))
+
+gra12 <- ggplot(Base_final,aes(x=factor(Material_pisos),y=Num_hijos,fill=factor(Material_pisos)))+
+  geom_boxplot()+
+  xlab("Material del piso del hogar")+ylab("Número de hijos") +
+  labs("Material del piso") +
+   scale_fill_brewer(labels = c("1 Alfombra o tapete", "2 Madera pulida y lacada", "3 Mármol", "4 Baldosa, vinilo,
+   tableta, ladrillo,
+   laminado", "5 Madera burda,
+   tabla, tablón,
+   otro vegetal", "6 Cemento, gravilla", "7 Tierra, arena"))
+
+gra13 <- ggplot(Base_final,aes(x=factor(Energia_electrica),y=Num_hijos,fill=factor(Energia_electrica)))+
+  geom_boxplot()+
+  xlab("Energia eléctrica en el hogar")+ylab("Número de hijos") +
+  scale_x_discrete(labels = c("Si","No")) +
+   scale_fill_brewer()+
+  theme(legend.position = "NONE")
+
+gra14 <- ggplot(Base_final,aes(x=factor(Estrato),y=Num_hijos,fill=factor(Estrato)))+
+  geom_boxplot()+
+  xlab("Estrato del hogar")+ylab("Número de hijos") +
+  labs("Estrato") +
+   scale_fill_brewer(labels = c("1 Bajo-Bajo", "2 Bajo", "3 Medio-Bajo", "4 Medio", "5 Medio-Alto", "6 Alto", "8 Planta eléctrica", "9 No conoce el estrato
+   o no cuenta con
+   recibo de pago", "0 Recibos sin estrato
+   o el servicio es pirata"))
+
+gra15 <- ggplot(Base_final,aes(x=factor(Acueducto),y=Num_hijos,fill=factor(Acueducto)))+
+  geom_boxplot()+
+  xlab("Acueducto en el hogar")+ylab("Número de hijos") +
+  scale_x_discrete(labels = c("Si","No")) +
+   scale_fill_brewer()+
+  theme(legend.position = "NONE")
+
+gra16 <- ggplot(Base_final,aes(x=factor(Alcantarillado),y=Num_hijos,fill=factor(Alcantarillado)))+
+  geom_boxplot()+
+  xlab("Alcantarillado en el hogar")+ylab("Número de hijos") +
+  scale_x_discrete(labels = c("Si","No")) +
+   scale_fill_brewer()+
+  theme(legend.position = "NONE")
+
+gra17 <- ggplot(Base_final,aes(x=factor(Basuras_semana),y=Num_hijos,fill=factor(Basuras_semana)))+
+  geom_boxplot()+
+  xlab("Número de veces que se 
+       recoge las basuras por semana")+ylab("Número de hijos") + 
+  scale_fill_brewer()+
+  theme(legend.position = "NONE")
+
+gra18 <- ggplot(Base_final,aes(x=factor(Nivel_educativo),y=Num_hijos,fill=factor(Nivel_educativo)))+
+  geom_boxplot()+
+  xlab("Nivel educativo del jefe del hogar")+ylab("Número de hijos") +
+  labs("Nivel educativo") +
+   scale_fill_brewer(labels = c("1 Ninguno", "2 Preescolar", "3 Básica Primaria
+   (1º - 5º)", "4 Básica secundaria
+   (6º–9º)", "5 Media (10º–13º)", "6 Técnico sin título", "7 Técnico con título", "8 Tecnológico
+   sin título", "9 Tecnológico 
+   con título", "10 Universitario
+   sin titulo", "11 Universitario 
+   con titulo", "12 Postgrado sin
+   titulo", "13 Postgrado 
+   con titulo"))
+
+gra19 <- ggplot(Base_final,aes(x=factor(Estudia),y=Num_hijos,fill=factor(Estudia)))+
+  geom_boxplot()+
+  xlab("Estudia el jefe hogar")+ylab("Número de hijos") +
+  scale_x_discrete(labels = c("Si","No")) +
+   scale_fill_brewer()+
+  theme(legend.position = "NONE")
+
+gra20 <- ggplot(Base_final,aes(x=factor(Afiliado),y=Num_hijos,fill=factor(Afiliado)))+
+  geom_boxplot()+
+  xlab("El jefe hogar está afiliado
+       a seguridad social")+ylab("Número de hijos") +
+  scale_x_discrete(labels = c("Si","No", "No informa")) +
+   scale_fill_brewer()+
+  theme(legend.position = "NONE")
+
+gra21 <- ggplot(Base_final,aes(x=factor(Salud_general),y=Num_hijos,fill=factor(Salud_general)))+
+  geom_boxplot()+
+  xlab("Estado de salud del jefe de hogar")+ylab("Número de hijos") +
+  scale_x_discrete(labels = c("Muy bueno","Bueno", "Regular", "Malo")) +
+   scale_fill_brewer()+
+  theme(legend.position = "NONE")
+
+gra22 <- ggplot(Base_final,aes(x=factor(Uso_celular),y=Num_hijos,fill=factor(Uso_celular)))+
+  geom_boxplot()+
+  xlab("Uso del celular del jefe de hogar")+ylab("Número de hijos") +
+  labs(fill = "Uso del celular") +
+   scale_fill_brewer(labels = c("1 Todos los días de la semana",
+"2 Al menos una vez a la semana,
+pero no cada día",
+"3 Al menos una vez al mes,
+pero no cada semana",
+"4 Al menos una vez al año,
+pero no cada mes",
+"5 No utiliza teléfono celular"))
+
+gra23 <- ggplot(Base_final,aes(x=factor(Num_cuartos),y=Num_hijos,fill=factor(Num_cuartos)))+
+  geom_boxplot()+
+  xlab("Números de cuartos en el hogar")+ylab("Número de hijos") +
+  scale_fill_brewer() + 
+  theme(legend.position = "NONE")
+
+
+gra24 <- ggplot(Base_final,aes(x=factor(Gas_natural),y=Num_hijos,fill=factor(Gas_natural)))+
+  geom_boxplot()+
+  xlab("Gas natural en el hogar")+ylab("Número de hijos") +
+  scale_x_discrete(labels = c("Si","No")) +
+   scale_fill_brewer()+
+  theme(legend.position = "NONE")
+
+gra25 <- ggplot(Base_final,aes(x=factor(Contrato_vivienda),y=Num_hijos,fill=factor(Contrato_vivienda)))+
+  geom_boxplot()+
+  xlab("Contrato de la vivienda del hogar")+ylab("Número de hijos") +
+  labs(fill = "Contrato de la vivienda") +
+   scale_fill_brewer(labels = c("1. Propia,
+   totalmente pagada", "2. Propia,
+   la están pagando", "3. En arriendo o
+   subarriendo", "4. Con permiso del
+   propietario,
+   sin pago alguno (usufructuario)", "5. Posesión sin título
+   (ocupante de hecho)", "6. Propiedad colectiva"))
+
+  
+gra26 <- ggplot(Base_final,aes(x=factor(Num_integrantes),y=Num_hijos,fill=factor(Num_integrantes)))+
+  geom_boxplot()+
+  xlab("Número de integrantes en el hogar")+ylab("Número de hijos") +
+  scale_fill_brewer()+
+  theme(legend.position = "NONE")
+  
+gra27 <- ggplot(Base_final,aes(x=factor(Telefonia_fija),y=Num_hijos,fill=factor(Telefonia_fija)))+
+  geom_boxplot()+
+  xlab("Telefonia fija en el hogar")+ylab("Número de hijos") +
+  scale_x_discrete(labels = c("Si","No")) +
+   scale_fill_brewer()+
+  theme(legend.position = "NONE")
+
+```
+
+```{r, echo=F}
+require(gridExtra)
+grid.arrange(gra1, gra2, gra3, gra4, nrow = 2,ncol = 2)
+grid.arrange(gra5, gra6, gra7, gra8, nrow = 2,ncol = 2)
+grid.arrange(gra9, gra10, gra11, gra12, nrow = 2,ncol = 2)
+grid.arrange(gra13, gra14, gra15, gra16, nrow = 2,ncol = 2)
+grid.arrange(gra17, gra18, gra19, gra20, nrow = 2,ncol = 2)
+grid.arrange(gra21, gra22, gra23, gra24, nrow = 2,ncol = 2)
+grid.arrange(gra25, gra26, nrow = 1, ncol = 2)
+gra27
+```
+
 Y para las variables numéricas se utilizan gráficos de puntos vs Num_hijos para analizar la posible influencia o relación de cada predictora con la respuesta.
 
-```{r, eval=FALSE}
-par(mfrow=c(2,2))
-plot(Base_final$Num_hijos~ Base_final$Edad)
-plot(Base_final$Num_hijos~ Base_final$Ingresos_hogar)
-plot(Base_final$Num_hijos~ Base_final$Ultimo_pago_energia)
-plot(Base_final$Num_hijos~ Base_final$Pago_mes_energia)
+
+```{r, echo=F}
+puntos1 <- ggplot(Base_final, aes(x = Edad, y = Num_hijos)) +
+  geom_point(col = "cyan4")+
+  labs(x = "Edad del jefe de hogar", y = "Número de hijos")
+
+puntos2 <- ggplot(Base_final, aes(x = Ingresos_hogar, y = Num_hijos)) +
+  geom_point(col = "cyan4")+
+  labs(x = "Ingresos del hogar", y = "Número de hijos") +
+  scale_x_continuous(breaks = seq(0,200000000, 40000000))
+
+puntos3 <- ggplot(Base_final, aes(x = Ultimo_pago_energia, y = Num_hijos)) +
+  geom_point(col = "cyan4")+
+  labs(x = "Ultimo pago de energia del hogar", y = "Número de hijos")
+
+puntos4 <- ggplot(Base_final, aes(x = Pago_mes_energia, y = Num_hijos)) +
+  geom_point(col = "cyan4")+
+  labs(x = "Pago mes de energia del hogar", y = "Número de hijos")
 ```
-![](graficoPuntos.png)
+
+
+```{r, echo=F}
+grid.arrange(puntos1, puntos2, puntos3, puntos4, nrow = 2,ncol = 2)
+```
+
 
 ####  Variables escogidas a partir de los graficos descriptivos
 
@@ -1145,7 +1405,7 @@ colSums(is.na(Base_de_ensayo))
 
 Aunque Ingresos_hogar y Nivel_educativo en primera instancia tienen una importancia elevada para el modelo se decide eliminar Nivel_educativo ya que posee datos faltantes, adicionalmente se elimina Ingresoso_hogar ya que, a criterio de los investigadores, esta variable puede generar controversia a la hora de ser contestada.
 
-#### Variables escogidas
+### Variables escogidas
 
 ```{r}
 library(tidyverse)
@@ -1428,7 +1688,7 @@ library(gmodels)
 library(caret)
 ```
 
-#### Ajuste modelo Knn
+### Ajuste modelo Knn
 
 Se entrena el modelo knn para que escoja el número k óptimo siendo el valor máximo k=30.
 
@@ -1461,7 +1721,9 @@ error <- 1-acierto
 
 La tasa de acierto es  `r acierto`, la tasa de error es `r error`.
 
+
 # Resultados
+
 
 ## Selección del mejor modelo
 
@@ -1639,6 +1901,7 @@ kable(f,align = "c")%>%
 
 
 # Conclusiones
+ falta
 
 # Bibliografía
 
