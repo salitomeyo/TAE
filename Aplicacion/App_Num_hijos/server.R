@@ -66,7 +66,7 @@ shinyServer(function(input, output) {
         prediccion <- prediccion$predictions
         
         # Se carga la silueta correspondiente
-        nom_silueta <- paste(prediccion, 'png', sep = ".")
+        nom_silueta <- paste(prediccion, 'svg', sep = ".")
         
         
         if(prediccion == 5){
