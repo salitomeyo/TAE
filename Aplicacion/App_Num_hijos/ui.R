@@ -1,7 +1,7 @@
 library(shiny)
 library(shinythemes)
 
-shinyUI(fluidPage(fluidPage(theme = shinytheme("superhero")),
+shinyUI(fluidPage(
                   
 
     # Estilo css
