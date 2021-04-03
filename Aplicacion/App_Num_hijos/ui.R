@@ -36,10 +36,6 @@ shinyUI(fluidPage(
             # Panel de inicio ---------------------------------------------------------
             tabPanel("Home", icon = icon("home"),
                      
-                     br(),
-                     br(),
-                     
-                     
                      tags$h1('¡Bienvenido, usuario!'),
                      
                      tags$p('Esta aplicación está diseñada para que usted ingrese los 
@@ -56,17 +52,14 @@ shinyUI(fluidPage(
                      responsable y haga uso adecuado de la información que aquí 
                      se le brinde.'),
                      
-                     tags$p('La aplicación que ha tenido la oportunidad de acceder, está 
-                     basada en un modelo de predicción Random Forest es cual fue 
+                     tags$p('Esta aplicacion a cual tiene la oportunidad de acceder, está 
+                     basada en un modelo de predicción Random Forest el cual fue 
                      entrenado con un conjunto de datos de las encuestas de calidad 
-                     de vida del año 2019 en el país de Colombia, el cual tienen 
+                     de vida del DANE en el año 2019 en el país de Colombia, el cual tienen 
                      exhaustiva información de todas las características de los 
-                     hogares y en las cuales se tuvo la oportunidad de escoger como 
+                     hogares y en las cuales se escogieron como 
                      más importantes las que son pedidas en la misma aplicación.'),
                      
-                     
-                     br(),
-                     br(),
                      hr(),
                      
                      tags$h2('Información acerca de los investigadores encargados 
@@ -76,29 +69,33 @@ shinyUI(fluidPage(
                      br(),
                      br(),
                      
-                     tags$img(src= "Cumple.png",class="imagen"),
-                     tags$h5("Cristina Mercedes Ortega Benavides"),
-                     tags$h5("Estudiante de Estadística"),
-                     
-                     
-                     tags$img(src= "Cumple.png",class="imagen"),
-                     tags$h5("Miguel Angel Londoño Ciceros"),
-                     tags$h5("Estudiante de Estadística"),
-                     
-                     tags$img(src= "Cumple.png",class="imagen"),
-                     tags$h5("Jennifer Salazar Galvis"),
-                     tags$h5("Estudiante de Estadística"),
-                     
-                     tags$img(src= "Cumple.png",class="imagen"),
-                     tags$h5("Juan Esteban Sanchez Pulgarin"),
-                     tags$h5("Estudiante de Estadística"),
-                     
-                     
-                     tags$img(src= "Cumple.png",class="imagen"),
-                     tags$h5("Salome Aristizabal Giraldo"),
-                     tags$h5("Estudiante de Ingenieria de Sistemas")
-                     
-                     
+                     tags$div(class="row row-cols-5",
+                              tags$div(class="col",
+                                 tags$img(src= "Cumple.png",class="imagen"),
+                                 tags$h5("Cristina Mercedes Ortega Benavides"),
+                                 tags$h5("Estudiante de Estadística"),
+                              ),
+                              tags$div(class="col",
+                                 tags$img(src= "Cumple.png",class="imagen"),
+                                 tags$h5("Miguel Angel Londoño Ciceros"),
+                                 tags$h5("Estudiante de Estadística"),
+                              ),
+                              tags$div(class="col",
+                                 tags$img(src= "Cumple.png",class="imagen"),
+                                 tags$h5("Jennifer Salazar Galvis"),
+                                 tags$h5("Estudiante de Estadística"),
+                              ),
+                              tags$div(class="col",
+                                 tags$img(src= "Cumple.png",class="imagen"),
+                                 tags$h5("Juan Esteban Sanchez Pulgarin"),
+                                 tags$h5("Estudiante de Estadística"),
+                              ),
+                              tags$div(class="col",
+                                 tags$img(src= "Cumple.png",class="imagen"),
+                                 tags$h5("Salome Aristizabal Giraldo"),
+                                 tags$h5("Estudiante de Ingenieria de Sistemas")
+                              ),
+                     )
                      ),
             
             # Panel de la app  ---------------------------------------------------------
