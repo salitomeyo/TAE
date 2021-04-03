@@ -63,12 +63,16 @@ shinyServer(function(input, output) {
         
         prediccion <- predict(RandomForest, datos_entrada)
         
+        prediccion <- prediccion$predictions
+        
+        if(prediccion == 5){
+            prediccion <- "5 o más"
+        }
+        
         output$Resultado <- renderText({
-            paste("Predicción: ", prediccion$predictions)
+            paste("El número de hijos del hogar es: ", prediccion)
         })
         
     })
-    
-
     
 })
