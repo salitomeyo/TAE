@@ -15,18 +15,13 @@
     align-content: center;
 }
 
-body{
-    text-align: center;
-    background-color: #ffecc2;
-}
-
 .informacion{
     position: absolute;
     top: 300px;
 }
 
 .btn{
-    background-color: #0d8296;
+    background-color: #006199;
     font-size: large;
     font-weight: 600;
     padding-left: 10%;
@@ -78,15 +73,26 @@ body{
 } 
 
 .selectize-input.full{
-    background-color: #4d4d4d;
+    background-color: #00798e;
     color: white;
 }
 
 .form-control{
-    background-color: #4d4d4d;
+    background-color: #00798e;
     color: white;
 }
 
-.selectize-input, .selectize-control.single .selectize-input.input-active {
-    background-color: #4d4d4d;
+.selectize-input {
+    background-color: #00798e;
+    color: white;
+
+}
+
+.nav-tabs{
+    background-color: #00525c;
+}
+
+body{
+    text-align: center;
+    background-color: #e4e7e6;
 }
