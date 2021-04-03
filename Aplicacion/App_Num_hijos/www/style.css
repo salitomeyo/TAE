@@ -17,6 +17,7 @@
 
 body{
     text-align: center;
+    background-color: #262626;
 }
 
 .informacion{
@@ -24,15 +25,68 @@ body{
     top: 300px;
 }
 
-button{
-    width : 40%;
-    height: 50px;
-    border-radius: 10px;
-    background-color: hotpink;
+.btn{
+    background-color: #0d8296;
+    font-size: large;
+    font-weight: 600;
+    padding-left: 10%;
+    padding-right: 10%;
 }
 
 .imagen{  
     height:100px; 
     width:100px;
     padding-left: 2%;
+}
+
+.slider {
+	width: 100%;
+	margin: auto;
+	overflow: hidden;
+}
+
+.slider ul {
+	display: flex;
+	padding: 0;
+	width: 400%;
+	
+	animation: cambio 20s infinite alternate linear;
+}
+
+.slider li {
+	width: 100%;
+	list-style: none;
+    align-content: center;
+}
+
+.slider img {
+	width: 100%;
+    height: 300px;
+}
+
+@keyframes cambio {
+	0% {margin-left: 0;}
+	20% {margin-left: 0;}
+	40% {margin-left: -100%;}
+	60% {margin-left: -200%;}
+	80% {margin-left: -300%;}
+	100% {margin-left: -300%;}
+}
+
+.selectize-input  { 
+    color: white;
+} 
+
+.selectize-input.full{
+    background-color: #4d4d4d;
+    color: white;
+}
+
+.form-control{
+    background-color: #4d4d4d;
+    color: white;
+}
+
+.selectize-input, .selectize-control.single .selectize-input.input-active {
+    background-color: #4d4d4d;
 }

@@ -1,17 +1,26 @@
 library(shiny)
+library(shinythemes)
 
-
-shinyUI(fluidPage(
+shinyUI(fluidPage(fluidPage(theme = shinytheme("superhero")),
                   
 
     # Estilo css
     includeCSS("www/style.css"),
     
-    # Titulo de la aplicación -------------------------------------------------
-    tags$div(class = "jumbo", 
-             tags$h1("Bienvenidos", style = "color:white")
-            
+    tags$div (class="slider",
+        tags$ul(
+            tags$li(
+                tags$img (src="Celular.jpg", alt=""),
+            ),
+            tags$li(
+                tags$img (src="empresa_credito.jpg", alt=""),
+            ),
+            tags$li(
+                tags$img (src="inmobiliaria.jpg", alt=""),
+            ),
+        ),
     ),
+
     
     tags$div(class="informacion",
     
@@ -115,7 +124,7 @@ shinyUI(fluidPage(
                     ),
                     
                     
-                    tags$button(type="submit", "Obtener predicción"),
+                    tags$button(type="submit", class="btn btn-info", "Obtener predicción"),
                     tags$h1(textOutput("Resultado"))
                     
                 )
