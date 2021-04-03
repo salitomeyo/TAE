@@ -125,6 +125,8 @@ shinyUI(fluidPage(
                     
                     
                     tags$button(type="submit", class="btn btn-info", "Obtener predicción"),
+                    hr(),
+                    br(),
                     tags$h1(textOutput("Resultado"))
                     
                 )
