@@ -9,6 +9,8 @@ output:
     
 ---
 
+<script language="JavaScript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE,warning = FALSE)
 ```
@@ -702,7 +704,6 @@ sapply(1:32, function(i){
 })
 ```
 
-
 ```{r, echo=F}
 require(ggplot2)
 
@@ -929,6 +930,34 @@ gra27 <- ggplot(Base_final,aes(x=factor(Telefonia_fija),y=Num_hijos,fill=factor(
   theme(legend.position = "NONE")
 
 ```
+
+<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+<div class="carousel-inner">
+<div class="carousel-item active">
+```{r}
+gra1
+```
+</div>
+<div class="carousel-item">
+```{r}
+gra2
+```
+</div>
+<div class="carousel-item">
+```{r}
+gra3
+```
+</div>
+</div>
+<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+<span class="visually-hidden">Previous</span>
+</button>
+<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+<span class="carousel-control-next-icon" aria-hidden="true"></span>
+<span class="visually-hidden">Next</span>
+</button>
+</div>
 
 ```{r, echo=F}
 require(gridExtra)
