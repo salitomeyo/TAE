@@ -7,19 +7,25 @@ shinyUI(fluidPage(
     # Estilo css
     includeCSS("www/style.css"),
     
-    tags$div (class="slider",
-        tags$ul(
-            tags$li(
-                tags$img (src="Celular.jpg", alt=""),
-            ),
-            tags$li(
-                tags$img (src="empresa_credito.jpg", alt=""),
-            ),
-            tags$li(
-                tags$img (src="inmobiliaria.jpg", alt=""),
-            ),
-        ),
+    # Titulo de la aplicación -------------------------------------------------
+    tags$div(class = "jumbo", 
+             tags$h1("Número de hijos de los hogares colombianos", style = "color:white")
+             
     ),
+    
+    # tags$div (class="slider",
+    #     tags$ul(
+    #         tags$li(
+    #             tags$img (src="Celular.jpg", alt=""),
+    #         ),
+    #         tags$li(
+    #             tags$img (src="empresa_credito.jpg", alt=""),
+    #         ),
+    #         tags$li(
+    #             tags$img (src="inmobiliaria.jpg", alt=""),
+    #         ),
+    #     ),
+    # ),
 
     
     tags$div(class="informacion",
@@ -38,9 +44,9 @@ shinyUI(fluidPage(
                 # División de la página verticalmente -------------------------------------
                 verticalLayout(
                     
-                    titlePanel(
-                        "Número de hijos de los hogares  colombianos"
-                    ),
+                    # titlePanel(
+                    #     "Número de hijos de los hogares colombianos"
+                    # ),
                     
                     # Botón Predicción ----------------------------------------------------------
                     conditionalPanel(
