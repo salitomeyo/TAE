@@ -32,12 +32,12 @@ E_civil <-  c("No está casado(a) y vive en pareja hace menos de dos años",
 shinyServer(function(input, output) {
     
     
-    observeEvent(
-        c(input$Genero,
-        input$Estado_civil,
-        input$Num_integrantes,
-        input$Vive_hogar_madre,
-        input$Edad)
+    observeEvent(input$submit
+        # c(input$Genero,
+        # input$Estado_civil,
+        # input$Num_integrantes,
+        # input$Vive_hogar_madre,
+        # input$Edad)
         , {
         
         # Variables categoricas a números -----------------------------------------
@@ -65,12 +65,25 @@ shinyServer(function(input, output) {
         
         prediccion <- prediccion$predictions
         
+        # Se carga la silueta correspondiente
+        nom_silueta <- paste(prediccion, 'png', sep = ".")
+        
+        
         if(prediccion == 5){
             prediccion <- "5 o más"
         }
+
+        # Se imprime la predicción ------------------------------------------------
         
         output$Resultado <- renderText({
             paste("El número de hijos del hogar es: ", prediccion)
+        })
+        
+        
+        # Se imprime la silueta ---------------------------------------------------
+        
+        output$silueta <- renderUI({
+            tags$img(src = nom_silueta)
         })
         
     })

@@ -42,13 +42,19 @@ shinyUI(fluidPage(
                         "Número de hijos de los hogares  colombianos"
                     ),
                     
-                    # Predicción ----------------------------------------------------------
-                    
-                    
-                    br(),
-                    br(),
-                    hr(),
-                    
+                    # Botón Predicción ----------------------------------------------------------
+                    conditionalPanel(
+                        condition = "input.Num_integrantes != '0' && 
+                                     input.Genero != ' ' && 
+                                     input.Edad > 12 && 
+                                     input.Estado_civil != ' ' &&
+                                     input.Vive_hogar_madre != ' '",
+                                     
+                                     br(),
+                                     uiOutput(outputId = "silueta"),
+                                     tags$h1(textOutput("Resultado")),
+                                     hr()
+                    ),
                     # Cuestionario ----------------------------------------------------------
                     
                     tags$div(class="row row-cols-5",
@@ -61,9 +67,9 @@ shinyUI(fluidPage(
                                  
                                  numericInput(inputId = "Num_integrantes",
                                               label = "",
-                                              value= 1,
+                                              value= 0,
                                               step = 1,
-                                              min=1,
+                                              min= 0,
                                               max =19),
                         ),
                         tags$div(class="col",
@@ -75,8 +81,8 @@ shinyUI(fluidPage(
                                  
                                  selectInput(inputId = "Genero",
                                              label = "",
-                                             choices = c("Masculino", "Femenino"),
-                                             selected = c("Femenino")), 
+                                             choices = c(" ", "Masculino", "Femenino"),
+                                             selected = c(" ")), 
                         ),
                         tags$div(class="col",
                                  tags$img(src = "Cumple.png", class="imagen"),
@@ -87,9 +93,9 @@ shinyUI(fluidPage(
                                  
                                  numericInput(inputId = "Edad",
                                               label = "",
-                                              value= 48,
+                                              value = 0,
                                               step = 1,
-                                              min = 13,
+                                              min = 0,
                                               max = 106),
                         ),
                         tags$div(class="col",
@@ -101,8 +107,8 @@ shinyUI(fluidPage(
                                  
                                  selectInput(inputId = "Vive_hogar_madre",
                                              label = "",
-                                             choices = c("Si", "No", "fallecida"),
-                                             selected = c("Si")), 
+                                             choices = c(" ", "Si", "No", "fallecida"),
+                                             selected = c(" ")), 
                         ),
                         tags$div(class="col",
                                  tags$img(src = "Estado_civil.png", class="imagen"),
@@ -113,21 +119,31 @@ shinyUI(fluidPage(
                                  
                                  selectInput(inputId = "Estado_civil",
                                              label = "",
-                                             choices = c("No está casado(a) y vive en pareja hace menos de dos años",
+                                             choices = c(" ",
+                                                         "No está casado(a) y vive en pareja hace menos de dos años",
                                                          "No está casado(a) y vive en pareja hace dos años o más",
                                                          "Está viudo(a)",
                                                          "Está separado(a) o divorciado(a)",
                                                          "Está soltero(a)",
                                                          "Está casado(a)"),
-                                             selected = c("No está casado(a) y vive en pareja hace menos de dos años"))
+                                             selected = c(" "))
                         )
                     ),
                     
-                    
-                    tags$button(type="submit", class="btn btn-info", "Obtener predicción"),
-                    hr(),
-                    br(),
-                    tags$h1(textOutput("Resultado"))
+                    # Botón Predicción ----------------------------------------------------------
+                    conditionalPanel(
+                        condition = "input.Num_integrantes != '0' && 
+                                     input.Genero != ' ' && 
+                                     input.Edad > 12 && 
+                                     input.Estado_civil != ' ' &&
+                                     input.Vive_hogar_madre != ' '",
+                        
+                                     br(), 
+                                     actionButton(inputId = "submit", "Obtener predicción"),
+                                     br()
+                    )
+                    # actionButton(inputId = "submit", "Obtener predicción"),
+                    # tags$button(type="submit", class="btn btn-info", "Obtener predicción"),
                     
                 )
             ),
