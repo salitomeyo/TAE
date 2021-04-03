@@ -2,7 +2,6 @@ library(shiny)
 library(shinythemes)
 
 shinyUI(fluidPage(
-                  
 
     # Estilo css
     includeCSS("www/style.css"),
@@ -33,11 +32,13 @@ shinyUI(fluidPage(
         # Panel de navegación -----------------------------------------------------
         tabsetPanel(
             
-            tabPanel("Home"
+
+            # Panel de inicio ---------------------------------------------------------
+            tabPanel("Home", icon = icon("home")
                      
                      ),
             
-            # Panel de inicio ---------------------------------------------------------
+            # Panel de la app  ---------------------------------------------------------
             tabPanel("App", icon = icon("child"),
                      
                    
@@ -48,7 +49,9 @@ shinyUI(fluidPage(
                     #     "Número de hijos de los hogares colombianos"
                     # ),
                     
-                    # Botón Predicción ----------------------------------------------------------
+
+                    # Predicción panel condicional --------------------------------------------
+                    
                     conditionalPanel(
                         condition = "input.Num_integrantes != '0' && 
                                      input.Genero != ' ' && 
@@ -62,6 +65,10 @@ shinyUI(fluidPage(
                                      hr()
                     ),
                     # Cuestionario ----------------------------------------------------------
+                    
+                    br(),
+                    br(),
+                    br(),
                     
                     tags$div(class="row row-cols-5",
                         tags$div(class="col",
@@ -154,6 +161,8 @@ shinyUI(fluidPage(
                 )
             ),
             
+
+            # Panel de video ----------------------------------------------------------
             tabPanel("Video", icon = icon("youtube")
             
             )
