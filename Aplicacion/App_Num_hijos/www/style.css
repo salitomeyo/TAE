@@ -89,26 +89,26 @@
 
 
 .selectize-input  { 
-    color: #262626;
+    color: white;
     font-size: 12px;
 } 
 
 .selectize-input.full{
     background-color: #3e8e8a;
     border-color: #367c79;
-    color: #262626;
+    color: white;
     font-size: 12px;
 }
 
 .selectize-dropdown-content{
     background-color: #3e8e8a;
-    color: #262626;
+    color: white;
     font-size: 12px;
 }
 
 .selectize-dropdown .active{
     background-color: #367c79;
-    color: #262626;
+    color: white;
     font-size: 12px;
 }
 
@@ -116,14 +116,14 @@
 .selectize-input {
     background-color: #3e8e8a;
     border-color: #367c79;
-    color: #262626;
+    color: white;
     font-size: 12px;
 }
 
 .form-control{
     background-color: #3e8e8a;
     border-color: #367c79;
-    color: #262626;
+    color: white;
     margin-bottom: 10%;
     font-size: 12px;
 }
@@ -131,7 +131,7 @@
 .form-control:focus{
     background-color: #3e8e8a;
     border-color: #367c79;
-    color: #262626;
+    color: white;
     font-size: 12px;
 }
 
