@@ -1,17 +1,8 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css");
 
-/* #loading-content {
-    position: absolute;
-    background: #00525c;
-    opacity: 0.9;
-    z-index: 100;
-    left: 0;
-    right: 0;
-    height: 100%;
-    text-align: center;
-    color: #FFFFFF;
-  }
-*/
+.jumbotron {
+    font-size: 40px;
+}
 
 .jumbo1 {
     position: absolute;
@@ -57,13 +48,14 @@
     background-color: #464646;
     align-content: center;
 }
+
 .informacion{
     position: absolute;
     top: 300px;
 }
 
 .btn{
-    background-color: #006199;
+    background-color: #005a66;
     font-size: large;
     font-weight: 600;
     padding-left: 10%;
@@ -74,69 +66,70 @@
     height:100px; 
     width:100px;
     padding-left: 2%;
+    padding-bottom: 6%;
 }
 
-.slider {
-	width: 100%;
-	margin: auto;
-	overflow: hidden;
-}
-
-.slider ul {
-	display: flex;
-	padding: 0;
-	width: 400%;
-	
-	animation: cambio 20s infinite alternate linear;
-}
-
-.slider li {
-	width: 100%;
-	list-style: none;
-    align-content: center;
-}
-
-.slider img {
-	width: 100%;
-    height: 300px;
-}
-
-@keyframes cambio {
-	0% {margin-left: 0;}
-	20% {margin-left: 0;}
-	40% {margin-left: -100%;}
-	60% {margin-left: -200%;}
-	80% {margin-left: -300%;}
-	100% {margin-left: -300%;}
-}
 
 .selectize-input  { 
-    color: white;
+    color: #262626;
+    font-size: 12px;
 } 
 
 .selectize-input.full{
-    background-color: #00798e;
-    color: white;
+    background-color: #3e8e8a;
+    border-color: #367c79;
+    color: #262626;
+    font-size: 12px;
+}
+
+.selectize-dropdown-content{
+    background-color: #3e8e8a;
+    color: #262626;
+    font-size: 12px;
+}
+
+.selectize-dropdown .active{
+    background-color: #367c79;
+    color: #262626;
+    font-size: 12px;
+}
+
+
+.selectize-input {
+    background-color: #3e8e8a;
+    border-color: #367c79;
+    color: #262626;
+    font-size: 12px;
 }
 
 .form-control{
-    background-color: #00798e;
-    color: white;
+    background-color: #3e8e8a;
+    border-color: #367c79;
+    color: #262626;
+    margin-bottom: 10%;
+    font-size: 12px;
 }
 
-.selectize-input {
-    background-color: #00798e;
-    color: white;
+.form-control:focus{
+    background-color: #3e8e8a;
+    border-color: #367c79;
+    color: #262626;
+    font-size: 12px;
+}
 
+.form-control.active{
+    border: 0px;
+    font-size: 12px;
 }
 
 .nav-tabs{
-    background-color: #00525c;
+    background-color: #262626;
 }
 
 body{
     text-align: center;
-    background-color: #e4e7e6;
+    background-color: #262626;
+    color: #cccccc;
 }
 
 h1{
@@ -145,10 +138,160 @@ h1{
     font-size: 30px;
 }
 
+h2{
+    padding-top: 40px;
+    padding-bottom: 20px;
+    font-size: 30px;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
 p{
     text-align: justify;
     padding: 10px;
     font-size: 15px;
     margin-left: 15%;
     margin-right: 15%;
+}
+
+.selectize-input, .selectize-control.single .selectize-input.input-active{
+    background-color: #3e8e8a;
+    font-size: 12px;
+}
+
+input{
+    background-color: #3e8e8a;
+    font-size: 12px;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #262626;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+    color: #71c1bb;
+    cursor: default;
+    background-color: #262626;
+    border: 3px solid #262626;
+    border-bottom-color: #3e8e8a;
+    font-size: 12px;
+}
+
+a {
+    color: #cccccc;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.btn:hover{
+    background-color:#00798e ;
+    border-color: #00798e;
+}
+
+.nav-tabs>li>a:hover{
+    background-color:#404040;
+    border-color: #404040;
+    color: #cccccc;
+    font-size: 12px;
+}
+
+.gris{
+    background-color: #262626;
+}
+
+.cyan{
+    background-color: #4DAEA9;
+}
+
+.negro{
+    color: #262626;
+}
+
+h1.negro{
+    padding-top: 15%;
+    padding-bottom: 5%;
+    font-size: 30px;
+}
+
+p.negro{
+    padding-bottom: 5%;
+    font-size: 15px;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+h5.negro{
+    font-size: 15px;
+}
+
+.nombre{
+    color: #4DAEA9;
+    padding-top: 10%;
+}
+
+.logologin{
+    width: 30%;
+    height: auto;
+    margin-top: 20%;
+}
+
+.well{
+    background-color: #262626;
+    border: 0px;
+    padding-top: 5%;
+}
+
+.loginform .selectize-input{
+    background-color: #71c1bb;
+    color: #262626;
+    width: 80%;
+}
+
+.loginbutton{
+    margin-bottom: 5%;
+}
+
+h2.body {
+    padding-top: 0px;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.btn-default.active.focus, .btn-default.active:focus, .btn-default.active:hover, .btn-default:active.focus, .btn-default:active:focus, .btn-default:active:hover, .open>.dropdown-toggle.btn-default.focus, .open>.dropdown-toggle.btn-default:focus, .open>.dropdown-toggle.btn-default:hover{
+    color: #262626;
+    background-color: #00798e;
+    border-color: #00798e;
+    box-shadow: #00798e;
+}
+
+.btn:focus{
+    color: #262626;
+    background-color: #00798e;
+    border-color: #00798e;
+}
+
+.rounded-circle{
+    width: 90px;
+    height: 90px;
+}
+
+.img-thumbnail {
+    background-color: #262626;
+    border: 2px solid #3e8e8a;
+}
+
+.co-creator{
+    height: max-content;
+}
+
+.rectangle{
+    height: 200px;
+}
+
+.resultado{
+    padding: 10px;
+    padding-left: 100px;
+    padding-right: 100px;
 }
