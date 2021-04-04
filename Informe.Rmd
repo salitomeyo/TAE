@@ -3,8 +3,7 @@ title: "Informe"
 author: "Todos"
 date: "31/3/2021"
 output:
-  html_document:
-  css: "style.css"
+  rmdformats::readthedown
     
 ---
 
@@ -1510,10 +1509,10 @@ pred_mod1_round <- round(pred_mod1_reg)
 Matriz de confusión
 
 ```{r, echo=FALSE}
-MC1 <- table(tst_prop$Num_hijos, pred_mod1_round)
+MC1 <- table(pred_mod1_round, tst_prop$Num_hijos)
 
 kable(MC1, align = "c")%>%
-  add_header_above(c("Predicciones" = 1, "Reales" = 15)) %>%
+  add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
   kable_paper("striped", full_width = FALSE) 
 ```
 
@@ -1550,7 +1549,7 @@ pred_mod1_arboles <-  predict(mod1_arboles, newdata = tst_prop, type = "class")
 ```
 
 ```{r, echo=FALSE}
-MC <- table(tst_prop$Num_hijos, pred_mod1_arboles)
+MC <- table(pred_mod1_arboles, tst_prop$Num_hijos)
 kable(MC, align = "c")%>%
   add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
   kable_paper("striped", full_width = FALSE)
@@ -1583,14 +1582,14 @@ pred_mod1_reg_arboles <-  predict(mod1_reg_arboles, newdata = tst_prop)
 
 ```{r, echo=FALSE}
 pred_mod1_reg_arboles <- round(pred_mod1_reg_arboles)
-MC <- table(tst_prop$Num_hijos, pred_mod1_reg_arboles)
-kable(MC, align = "c")%>%
+MC2 <- table(pred_mod1_reg_arboles, tst_prop$Num_hijos)
+kable(MC2, align = "c")%>%
   add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
   kable_paper("striped", full_width = FALSE)
 ```
 
 ```{r, echo=FALSE}
-acierto<-sum(diag(MC))/sum(MC)
+acierto<-sum(diag(MC2))/sum(MC2)
 error <- 1-acierto
 ```
 
@@ -1616,14 +1615,14 @@ HijosPoisson <-  predict(HijosPoisson, newdata = tst_prop)
 
 ```{r, echo=FALSE}
 HijosPoisson <- round(HijosPoisson)
-MC <- table(na.omit(tst_prop)$Num_hijos, HijosPoisson)
-kable(MC, align = "c")%>%
+MC3 <- table(HijosPoisson, na.omit(tst_prop)$Num_hijos)
+kable(MC3, align = "c")%>%
   add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
   kable_paper("striped", full_width = FALSE)
 ```
 
 ```{r}
-acierto<-sum(diag(MC))/sum(MC)
+acierto<-sum(diag(MC3))/sum(MC3)
 error <- 1-acierto
 ```
 
@@ -1651,14 +1650,14 @@ pred_mod_RF <- predict(mod_RF, data = (tst_prop))
 ```
 
 ```{r, echo=FALSE}
-MC <- table(predicho = pred_mod_RF$predictions, real = (tst_prop)$Num_hijos)
-kable(MC, align = "c")%>%
+MC4 <- table(predicho = pred_mod_RF$predictions, real = (tst_prop)$Num_hijos)
+kable(MC4, align = "c")%>%
   add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
   kable_paper("striped", full_width = FALSE)
 ```
 
 ```{r, echo=FALSE}
-acierto<-sum(diag(MC))/sum(MC)
+acierto<-sum(diag(MC4))/sum(MC4)
 error <- 1-acierto
 ```
 
@@ -1685,14 +1684,14 @@ pred_bayes <- predict(mod_Naive_Bayes, newdata = tst_prop, type="class")
 ```
 
 ```{r, echo=FALSE}
-MC <- table(tst_prop$Num_hijos, pred_bayes)
-kable(MC, align = "c")%>%
+MC5 <- table( pred_bayes, tst_prop$Num_hijos)
+kable(MC5, align = "c")%>%
   add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
   kable_paper("striped", full_width = FALSE)
 ```
 
 ```{r, echo=FALSE}
-acierto<-sum(diag(MC))/sum(MC)
+acierto<-sum(diag(MC5))/sum(MC5)
 error <- 1-acierto
 ```
 
@@ -1763,14 +1762,14 @@ knn_model <- knn(train, test, cl = y_train, k = 18)
 ```
 
 ```{r, echo=FALSE}
-MC <- table("Predicciones" = knn_model, "Reales" = y_test)
-kable(MC, align = "c")%>%
+MC6 <- table("Predicciones" = knn_model, "Reales" = y_test)
+kable(MC6, align = "c")%>%
   add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
   kable_paper("striped", full_width = FALSE)
 ```
 
 ```{r, echo=FALSE}
-acierto<-sum(diag(MC))/sum(MC)
+acierto<-sum(diag(MC6))/sum(MC6)
 error <- 1-acierto
 ```
 
