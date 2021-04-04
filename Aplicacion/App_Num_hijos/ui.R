@@ -1,6 +1,6 @@
 library(shiny)
 library(shinythemes)
-library(shinyjs)
+# library(shinyjs)
 
 
 shinyUI(fluidPage(
@@ -9,18 +9,18 @@ shinyUI(fluidPage(
     includeCSS("www/style.css"),
     
     # shinyjs
-    useShinyjs(),
+    # useShinyjs(),
     
     # Loading message
-    div(
-        id = "loading-content",
-        h1("Cargando...")
-    ),
+    # div(
+    #     id = "loading-content",
+    #     h1("Cargando...")
+    # ),
     
-    hidden(
-        
-    div(
-        id = "app-content",
+    # hidden(
+    #     
+    # div(
+    #     id = "app-content",
         
 
     # Panel emergente de inicio ----------------------------------------------
@@ -300,5 +300,5 @@ shinyUI(fluidPage(
         )
     )
     )
-    ))
+    # ))
 ))
