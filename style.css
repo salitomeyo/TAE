@@ -32,3 +32,32 @@ body{
   text-align: justify;
   align-content: center;
 }
+
+button{
+  width: 100%;
+}
+
+#sidebar h2 {
+  background-color: #00798e;
+}
+
+#sidebar a{
+  color: 262626;
+  background-color: #4DAEA9;
+}
+
+.nav>li>a:focus, .nav>li>a:hover {
+  text-decoration: none;
+  background-color: #00798e;
+}
+
+a:visited {
+  color: #00798e;
+}
+
+#toc ul.nav li.active a {
+  color: #262626 !important;
+  font-weight: bold;
+  background-color: #00798e;
+  border-right: solid 0px #00798e !important;
+}

@@ -1,11 +1,88 @@
 ---
 title: "Informe"
-author: "Todos"
+author: "Cristina Mercedes Ortega Benavides, Miguel Angel Londoño Ciceros, Jennifer Salazar Galvis, Juan Esteban Sanchez Pulgarin, Salome Aristizabal Giraldo"
 date: "31/3/2021"
 output:
-  rmdformats::readthedown
+  rmdformats::readthedown:
+  css: "style.css"
     
 ---
+
+<style>
+
+#toc ul.nav li.active ul li a {
+    background-color: #404040;
+    border-right: solid 1px #404040 !important;
+}
+
+#postamble .author {
+    font-size: 10px;
+}
+
+#sidebar h2 a:hover {
+    color: #4DAEA9;
+}
+
+#postamble .date {
+    font-size: 10px;
+}
+
+#postamble {
+    color: white;
+    background: #262626;
+    border-top: solid 0px #211103;
+}
+
+#toc {
+    background-color: #262626;
+}
+
+#toc a{
+  border-bottom: solid 2px #4DAEA9;
+}
+
+#sidebar a:hover {
+    color:#262626;
+    background-color: #4DAEA9;
+    cursor: pointer;
+}
+
+button{
+  width: 100%;
+  color:#4DAEA9;
+}
+
+#sidebar h2 {
+  background-color: #00798e;
+  margin-bottom:0px;
+}
+
+#sidebar a{
+  color: white;
+}
+
+.nav>li>a:focus, .nav>li>a:hover {
+  text-decoration: none;
+  background-color: #71c1bb;
+}
+
+a:visited {
+  color: #00798e;
+}
+
+#toc ul.nav li.active a {
+    color: #4DAEA9 !important;
+    font-weight: bold;
+    background-color: #333333;
+    border-right: solid 0px #333333 !important;
+    border-bottom: solid 2px #4DAEA9;
+}
+
+h1, h2, h3, h4, h5, h6{
+    color: #4DAEA9;
+}
+
+</style>
 
 <script language="JavaScript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -956,22 +1033,397 @@ gra27 <- ggplot(Base_final,aes(x=factor(Telefonia_fija),y=Num_hijos,fill=factor(
 
 ```
 
+<div class="accordion" id="accordionExample">
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingOne">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+        Género
+</button>
+</h5>
+<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra1
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwo">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        Estado civil
+</button>
+</h5>
+<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra2
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingThree">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+        Lugar de nacimiento
+</button>
+</h5>
+<div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra3
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingFour">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+        Reside el padre con el jefe del hogar
+</button>
+</h5>
+<div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra4
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingFive">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+        Educación del padre del jefe del hogar
+</button>
+</h5>
+<div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra5
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingSix">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+        Reside la madre con el jefe del hogar
+</button>
+</h5>
+<div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra6
+```
+</div>
+</div>
+</div>
 
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingSeven">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+        Educación de la madre del jefe del hogar
+</button>
+</h5>
+<div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra7
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingEight">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+        Etnia
+</button>
+</h5>
+<div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra8
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingNine">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+        Número de subsidios
+</button>
+</h5>
+<div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra9
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTen">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTen" aria-expanded="false" aria-controls="collapseTen">
+        Cantidad de hogares por vivienda
+</button>
+</h5>
+<div id="collapseTen" class="accordion-collapse collapse" aria-labelledby="headingTen" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra10
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingEleven">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEleven" aria-expanded="false" aria-controls="collapseEleven">
+        Tipo de vivienda
+</button>
+</h5>
+<div id="collapseEleven" class="accordion-collapse collapse" aria-labelledby="headingEleven" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra11
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwelve">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwelve" aria-expanded="false" aria-controls="collapseTwelve">
+        Material de los pisos
+</button>
+</h5>
+<div id="collapseTwelve" class="accordion-collapse collapse" aria-labelledby="headingTwelve" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra12
+```
+</div>
+</div>
+</div>
+
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingThirteen">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThirteen" aria-expanded="false" aria-controls="collapseThirteen">
+        Servicio de energía eléctrica
+</button>
+</h5>
+<div id="collapseThirteen" class="accordion-collapse collapse" aria-labelledby="headingThirteen" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra13
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingFourteen">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFourteen" aria-expanded="false" aria-controls="collapseFourteen">
+        Estrato
+</button>
+</h5>
+<div id="collapseFourteen" class="accordion-collapse collapse" aria-labelledby="headingFourteen" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra14
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingFifteen">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFifteen" aria-expanded="false" aria-controls="collapseFifteen">
+        Acueducto
+</button>
+</h5>
+<div id="collapseFifteen" class="accordion-collapse collapse" aria-labelledby="headingFifteen" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra15
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingSixteen">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSixteen" aria-expanded="false" aria-controls="collapseSixteen">
+        Alcantarillado
+</button>
+</h5>
+<div id="collapseSixteen" class="accordion-collapse collapse" aria-labelledby="headingSixteen" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra16
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingSeventeen">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeventeen" aria-expanded="false" aria-controls="collapseSeventeen">
+        Recolección de basuras por semana
+</button>
+</h5>
+<div id="collapseSeventeen" class="accordion-collapse collapse" aria-labelledby="headingSeventeen" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra17
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingEighteen">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEighteen" aria-expanded="false" aria-controls="collapseEighteen">
+        Nivel educativo
+</button>
+</h5>
+<div id="collapseEighteen" class="accordion-collapse collapse" aria-labelledby="headingEighteen" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra18
+```
+</div>
+</div>
+</div>
+
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingNineteen">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNineteen" aria-expanded="false" aria-controls="collapseNineteen">
+        Es estudiante
+</button>
+</h5>
+<div id="collapseNineteen" class="accordion-collapse collapse" aria-labelledby="headingNineteen" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra19
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwenty">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwenty" aria-expanded="false" aria-controls="collapseTwenty">
+        Afiliación a salud
+</button>
+</h5>
+<div id="collapseTwenty" class="accordion-collapse collapse" aria-labelledby="headingTwenty" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra20
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwentyone">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwentyone" aria-expanded="false" aria-controls="collapseTwentyone">
+        Estado de salud
+</button>
+</h5>
+<div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingTwentyone" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra21
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwentytwo">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwentytwo" aria-expanded="false" aria-controls="collapseTwentytwo">
+        Uso del celular
+</button>
+</h5>
+<div id="collapseTwentytwo" class="accordion-collapse collapse" aria-labelledby="headingTwentytwo" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra22
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwentythree">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwentythree" aria-expanded="false" aria-controls="collapseTwentythree">
+        Número de cuartos
+</button>
+</h5>
+<div id="collapseTwentythree" class="accordion-collapse collapse" aria-labelledby="headingTwentythree" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra23
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwentyfour">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwentyfour" aria-expanded="false" aria-controls="collapseTwentyfour">
+         Servicio de gas natural
+</button>
+</h5>
+<div id="collapseTwentyfour" class="accordion-collapse collapse" aria-labelledby="headingTwentyfour" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra24
+```
+</div>
+</div>
+</div>
+
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwentyfive">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwentyfive" aria-expanded="false" aria-controls="collapseTwentyfive">
+        Contrato de la vivienda
+</button>
+</h5>
+<div id="collapseTwentyfive" class="accordion-collapse collapse" aria-labelledby="headingTwentyfive" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra25
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwentysix">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwentysix" aria-expanded="false" aria-controls="collapseTwentysix">
+        Número de integrantes en el hogar
+</button>
+</h5>
+<div id="collapseTwentysix" class="accordion-collapse collapse" aria-labelledby="headingTwentysix" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra26
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwentyseven">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwentyseven" aria-expanded="false" aria-controls="collapseTwentyseven">
+        Servicio de telefonía fija
+</button>
+</h5>
+<div id="collapseTwentyseven" class="accordion-collapse collapse" aria-labelledby="headingTwentyseven" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra27
+```
+</div>
+</div>
+</div>
+
+</div>
 
 ```{r, echo=F}
 require(gridExtra)
-grid.arrange(gra1, gra2, gra3, gra4, nrow = 2,ncol = 2)
-grid.arrange(gra5, gra6, gra7, gra8, nrow = 2,ncol = 2)
-grid.arrange(gra9, gra10, gra11, gra12, nrow = 2,ncol = 2)
-grid.arrange(gra13, gra14, gra15, gra16, nrow = 2,ncol = 2)
-grid.arrange(gra17, gra18, gra19, gra20, nrow = 2,ncol = 2)
-grid.arrange(gra21, gra22, gra23, gra24, nrow = 2,ncol = 2)
-grid.arrange(gra25, gra26, nrow = 1, ncol = 2)
-gra27
 ```
 
 Y para las variables numéricas se utilizan gráficos de puntos vs Num_hijos para analizar la posible influencia o relación de cada predictora con la respuesta.
-
 
 ```{r, echo=F}
 puntos1 <- ggplot(Base_final, aes(x = Edad, y = Num_hijos)) +
@@ -991,10 +1443,65 @@ puntos4 <- ggplot(Base_final, aes(x = Pago_mes_energia, y = Num_hijos)) +
   labs(x = "Pago mes de energia del hogar", y = "Número de hijos")
 ```
 
-
-```{r, echo=F}
-grid.arrange(puntos1, puntos2, puntos3, puntos4, nrow = 2,ncol = 2)
+<div class="accordion" id="accordionPuntos">
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingOne">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+        Edad
+</button>
+</h5>
+<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionPuntos">
+<div class="accordion-body">
+```{r}
+puntos1
 ```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwo">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        Ingresos del hogar
+</button>
+</h5>
+<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionPuntos">
+<div class="accordion-body">
+```{r}
+puntos2
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingThree">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+        Ultimo pago de energia del hogar
+</button>
+</h5>
+<div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionPuntos">
+<div class="accordion-body">
+```{r}
+puntos3
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingFour">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+        Pago mensual de energía del hogar
+</button>
+</h5>
+<div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionPuntos">
+<div class="accordion-body">
+```{r}
+puntos4
+```
+</div>
+</div>
+</div>
+</div>
+
 
 
 ###  Variables escogidas a partir de los graficos descriptivos
