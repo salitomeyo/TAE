@@ -221,7 +221,7 @@ shinyUI(fluidPage(
                                        tags$h1('Acerca de la aplicación'),
                                        
                                        tags$p('Esta aplicación permite obtener con facilidad una predicción 
-                                              para el número de hijos de un hogar colombiano en el año 2019, 
+                                              para el número de hijos de un hogar colombiano, 
                                               a partir de conocer las siguientes cinco características sobre el hogar:'),
                                               
                                        tags$p("•	El número de integrantes del hogar", br(),
@@ -229,13 +229,18 @@ shinyUI(fluidPage(
                                               "•	La edad del jefe de hogar", br(),
                                               "•	El estado civil del jefe de hogar", br(),
                                               "•	Y si vive en el hogar la madre del jefe de hogar"),
+                                       
+                                       tags$p("Los datos que administrara no son íntimos o con los cuales se pueda 
+                                              sentir incomodo, además de que es poca la información que proporcionara 
+                                              para tener la oportunidad de obtener una predicción del número de hijos 
+                                              del hogar del cual proporcionó la información."),
                                               
                                         tags$p(
                                         
                                         "Para usarla vaya a el panel", tags$i(class="fa fa-child"),
-                                        "app y complete el formulario, cuanto todos los campos 
+                                        "App y complete el formulario, cuanto todos los campos 
                                         tengan un valor valido se habilitará un botón que le 
-                                        mostrará la predicción correspondiente"),
+                                        mostrará la predicción correspondiente."),
                                         
                                        
                                        tags$p('Las predicciones sobre el número de hijos son dadas por un modelo de
