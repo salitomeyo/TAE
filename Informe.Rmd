@@ -12,6 +12,7 @@ output:
 
 #toc ul.nav li.active ul li a {
     background-color: #404040;
+    color:white;
     border-right: solid 1px #404040 !important;
 }
 
@@ -1323,7 +1324,7 @@ gra20
         Estado de salud
 </button>
 </h5>
-<div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingTwentyone" data-bs-parent="#accordionExample">
+<div id="collapseTwentyone" class="accordion-collapse collapse" aria-labelledby="headingTwentyone" data-bs-parent="#accordionExample">
 <div class="accordion-body">
 ```{r}
 gra21
