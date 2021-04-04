@@ -32,8 +32,7 @@ shinyUI(fluidPage(
                          
                          br(),
                          
-                         tags$p('Le damos gracias por hacer uso de aplicación y esperamos que la
-                              aplicación haya sido de su agrado y haga uso adecuado de la información que aquí se le brinde.'), 
+                         tags$p('Le damos gracias por hacer uso de aplicación, esperamos que esta sea de su agrado y haga un uso adecuado de la información que aquí se le brinde.'), 
                          
                          hr(),
                          
@@ -97,6 +96,7 @@ shinyUI(fluidPage(
                 # División de la página verticalmente -------------------------------------
                 verticalLayout(
                     
+                    br(),
                     titlePanel(
                         
                         tags$h2("Complete el formulario para obtener la predicción sobre el número de hijos")
@@ -215,6 +215,11 @@ shinyUI(fluidPage(
                 )
             ),
             
+            # Panel de video ----------------------------------------------------------
+            tabPanel("Video", icon = icon("youtube")
+                     
+            ),
+            
             # Panel de inicio ---------------------------------------------------------
             tabPanel("Sobre nosotros", icon = icon("user-edit"),
                      
@@ -274,11 +279,6 @@ shinyUI(fluidPage(
                                        tags$h5("Estudiante de Ingenieria de Sistemas")
                               ),
                      )
-            ),
-            
-            # Panel de video ----------------------------------------------------------
-            tabPanel("Video", icon = icon("youtube")
-            
             )
         
         )
