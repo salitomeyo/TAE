@@ -220,29 +220,37 @@ shinyUI(fluidPage(
                                        
                                        tags$h1('Acerca de la aplicación'),
                                        
-                                       tags$p('Esta aplicacion a cual tiene la oportunidad de acceder, está 
-                     basada en un modelo de predicción Random Forest el cual fue 
-                     entrenado con un conjunto de datos de las encuestas de calidad 
-                     de vida del DANE en el año 2019 en el país de Colombia, el cual tienen 
-                     exhaustiva información de todas las características de los 
-                     hogares y en las cuales se escogieron como 
-                     más importantes las que son pedidas en la misma aplicación.'),
+                                       tags$p('Esta aplicación permite obtener con facilidad una predicción 
+                                              para el número de hijos de un hogar colombiano en el año 2019, 
+                                              a partir de conocer las siguientes cinco características sobre el hogar:'),
+                                              
+                                       tags$p("•	El número de integrantes del hogar", br(),
+                                              "•	El genero del jefe de hogar", br(),
+                                              "•	La edad del jefe de hogar", br(),
+                                              "•	El estado civil del jefe de hogar", br(),
+                                              "•	Y si vive en el hogar la madre del jefe de hogar"),
+                                              
+                                        tags$p(
+                                        
+                                        "Para usarla vaya a el panel", tags$i(class="fa fa-child"),
+                                        "app y complete el formulario, cuanto todos los campos 
+                                        tengan un valor valido se habilitará un botón que le 
+                                        mostrará la predicción correspondiente"),
+                                        
                                        
-                                       tags$p('Esta aplicación está diseñada para que usted ingrese los 
-                     datos del hogar al cual pertenece o del cual desea adquirir 
-                     información, la información requerida está enfocada principalmente
-                     en el jefe de la misma, los datos que administrara no son íntimos 
-                     o con los cuales se pueda sentir incomodo, además de que es poca 
-                     la información que proporcionara para tener la oportunidad de 
-                     obtener una predicción del número de hijos del hogar del cual 
-                     proporciono la información.'),
+                                       tags$p('Las predicciones sobre el número de hijos son dadas por un modelo de
+                                              Random Forest el cual fue entrenado sobre un conjunto de datos de la 
+                                              encuesta de calidad de vida del DANE en el año 2019 en el país de Colombia,
+                                              y que obtuvo una tasa de acierto del 86% sobre los datos que se usaron para su validación,
+                                              los detalles sobre como se llegó a este modelo pueden ser consultados en este informe.'),
                                        
                                        
                                        hr(),
                                        
-                                       tags$h2('Información acerca de los investigadores encargados 
-                     del ajuste del modelo de predicción y creación de la aplicación'),
+                                       tags$h2('Más información'),
                                        
+                                       tags$p("Esta aplicación shiny fue creada para el curso Técnicas en aprendizaje estadístico semestre 2021-1
+                                              de la Universidad nacional de Colombia sede Medellín por: "),
                                        
                                        tags$div(class="row row-cols-5",
                                                 tags$div (class="col co-creator",
@@ -320,7 +328,7 @@ shinyUI(fluidPage(
                                                                     )
                                                           )
                                                 ),
-                                       ),
+                                       )
                               )
                               
                             )
