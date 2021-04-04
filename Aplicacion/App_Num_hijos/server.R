@@ -117,4 +117,7 @@ shinyServer(function(input, output) {
         
     })
     
+    hide(id = "loading-content", anim = TRUE, animType = "fade")    
+    show("app-content")
+    
 })
