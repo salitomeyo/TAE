@@ -181,7 +181,7 @@ h2{
 p{
     text-align: justify;
     padding: 10px;
-    font-size: 15px;
+    font-size: 18px;
     margin-left: 15%;
     margin-right: 15%;
 }
@@ -330,4 +330,12 @@ h2.body {
 a:hover{
     color: #FFFFFF;
     text-decoration: none;
+}
+
+.small, small {
+    font-size: 15px;
+}
+
+.mb-0 {
+    font-size: 15px;
 }

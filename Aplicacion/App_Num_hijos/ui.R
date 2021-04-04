@@ -265,8 +265,8 @@ shinyUI(fluidPage(
                                                                               tags$span (class="small text-uppercase text-muted", "Estudiante de Estadistica"),
                                                                               tags$ul (class="social mb-0 list-inline mt-3",
                                                                                        tags$li (class="list-inline-item",
-                                                                                                tags$a (href="#",class="social-link",
-                                                                                                        tags$i (class="fa fa-facebook-f")
+                                                                                                tags$a (href="https://www.linkedin.com/in/cristina-mercedes-ortega-benavides-0230bb20b/",class="social-link",
+                                                                                                        tags$i (class="fa fa-linkedin")
                                                                                                 )
                                                                                        )
                                                                               )
@@ -280,8 +280,8 @@ shinyUI(fluidPage(
                                                                               tags$span (class="small text-uppercase text-muted", "Estudiante de Estadistica"),
                                                                               tags$ul (class="social mb-0 list-inline mt-3",
                                                                                        tags$li (class="list-inline-item",
-                                                                                                tags$a (href="#",class="social-link",
-                                                                                                        tags$i (class="fa fa-facebook-f")
+                                                                                                tags$a (href="https://www.linkedin.com/in/miguel-londo%C3%B1o-374b48201/",class="social-link",
+                                                                                                        tags$i (class="fa fa-linkedin")
                                                                                                 )
                                                                                        )
                                                                               )
@@ -295,8 +295,8 @@ shinyUI(fluidPage(
                                                                               tags$span (class="small text-uppercase text-muted", "Estudiante de Estadistica"),
                                                                               tags$ul (class="social mb-0 list-inline mt-3",
                                                                                        tags$li (class="list-inline-item",
-                                                                                                tags$a (href="#",class="social-link",
-                                                                                                        tags$i (class="fa fa-facebook-f")
+                                                                                                tags$a (href="https://www.linkedin.com/in/jennifer-salazar-galvis-82a231202/",class="social-link",
+                                                                                                        tags$i (class="fa fa-linkedin")
                                                                                                 )
                                                                                        )
                                                                               )
@@ -310,8 +310,8 @@ shinyUI(fluidPage(
                                                                               tags$span (class="small text-uppercase text-muted", "Estudiante de Estadistica"),
                                                                               tags$ul (class="social mb-0 list-inline mt-3",
                                                                                        tags$li (class="list-inline-item",
-                                                                                                tags$a (href="#",class="social-link",
-                                                                                                        tags$i (class="fa fa-facebook-f")
+                                                                                                tags$a (href="https://www.linkedin.com/in/juan-esteban-sanchez-pulgarin-b39291172/",class="social-link",
+                                                                                                        tags$i (class="fa fa-linkedin")
                                                                                                 )
                                                                                        )
                                                                               )
@@ -325,8 +325,8 @@ shinyUI(fluidPage(
                                                                               tags$span (class="small text-uppercase text-muted", "Estudiante de Ingenieria de Sistemas e Informatica"),
                                                                               tags$ul (class="social mb-0 list-inline mt-3",
                                                                                        tags$li (class="list-inline-item",
-                                                                                                tags$a (href="#",class="social-link",
-                                                                                                        tags$i (class="fa fa-facebook-f")
+                                                                                                tags$a (href="https://www.linkedin.com/in/salome-aristizabal-giraldo-7546441bb/",class="social-link",
+                                                                                                        tags$i (class="fa fa-linkedin")
                                                                                                 )
                                                                                        )
                                                                               )
