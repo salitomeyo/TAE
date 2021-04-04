@@ -117,4 +117,11 @@ shinyServer(function(input, output) {
     
   })
   
+
+  # Ocultar app mientras carga ----------------------------------------------
+  
+  hide(id = "loading-content", anim = TRUE, animType = "fade")
+  show("app-content")
+  
+  
 })

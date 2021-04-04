@@ -1,12 +1,28 @@
 library(shiny)
 library(shinythemes)
+library(shinyjs)
 
 shinyUI(fluidPage(
+  # shinyjs
+  useShinyjs(),
   
   # Estilo css
   includeCSS("www/style.css"),
   
+  # Ventana emergente de cargando... ----------------------------------------
+  tags$div(
+      id = "loading-content",
+      tags$h1("Cargando...", class = "cargando"),
+      class = "jumbotron"
+  ),
   
+  # Contenido oculto por la ventana emergente
+  hidden(
+  
+  tags$div(
+    id = "app-content",
+    
+    
   # Panel emergente de inicio ----------------------------------------------
   
   conditionalPanel(condition = "input.app == 0",
@@ -16,13 +32,13 @@ shinyUI(fluidPage(
                      tags$div(class="row",
                               tags$div(class="gris col-6",
                                        tags$img(class="logologin", src="logo.png"),
-                                       tags$h1(class="nombre", "Predictor de hijos"),
+                                       tags$h1(class="nombre", "Prediciendo el número de hijos"),
                               ),
                               
                               tags$div(class="cyan col-6",
                                        tags$h1(class="negro","Bienvenido"),
                                        
-                                       tags$p(class="negro",'Le damos gracias por hacer uso de aplicación, esperamos que esta sea de su agrado y haga un uso adecuado de la información que aquí se le brinde.'), 
+                                       tags$p(class="negro",'Le damos gracias por hacer uso de esta aplicación, esperamos que esta sea de su agrado y haga un uso adecuado de la información que aquí se le brinde.'), 
                                        
                                        tags$h5(class="negro","Seleccione su tipo de usuario:  "),
                                        
@@ -78,7 +94,7 @@ shinyUI(fluidPage(
                                          
                                          titlePanel(
                                           
-                                           tags$h2(class="body", "Complete el formulario para obtener la predicción sobre el número de hijos")
+                                           tags$h2(class="body", "Complete el formulario con la información de un hogar para obtener la predicción sobre el número de hijos")
                                            
                                          ),
                                          
@@ -194,7 +210,12 @@ shinyUI(fluidPage(
                                        )
                               ),
                               
-                              # Panel de inicio ---------------------------------------------------------
+                              # Panel de video ----------------------------------------------------------
+                              tabPanel("Video", icon = icon("youtube")
+                                       
+                              ),
+                              
+                              # Panel sobre nosotrso ---------------------------------------------------------
                               tabPanel("Sobre nosotros", icon = icon("user-edit"),
                                        
                                        tags$h1('Acerca de la aplicación'),
@@ -300,14 +321,10 @@ shinyUI(fluidPage(
                                                           )
                                                 ),
                                        ),
-                              ),
-                              
-                              # Panel de video ----------------------------------------------------------
-                              tabPanel("Video", icon = icon("youtube")
-                                       
                               )
                               
                             )
-                   )
-  )
+                   )#div class = "information"
+  ) #Conditional panel
+  )) #div class = "app-content" #Hidden
 ))

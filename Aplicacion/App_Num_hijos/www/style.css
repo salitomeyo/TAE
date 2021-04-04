@@ -1,5 +1,23 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css");
 
+#loading-content {
+    position: absolute;
+    background: #464646;
+    opacity: 0.9;
+    z-index: 100;
+    left: 0;
+    right: 0;
+    height: 100%;
+    text-align: center;
+    color: #FFFFFF;
+    display: table;
+}
+
+.cargando{
+    vertical-align: middle;
+    display: table-cell;
+}
+
 .jumbotron {
     font-size: 40px;
 }
