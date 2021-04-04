@@ -1,6 +1,36 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css");
 
-.jumbo {
+.jumbo1 {
+    position: absolute;
+    width: 100%;
+    height: 300px;
+    left: 0px;
+    top: 0px;
+
+    background: url("inmobiliaria.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #464646;
+    align-content: center;
+}
+
+.jumbo2 {
+    position: absolute;
+    width: 100%;
+    height: 300px;
+    left: 0px;
+    top: 0px;
+
+    background: url("empresa_credito.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #464646;
+    align-content: center;
+}
+
+.jumbo3 {
     position: absolute;
     width: 100%;
     height: 300px;
@@ -14,7 +44,6 @@
     background-color: #464646;
     align-content: center;
 }
-
 .informacion{
     position: absolute;
     top: 300px;

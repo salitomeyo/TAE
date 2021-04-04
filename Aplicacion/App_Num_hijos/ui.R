@@ -6,11 +6,64 @@ shinyUI(fluidPage(
     # Estilo css
     includeCSS("www/style.css"),
     
-    # Titulo de la aplicación -------------------------------------------------
-    tags$div(class = "jumbo", 
-             tags$h1("Número de hijos de los hogares colombianos", style = "color:white")
-             
+
+    # Panel emergente de inicio ----------------------------------------------
+    
+    conditionalPanel(condition = "input.app == 0",
+                     
+                     br(),
+                     br(),
+                     br(),
+                     br(),
+                     br(),
+                     br(),
+                     br(),
+                     br(),
+                     br(),
+                     br(),
+                     br(),
+                     br(),
+                     
+                     wellPanel(
+                         
+                         tags$h1("Bienvenido"),
+                         
+                         br(),
+                         br(),
+                         hr(),
+                         
+                         fluidRow(
+                             
+                             column(5),
+                             
+                             column(2, 
+                                    
+                                    tags$h5("Seleccione su tipo de usuario:  "),
+                                    
+                                    selectInput(inputId = "usuario",
+                                                label = "",
+                                                choices = c("Inmobiliaria", "Empresa crediticia", "Usuario natural"),
+                                                selected = c("Inmobiliaria")),
+                                    
+                                    actionButton(inputId = "app", "Continuar")
+                             ),
+                             
+                             column(5)
+                             
+                         )
+                         
+                     )
     ),
+    
+    
+
+    # Panel de la App ---------------------------------------------------------
+    
+    conditionalPanel(condition = "input.app != 0",
+    
+    # Titulo de la aplicación -------------------------------------------------
+    
+    htmlOutput(outputId = "header"),
     
     # tags$div (class="slider",
     #     tags$ul(
@@ -228,5 +281,6 @@ shinyUI(fluidPage(
             )
         
         )
+    )
     )
 ))

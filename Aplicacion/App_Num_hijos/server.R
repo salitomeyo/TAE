@@ -26,19 +26,48 @@ E_civil <-  c("No está casado(a) y vive en pareja hace menos de dos años",
     "Está soltero(a)",
     "Está casado(a)")
 
-
 # Server de la aplicación -------------------------------------------------
 
 shinyServer(function(input, output) {
     
+
+    # Cambio de fondo según el usuario ----------------------------------------
     
-    observeEvent(input$submit
-        # c(input$Genero,
-        # input$Estado_civil,
-        # input$Num_integrantes,
-        # input$Vive_hogar_madre,
-        # input$Edad)
-        , {
+    observeEvent(input$usuario, {
+        
+        output$header <- renderUI({
+            
+            if(input$usuario == "Inmobiliaria"){
+                
+                tags$div(class = "jumbo1",
+                         tags$h1("Número de hijos de los hogares colombianos", style = "color:white")
+                         
+                )
+                
+            }else if(input$usuario == "Empresa crediticia"){
+                
+                tags$div(class = "jumbo2",
+                         tags$h1("Número de hijos de los hogares colombianos", style = "color:white")
+                         
+                )
+                
+            }else if(input$usuario == "Usuario natural"){
+                
+                tags$div(class = "jumbo3",
+                         tags$h1("Número de hijos de los hogares colombianos", style = "color:white")
+                         
+                )
+                
+            }
+
+            
+        })
+
+    })
+
+    # Server para la predicción del numero de hijos ---------------------------
+    
+    observeEvent(input$submit, {
         
         # Variables categoricas a números -----------------------------------------
         
