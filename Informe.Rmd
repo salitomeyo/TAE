@@ -4,8 +4,7 @@ author: "Todos"
 date: "31/3/2021"
 output:
   html_document:
-  rmdformats::material:
-    css: "style.css"
+  css: "style.css"
     
 ---
 
@@ -16,7 +15,6 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE,warning = FALSE)
 ```
 
 # Introducción
-<div>
 
 <div style="text-align: justify">
 
@@ -26,56 +24,62 @@ Entre los datos que en algunos contextos pueden ser censurados u omitidos está 
 
 Se decidió abordar este problema como un problema de clasificación (aprendizaje supervisado). Para esto se tuvo en cuenta los siguiente:
 
-Se realizó una buena investigación y contextualización del conjunto de datos que fueron obtenidos de la ECV realizada por el DANE en 2019, mediante este se tuvo la oportunidad de establecer el número de hijos mediante la combinación de algunas variables presentes en un conjunto de datos particular abordado en la encuesta, además de seleccionar las variables más relevantes para realizar un análisis y la modelación.
+Se realizó una buena investigación y contextualización del conjunto de datos que fueron obtenidos de la ECV realizada por el DANE en 2019, mediante este se tuvo la oportunidad de establecer el número de hijos, a partir de, la combinación de algunas variables presentes en un conjunto de datos particular abordado en la encuesta, además de seleccionar las variables más relevantes para realizar un análisis y la modelación.
 
-Se procedió a la selección de variables, las cuales posteriormente fueron unidas mediante indicadores de hogares, este procedimiento fue realizado de manera muy cuidadosa para no obtener información incorrecta, después de este paso se llegó a una base de datos con las variables consideradas por lo investigadores como de interés.
+Se procedió a la selección de variables, las cuales posteriormente fueron unidas mediante indicadores de hogares. Este procedimiento fue realizado de manera muy cuidadosa para no obtener información incorrecta, después de este paso se llegó a una base de datos con las variables que los investigadores consideraron de interés.
 
 Previo a lo anterior, se procedió a realizar un análisis descriptivo sobre el conjunto de datos, que ayudaran a una mejor comprensión de las variables y a seleccionar cuales de estas eran más relevantes para predecir el número de hijos, se realizaron gráficos y demás análisis.
 
-Como paso siguiente se usaron técnicas estadísticas para la selección de variables mediante la formulación de modelos, los cuales en su mayoría coincidieron con los resultados las variables seleccionadas mediante el análisis descriptivo.  
+Como paso siguiente se usaron técnicas estadísticas para la selección de variables mediante la formulación de modelos, los cuales en su mayoría coincidieron con las variables seleccionadas mediante el análisis descriptivo.  
 
-Luego de este proceso de selección de variables se obtuvo un conjunto de datos con menos variables pero con el mismo número de registros, y asi empezar a modelar la variable objetivo.
+Después de seleccionar las variables, se obtuvo un conjunto de datos con menos atributos, pero con el mismo número de registros, y asi se empezó a modelar el número de hijos como un problema de clasificación, donde cada nivel de la variable respuesta es una categoría.
 
-Para la modelación se tendra el problema como uno de clasificación, donde el número de hijos corresponde a cada nivel de la variable respuesta como categoría.
+Los modelos seleccionados fueron considerados como los más adecuados para este problema en particular y son populares en el mundo del aprendizaje estadístico. Se realizaron ajustes con cada uno y se evaluó su rendimiento  mediante validación cruzada (Calculando tasas de acierto y error).
 
-Los modelos seleccionados fueron considerados como los más adecuados para este problema en particular y son populares en el mundo del aprendizaje estadístico, se realizaron ajustes con cada uno y se realizó validación cruzada, para poder evaluar el rendimiento de cada uno de ellos (mediante tasas de acierto y error).
-
-Después de ajustar varios modelos, se analizó la posibilidad de encontrar el mismo resultado con menos variables, encontrando que se obtenía la misma tasa de acierto, aunque, el número de variables utilizadas era menor; por lo tanto, se decidió nuevamente hacer una reducción de variables, de tal manera que se obtuvieron modelos más parsimoniosos (Buenos resultados con menos variables) llegando finalmente a modelos con cinco variables.
+Después de ajustar varios modelos, se analizó la posibilidad de encontrar el mismo resultado con menos variables, encontrando que se obtenía la misma tasa de acierto, aunque, el número de atributos utilizados era menor; por lo tanto, se decidió nuevamente hacer una reducción del conjunto de datos, de tal manera que se obtuvieron modelos más parsimoniosos (Buenos resultados con menos variables) llegando finalmente a modelos con cinco variables.
 
 De los modelos ajustados inicialmente se consideraron los cuatro mejores. Posteriormente estos modelos se ponen en competencia mediante distintas muestras aleatorias, divididas en conjunto de entrenamiento y validación; de tal manera, que el mejor modelo sea aquel que obtenga mejores resultados en el conjunto de validación en las diferentes muestras. 
 
 Bosques Aleatorios resultó ser el mejor después de este procedimiento, teniendo una alta tasa de aciertos. Después, se ajustó el mismo modelo con el conjunto de datos completo, con el fin de generar mejores predicciones por el hecho de contar con un mayor número de información.
 
-Como parte final, se aplicará el modelo obtenido en una página web que permitirá la interacción con sus posibles usuarios, esto mostrará su potencial para predecir el número de hijos de un hogar según la estructura del mismo.
+Como parte final, se aplicó el modelo obtenido en una página web que permite la interacción con sus usuarios, esto mostrará su potencial para predecir el número de hijos de un hogar colombiano según la estructura del mismo.
 
 
 # Retos
-<div>
 
-## Contextualización del conjunto de datos:
+ * Contextualizar la base de datos.
+ * Seleccionar las variables.
+ * Construir la variables número de hijos.
+ * Organizar la base de datos con variables que contribuyan de manera significativa a la solución del problema.
+ * Encontrar modelos que se ajusten a las necesidades del conjunto de datos.
+ * Seleccionar una solución óptima tanto para los investigadores como para los usuarios.
+
+# Contextualización del conjunto de datos:
 
 El número de hijos en un hogar es una variable muy simple y poco estudiada en algunos contextos, por eso los volúmenes de datos que se encuentran en la web muchas veces no disponen de este tipo de información, pero para entidades como inmobiliarias, empresas crediticias, etc; puede serles de sumo interés, por ello, bajo trabajos de investigación se llega a la conclusión de que estas variables pueden ser deducidas a partir de otras que siguen en el mismo contexto, en este caso particular el número de hijos puede ser deducida a partir de conjuntos de datos relacionados con información acerca de los hogares del país, por lo tanto, una de las bases de datos que se considera tienen más relación con las viviendas y hogares de Colombia es la encuesta de Calidad de vida, donde la más actualizada hasta la fecha es la realizada en el año 2019.
 
 La Encuesta de Calidad de Vida (ECV) es una investigación que realiza el DANE, con el objetivo de recoger información sobre diferentes aspectos y dimensiones del bienestar de los hogares, incluyendo aspectos como el acceso a bienes y servicios públicos, privados o comunales, salud, educación, cuidado de niños y niñas menores de 5 años, entre otros. Esta información posibilita efectuar análisis posteriores de los factores que explican los diferentes niveles de vida existentes en la población colombiana.
 
-Por ello mediante este conjunto de datos que tiene un gran volumen se intenta extraer aquellas variables que se consideran más representativas para intentar predecir el número de hijos que tienen cada uno de los hogares; Antes de ello, se debe de definir para esta investigación que es un hogar y que es el número de hijos, para realizar todos los análisis posteriores en función de esta variable (Número de hijos en el hogar).
+Por ello mediante este conjunto de datos que tiene un gran volumen, se intenta extraer aquellas variables que se consideran más representativas para intentar predecir el número de hijos que tiene cada uno de los hogares; antes de ello, se debe definir para esta investigación que es un hogar y que es el número de hijos, para realizar todos los análisis posteriores en función de esta variable (Número de hijos en el hogar).
 
 
-### Definiciones importantes
+## Definiciones importantes
 
-__Usuario__
+### Usuario
 
-Inmobiliarias, empresas crediticias, en las cuales el número de hijos es una información sensible, ya que esto puede suponerse como un impedimento ya sea a la hora de conseguir o rentar apartamento, o para conseguir préstamos; ya que se concibe que el mantenimiento de los hijos es elevado y este sube cuantos más hijos posee el prestatario, por lo que resulta más complicado para los padres de familia acceder a los mismos. 
+Inmobiliarias, empresas crediticias, en las cuales el número de hijos es una información sensible, ya que esto puede suponerse como un impedimento ya sea a la hora de conseguir o rentar apartamento, o para conseguir préstamos; debido a que, se concibe que el mantenimiento de los hijos es elevado y este sube cuantos más hijos posee el prestatario, por lo que resulta más complicado para los padres de familia acceder a los mismos. 
 
-Agencias o constructoras inmobiliarias en ocasiones tienen mucha información histórica de los clientes, sobretodo de los jefes de hogar, obteniendo así información relevante de las características de un hogar. En base a estas características podemos predecir el número de hijos del mismo, lo cual pueden utilizar dichas empresas para lanzar nuevos proyectos y ofrecer atención más personalizada a los hogares. Adicionalmente, algunas empresas que facilitan el arriendo como intermediarios pueden tener políticas de arriendo como el hecho de que no se admiten hijos en los hogares, esto es común en residencias estudiantiles, entre otros.
+Agencias o constructoras inmobiliarias en ocasiones tienen mucha información histórica de los clientes, sobretodo de los jefes de hogar, obteniendo así información relevante de las características de un hogar. En base a estas características podemos predecir el número de hijos del mismo, esta información puede ser utilizada por dichas empresas para lanzar nuevos proyectos y ofrecer atención más personalizada a sus usuarios.
 
-__Hogar__
+Adicionalmente, algunas empresas que facilitan el arriendo como intermediarios pueden tener políticas de arriendo como el hecho de que no se admiten hijos en los hogares, esto es común en residencias estudiantiles, entre otros.
 
-Según el DANE se entiende como hogar a una persona o grupo de personas que ocupan la totalidad o parte de una vivienda y que se han asocian para compartir su lugar de descanso, alimentos y demás necesidades básicas (si se trata de hogar-unidad doméstica) . Pueden ser familiares o no entre sí.
+### Hogar
+
+Según el DANE se entiende como hogar a una persona o grupo de personas que ocupan la totalidad o parte de una vivienda y que se han asociado para compartir su lugar de descanso, alimentos y demás necesidades básicas (si se trata de hogar-unidad doméstica) . Pueden ser familiares o no entre sí.
 
 Un hogar no puede dividirse en más de una vivienda, pero dentro de cada vivienda, puede haber más de un hogar, conformado por una o más personas con o sin vínculos de parentesco.
 
-__Número de hijos__
+### Número de hijos
 
 Se define el número de hijos de acuerdo con los hogares colombianos promedio, definidos por el DANE, en los cuales se tienen:
 
@@ -91,17 +95,17 @@ Se muestra a continuación una imagen que ejemplifica mejor lo antes mencionado:
 
 ![](hogares.png)
 
+
 </center>
 
 En base a esto se considera como el número de hijos, a los hijos, hijastros y nietos del jefe del hogar, sin discriminar por edad, ya que está es la forma que en general funciona mejor, en base a la mayoría de estructuras de los hogares en Colombia.
 
-En casos generales funciona esta estructura ya que en la mayoría de hogares cuenta con padres y si estos no están presentes, los abuelos de los hijos lo están, cuando se considera que hay varios grupos familiares en una misma vivienda, como lo son por ejemplo, varios hermanos con sus respectivos hijos, estos se dividirán en diferentes hogares; ya que son varios núcleos familiares en una misma vivienda, los cuales deben ser tomados como hogares de manera independiente, por lo tanto, estructuras como estas no sesgan la elección de la variable __número de hijos__, además que, cabe aclarar que la encuesta de calidad de vida hace esta misma división, ya que en una misma vivienda se ven presentes varios hogares(siendo 5 el máximo), por lo tanto, esta variable fue seleccionada con los hijos/hijastros y nietos del jefe del hogar; en base a la estructura de la encuesta de calidad de vida y en la perspectiva de los investigadores.
+En casos generales funciona esta estructura ya que en la mayoría de hogares cuenta con padres y si estos no están presentes, los abuelos de los hijos lo están, cuando se considera que hay varios grupos familiares en una misma vivienda, como lo son por ejemplo, varios hermanos con sus respectivos hijos, estos se dividirán en diferentes hogares; ya que son varios núcleos familiares en una misma vivienda, los cuales deben ser tomados como hogares de manera independiente, por lo tanto, estructuras como estas no sesgan la elección de la variable __número de hijos__. Además, cabe aclarar que la encuesta de calidad de vida hace esta misma división, ya que en una misma vivienda se ven presentes varios hogares(siendo 5 el máximo), por lo tanto, esta variable fue seleccionada con los hijos/hijastros y nietos del jefe del hogar; en base a la estructura de la encuesta de calidad de vida y en la perspectiva de los investigadores.
 
 
 # Materiales
-<div>
 
-## Contextualización de las variables utilizadas
+## Variables preselecionadas
 
 ### Características y composición del hogar.
 
@@ -477,7 +481,6 @@ Compuesta por 45 variables de las cuales se escogieron:
 
 
 # Metodología
-<div>
 
 ## Preprocesamiento de los datos
 
@@ -491,7 +494,7 @@ Como primer paso se realiza la lectura de las bases de datos:
 Caracteristicas_hogar_personas <- read.table("Caracteristicas y composicion del hogar.csv", sep = ";", header = T)
 ```
 
-Debido a que la variable P6051 muestra el parentesco de los integrantes de la familia con el jefe de hogar solo será utilizada para la creación de la variable número de hijos, es decir, no se tiene en cuenta como covariable para el ajuste de modelos:
+Debido a que la variable P6051 muestra el parentesco de los integrantes de la familia con el jefe de hogar, solo será utilizada para la creación de la variable número de hijos, es decir, no se tiene en cuenta como covariable para el ajuste de modelos:
 
 ```{r}
 #Selección de las variables necesarias
@@ -516,8 +519,8 @@ num_hijos <- aux_creacion_respuesta %>%
 
 ```{r,echo=FALSE}
 require(kableExtra)
-kable(head(num_hijos))%>%
-  kable_styling("striped", full_width = F)
+kable(head(num_hijos), align = "c")%>%
+  kable_paper("striped", full_width = F)
 ```
 
 El número de hogares que tiene al menos un hijo es de: `r dim(num_hijos)[1]` hogares.
@@ -535,8 +538,8 @@ num_integrantes <- Caracteristicas_hogar_personas %>%
 
 ```{r,echo=FALSE}
 require(kableExtra)
-kable(head(num_integrantes))%>%
-  kable_styling("striped",full_width = F)
+kable(head(num_integrantes), align = "c")%>%
+  kable_paper("striped",full_width = F)
 ```
 
 El número de hogares es `r dim(num_integrantes)[1]`.
@@ -553,8 +556,8 @@ colnames(num_hijos_final) <- c("ï..DIRECTORIO","SECUENCIA_P", "Num Integrantes"
 
 ```{r,echo=FALSE}
 require(kableExtra)
-kable(head(num_hijos_final,10))%>%
-  kable_styling("striped",full_width = F)
+kable(head(num_hijos_final,10), align = "c")%>%
+  kable_paper("striped",full_width = F)
 ```
 
 
@@ -648,7 +651,7 @@ Base5 <- Reduce(function(...) merge (..., by= c("ï..DIRECTORIO","SECUENCIA_ENCU
 Base5[,c("ORDEN")] <- NULL
 ```
 
-Una vez obtenida la base 4 agrupada por i..DIRECTORIO y SECUENCIA_P y la base 5 agrupada por i..DIRECTORIO y SECUENCIA_ENCUESTA se procede a agruparlas igualando SECUENCIA_P con SECUENCIA_ENCUESTA.
+Una vez obtenida la base 4 agrupada por i..DIRECTORIO y SECUENCIA_P y la base 5 agrupada por i..DIRECTORIO y SECUENCIA_ENCUESTA, se procede a agruparlas igualando SECUENCIA_P con SECUENCIA_ENCUESTA.
 
 ```{r,eval=FALSE}
 Base6 <- merge(Base4, Base5, by.x =c("ï..DIRECTORIO","SECUENCIA_P"),
@@ -668,19 +671,19 @@ Base_final[,c("P6435","P6051","P5018S1","ï..DIRECTORIO","SECUENCIA_P")] <- NULL
 
 ```{r,echo=FALSE}
 load(file = "datos.RData")
-kable(head(Base_final))%>%
-  kable_styling("striped", full_width = F)%>%
+kable(head(Base_final), align = "c")%>%
+  kable_paper("striped", full_width = F)%>%
   scroll_box(width = "100%", height = "330px")
 ```
 
 ### Medidas de localización y escala
 
-Se realizó un  análisis descriptivo a cada variable donde se identificó el rango y media de las variables continuas y discretas respectivamente, y la proporción de cada clase en las variables categóricas, además de la identificación de las variables con valores faltantes.
+Se realiza un análisis descriptivo a cada variable donde se identifica el rango y media de las variables continuas y discretas respectivamente, y la proporción de cada clase en las variables categóricas, además de la identificación de las variables con valores faltantes.
 
 ```{r}
 require(knitr)
-kable(summary(Base_final))%>%
-  kable_styling("striped")%>%
+kable(summary(Base_final), align = "c")%>%
+  kable_paper("striped")%>%
   scroll_box(width = "100%", height = "300px")
 ```
 
@@ -857,7 +860,8 @@ gra18 <- ggplot(Base_final,aes(x=factor(Nivel_educativo),y=Num_hijos,fill=factor
   geom_boxplot()+
   xlab("Nivel educativo del jefe del hogar")+ylab("Número de hijos") +
   labs(fill = "Nivel educativo") +
-   scale_fill_brewer(labels = c("1 Ninguno", "2 Preescolar", "3 Básica Primaria
+  scale_fill_grey(start = 0.1, end = 0.8, na.value
+= "white", labels = c("1 Ninguno", "2 Preescolar", "3 Básica Primaria
    (1º - 5º)", "4 Básica secundaria
    (6º–9º)", "5 Media (10º–13º)", "6 Técnico sin título", "7 Técnico con título", "8 Tecnológico
    sin título", "9 Tecnológico 
@@ -940,7 +944,8 @@ gra25 <- ggplot(Base_final,aes(x=factor(Contrato_vivienda),y=Num_hijos,fill=fact
 gra26 <- ggplot(Base_final,aes(x=factor(Num_integrantes),y=Num_hijos,fill=factor(Num_integrantes)))+
   geom_boxplot()+
   xlab("Número de integrantes en el hogar")+ylab("Número de hijos") +
-  scale_fill_brewer()+
+  scale_fill_grey(start = 0.1, end = 0.8, na.value
+= "red")+
   theme(legend.position = "NONE")
   
 gra27 <- ggplot(Base_final,aes(x=factor(Telefonia_fija),y=Num_hijos,fill=factor(Telefonia_fija)))+
@@ -952,37 +957,9 @@ gra27 <- ggplot(Base_final,aes(x=factor(Telefonia_fija),y=Num_hijos,fill=factor(
 
 ```
 
-<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-<div class="carousel-inner">
-<div class="carousel-item active">
-```{r}
-gra1
-```
-</div>
-<div class="carousel-item">
-```{r}
-gra2
-```
-</div>
-<div class="carousel-item">
-```{r}
-gra3
-```
-</div>
-</div>
-<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-<span class="visually-hidden">Previous</span>
-</button>
-<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-<span class="carousel-control-next-icon" aria-hidden="true"></span>
-<span class="visually-hidden">Next</span>
-</button>
-</div>
 
 
-
-```{r, echo=F, eval = F}
+```{r, echo=F}
 require(gridExtra)
 grid.arrange(gra1, gra2, gra3, gra4, nrow = 2,ncol = 2)
 grid.arrange(gra5, gra6, gra7, gra8, nrow = 2,ncol = 2)
@@ -1004,8 +981,7 @@ puntos1 <- ggplot(Base_final, aes(x = Edad, y = Num_hijos)) +
 
 puntos2 <- ggplot(Base_final, aes(x = Ingresos_hogar, y = Num_hijos)) +
   geom_point(col = "cyan4")+
-  labs(x = "Ingresos del hogar", y = "Número de hijos") +
-  scale_x_continuous(breaks = seq(0,200000000, 40000000))
+  labs(x = "Ingresos del hogar", y = "Número de hijos") 
 
 puntos3 <- ggplot(Base_final, aes(x = Ultimo_pago_energia, y = Num_hijos)) +
   geom_point(col = "cyan4")+
@@ -1017,14 +993,14 @@ puntos4 <- ggplot(Base_final, aes(x = Pago_mes_energia, y = Num_hijos)) +
 ```
 
 
-```{r, echo=F, eval = F}
+```{r, echo=F}
 grid.arrange(puntos1, puntos2, puntos3, puntos4, nrow = 2,ncol = 2)
 ```
 
 
-####  Variables escogidas a partir de los graficos descriptivos
+###  Variables escogidas a partir de los graficos descriptivos
 
-```{r}
+```{r, echo=F}
 var_interesantes <- c(
   "Genero",
   "Edad",
@@ -1040,6 +1016,9 @@ var_interesantes <- c(
   "Cant_hogares_vivienda",
   "Num_hijos"
 )
+
+kable(var_interesantes, align = "c", col.names = "Variables interesantes") %>%
+  kable_paper("striped", full_width = F)
 ```
 
 Se realiza un subset con las variables interesantes
@@ -1049,11 +1028,11 @@ require(kableExtra)
 
 Base_interesante <- subset(Base_final, select = var_interesantes)
 kable(head(Base_interesante))%>%
-  kable_styling("striped")%>%
+  kable_paper("striped", full_width = F)%>%
   scroll_box(width = "100%", height = "320px")
 ```
 
-Las variables categóricas de Base_interesante se convierten a factor y se crea un modelo de regresión lineal múltiple para poder utilizar regresión paso a paso
+Las variables categóricas de Base_interesante se convierten a factor y se crea un modelo de regresión lineal múltiple para poder utilizar selección de variables por regresión paso a paso.
 
 ### Regresión por paso a paso
 
@@ -1072,19 +1051,17 @@ Base_interesante <-  Base_interesante %>%
 ```
 
 ```{r}
-mod1 <- lm(Num_hijos~., data = Base_interesante)
-```
-
-Para la preseleccion de variables también se utilizaron métodos de selección de variables tales como Regresión paso a paso y Lasso.
-
-```{r}
 require(olsrr)
-ols_step_both_p(mod1)
+
+mod1 <- lm(Num_hijos~., data = Base_interesante) # Modelo de regresión lineal múltiple
+ols_step_both_p(mod1) # Selección
 ```
+
+
 
 ### Selección de las variables de interés con Lasso
 
-Se toma la Base_final que posee 32 variables y se convierten las variables categóricas a factor. Se eliminan las variables con mayor número de NA y se eliminan las filas con NA.
+Se toma la Base_final que posee 32 variables y se convierten las variables categóricas a factor. Se eliminan las variables con mayor número de NA y se eliminan las filas con NA, para poder aplicar Lasso.
 
 ```{r, echo=FALSE}
 Base_final <- Base_final %>% 
@@ -1125,18 +1102,18 @@ Base_menos_Nas <- na.omit(Base_menos_Nas)
 Se crea una matriz de diseño para aplicar Regresión Lasso
 
 ```{r}
-x <- model.matrix(Num_hijos ~ ., Base_menos_Nas)[,-1]
-y <- Base_menos_Nas$Num_hijos
+x <- model.matrix(Num_hijos ~ ., Base_menos_Nas)[,-1] # Matriz de diseño
+y <- Base_menos_Nas$Num_hijos # Variable respuesta
 
 # Aplicación de la técnica de regularización
 
 require(glmnet)
 
-gridz <- 10^seq(-2,10, length = 100)
+gridz <- 10^seq(-2,10, length = 100) # Malla de lambdas
 lasso.mod <- glmnet(x, y, alpha = 1, lambda = gridz)
 ```
 
-Se hace validación cruzada para seleccionar el $\lambda$ óptimo para aplicar en el modelo
+Se hace validación cruzada para seleccionar el $\lambda$ óptimo, que se aplicará en el modelo
 
 ```{r}
 set.seed(23)
@@ -1346,22 +1323,22 @@ Base_modelar <- Base_final[,c("Genero",
 
 ```{r, echo=FALSE}
 kable(head(Base_modelar))%>%
-  kable_styling(bootstrap_options = c("striped", "hover"))%>%
+  kable_paper(bootstrap_options = c("striped", "hover"))%>%
   row_spec(c(0,1,2,3,4,5,6),align = "center")%>%
   scroll_box(height = "320px")
 ```
 
 ## Modelamiento
 
-Los modelos escogidos son de regresión y clasificación, en cada uno se adaptó la variable respuesta, en los de clasificación se obtienen las predicciones como el número de hijos puntual, en las de regresión se obtienen aproximaciones decimales las cual previamente debían de ser redondeadas para ser comparadas con los valores reales, en general por este último procedimiento se podía notar que en general funcionaba mucho mejor los modelos de clasificación (su tasa de aciertos era la más alta) por lo tanto finalmente estos fueron considerados como los favoritos y continuaron en el proceso de selección de modelos, además cabe aclarar que cada modelo le fue ingresado las variables como se debía según su proceso de ajuste, por ejemplo en el modelo de Knn las variables explicativas fueron ingresadas estandarizadas las que son numéricas y se crearon variables dummy para las categóricas, en general el desempeño de este modelo fue muy bueno, pero su tiempo de ejecución fue superior a otros modelos y este fue uno de los criterios utilizados en la selección de modelos.
+Los modelos escogidos son de regresión y clasificación, en cada uno se adaptó la variable respuesta. En los de clasificación se obtienen las predicciones como el número de hijos puntual, en los de regresión se obtienen aproximaciones decimales las cuales previamente debían ser redondeadas para ser comparadas con los valores reales, en general por este último procedimiento se podía notar que funcionaban mucho mejor los modelos de clasificación (su tasa de aciertos era la más alta) por lo tanto finalmente estos fueron considerados como los favoritos y continuaron en el proceso de selección de modelos, además, cabe aclarar que a cada modelo le fue ingresado las variables como se debía según su proceso de ajuste, por ejemplo, en el modelo de Knn las variables explicativas fueron ingresadas, estandarizadas las que son numéricas y se crearon variables dummy para las categóricas, en general el desempeño de este modelo fue muy bueno, pero su tiempo de ejecución fue superior al de los otros; este es uno de los criterios utilizados en la selección.
 
-Para la selección de modelos a ajustar se tuvo en cuenta que dado que la mayoría de las variables escogidas como significativas corresponden a variables categóricas se debieron escoger modelos que permitieran el correcto manejo de las mismas.
+Ya que la mayoría de las variables escogidas como significativas corresponden a variables categóricas, se seleccionaron modelos que permiten el correcto manejo de las mismas. A continuación se ilustra la etapa de modelamiento.
 
 ```{r, echo=FALSE}
 load("Base_modelar.RData")
 ```
 
-A continuación se utilizarán diferentes modelos para después escoger aquel que mejor se ajuste a las necesidades. Se crea un nuevo dataframe con Num_hijos organizada
+Se realiza un gráfico de barras, para observar como se distribuye el número de hijos en los hogares colombianos.
 
 ```{r}
 barplot(prop.table(table(Base_modelar$Num_hijos)),
@@ -1371,7 +1348,8 @@ barplot(prop.table(table(Base_modelar$Num_hijos)),
 grid()
 ```
 
-Se observa que la mayoría de familias tienen entre 0 y 2 hijos, sin embargo, hay una proporción considerable de hogares que poseen 3, 4 y 5 hijos. A partir de los 6 hijos la proporción decae, por lo que se podría pensar en agrupar a los hogares en 5 categorías comprendidas como: 0, 1, 2, 3, 4, 5+.  
+Se deduce que la mayoría de las familias tienen entre 0 y 2 hijos, sin embargo, hay una proporción considerable de hogares que poseen 3, 4 y 5 hijos. Pero, a partir de los 6 hijos la proporción decae, por lo que se podría pensar en agrupar a los hogares en 5 categorías comprendidas como: 0, 1, 2, 3, 4, 5+.  
+
 
 ```{r}
 Base_de_ensayo <- Base_modelar
@@ -1384,8 +1362,10 @@ Base_de_ensayo$Num_hijos[Base_de_ensayo$Num_hijos >= 5] <- 5
 require(kableExtra)
 
 tabla <- data.frame(table(Base_de_ensayo$Num_hijos))
+tabla$Var1 <- c(0:4,"5 o más")
+
 kable(tabla, align="c",col.names=c("Número de hijos", "Frecuencia"))%>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_paper(bootstrap_options = c("striped", "hover"), full_width = F)
 ```
 
 ### Bosques Aleatorios para selección de variables
@@ -1449,15 +1429,25 @@ barplot(sort(mod_RF$variable.importance, decreasing = T),las=2,col = "cyan4",cex
 grid()
 ```
 
-Utilizamos los pesos de importancia asignados por el Bosque Aleatorio para escoger las variables que se utilizarán en el resto de modelos, además se tiene en cuenta la cantidad de NA en cada una de las variables.
+Se utiliza los pesos de importancia asignados por Bosques Aleatorios para escoger las variables que se utilizarán en el resto de modelos, además se tiene en cuenta la cantidad de NA en cada una de las variables.
 
 ```{r}
-colSums(is.na(Base_de_ensayo))
+kable(colSums(is.na(Base_de_ensayo)), align = "c", col.names = "Cantidad de NA") %>%
+  kable_paper("striped", full_width =F)
 ```
 
-Aunque Ingresos_hogar y Nivel_educativo en primera instancia tienen una importancia elevada para el modelo se decide eliminar Nivel_educativo ya que posee datos faltantes, adicionalmente se elimina Ingresoso_hogar ya que, a criterio de los investigadores, esta variable puede generar controversia a la hora de ser contestada.
+Aunque Ingresos_hogar, Nivel_educativo, Uso_celular, Ultimo_pago_energia, Educacion_madre y Estrato en primera instancia tienen una importancia elevada para el modelo se decide eliminarlas ya que contienen una gran cantidad de datos faltantes.
 
 ### Variables escogidas
+
+Las variables a utilizar en los modelos son las escogidas en orden de importancia por Bosques Aleatorios, se muestran a continuación:
+
+ * Num_integrantes
+ * Estado_civil
+ * Genero
+ * Edad
+ * Vive_hogar_madre
+ * Num_hijos
 
 ```{r}
 library(tidyverse)
@@ -1510,7 +1500,7 @@ par(mfrow=c(2,2))
 plot(modelo1)
 ```
 
-Se puede apreciar que no se cumplen los supuestos en los residuales. 
+Se puede apreciar que no se cumple el supuesto de normalidad en los residuales, homocedasticidad e independencia, por lo tanto no es adecuado para realizar predicciones. 
 
 ```{r, echo=FALSE}
 pred_mod1_reg <- predict(modelo1, newdata = tst_prop)
@@ -1520,17 +1510,19 @@ pred_mod1_round <- round(pred_mod1_reg)
 Matriz de confusión
 
 ```{r, echo=FALSE}
-MC <- table(tst_prop$Num_hijos, pred_mod1_round)
-kable(MC)%>%
-  kable_styling(full_width = FALSE)
+MC1 <- table(tst_prop$Num_hijos, pred_mod1_round)
+
+kable(MC1, align = "c")%>%
+  add_header_above(c("Predicciones" = 1, "Reales" = 15)) %>%
+  kable_paper("striped", full_width = FALSE) 
 ```
 
 ```{r, echo=FALSE}
-acierto<-sum(diag(MC))/sum(MC)
+acierto<-sum(diag(MC1))/sum(MC1)
 error <- 1-acierto
 ```
 
-La tasa de acierto es  `r acierto`, la tasa de error es `r error`
+La tasa de acierto es  `r acierto` y la tasa de error es `r error`
 
 ### Árbol de clasificación 
 
@@ -1546,8 +1538,10 @@ mod1_arboles <- rpart(Num_hijos~., data = trn_prop)
 ```
 
 ```{r, echo=FALSE}
-prp(mod1_arboles, type = 2, extra = 6, split.font = 3,    box.col = c(3:10)[mod1_arboles$frame$yval])
+prp(mod1_arboles, type = 2, extra = 6, split.font = 3, box.col = c("#009999","#00e6e6","#0099e6","#00d6e6","#5cd6d6","#00cc99")[mod1_arboles$frame$yval])
 ```
+
+Se observa que la variable Num_integrantes es una de las más importantes, en la creación del árbol de regresión.
 
 Se hacen las predicciones y se obtiene la siguiente matriz de confusión
 
@@ -1557,8 +1551,9 @@ pred_mod1_arboles <-  predict(mod1_arboles, newdata = tst_prop, type = "class")
 
 ```{r, echo=FALSE}
 MC <- table(tst_prop$Num_hijos, pred_mod1_arboles)
-kable(MC)%>%
-  kable_styling(full_width = FALSE)
+kable(MC, align = "c")%>%
+  add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
+  kable_paper("striped", full_width = FALSE)
 ```
 
 ```{r, echo=FALSE}
@@ -1566,7 +1561,7 @@ acierto<-sum(diag(MC))/sum(MC)
 error <- 1-acierto
 ```
 
-La tasa de acierto es  `r acierto`, la tasa de error es `r error`
+La tasa de acierto es  `r acierto` y la tasa de error es `r error`
 
 ### Árboles de Regresión
 
@@ -1575,8 +1570,10 @@ mod1_reg_arboles <- rpart(as.numeric(as.character(Num_hijos))~., data = trn_prop
 ```
 
 ```{r, echo=FALSE}
-prp(mod1_reg_arboles, type = 2, split.font = 3,    box.col = c(3:10)[mod1_reg_arboles$frame$yval])
+prp(mod1_reg_arboles, type = 2, split.font = 3,    box.col = c("#009999","#00e6e6","#0099e6","#00d6e6","#5cd6d6","#00cc99")[mod1_reg_arboles$frame$yval])
 ```
+
+Se observa que en la construcción del árbol de regresión solo se utilizaron dos variables, Num_integrantes y Estado_civil.
 
 Se hacen las predicciones y se obtiene la matriz de confusión
 
@@ -1587,8 +1584,9 @@ pred_mod1_reg_arboles <-  predict(mod1_reg_arboles, newdata = tst_prop)
 ```{r, echo=FALSE}
 pred_mod1_reg_arboles <- round(pred_mod1_reg_arboles)
 MC <- table(tst_prop$Num_hijos, pred_mod1_reg_arboles)
-kable(MC)%>%
-  kable_styling(full_width = FALSE)
+kable(MC, align = "c")%>%
+  add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
+  kable_paper("striped", full_width = FALSE)
 ```
 
 ```{r, echo=FALSE}
@@ -1596,13 +1594,15 @@ acierto<-sum(diag(MC))/sum(MC)
 error <- 1-acierto
 ```
 
-La tasa de acierto es  `r acierto`, la tasa de error es `r error`
+La tasa de acierto es  `r acierto` y la tasa de error es `r error`
 
 ### Regresión Poisson
 
 ```{r, echo=FALSE}
 require(gamlss)
 ```
+
+Se ajusta el modelo usando la función gamlss del paquete gamlss, con una familia Poisson.
 
 ```{r}
 HijosPoisson <-gamlss(as.numeric(as.character(Num_hijos))~., data= trn_prop, family=PO(mu.link="log"))
@@ -1617,8 +1617,9 @@ HijosPoisson <-  predict(HijosPoisson, newdata = tst_prop)
 ```{r, echo=FALSE}
 HijosPoisson <- round(HijosPoisson)
 MC <- table(na.omit(tst_prop)$Num_hijos, HijosPoisson)
-kable(MC)%>%
-  kable_styling(full_width = FALSE)
+kable(MC, align = "c")%>%
+  add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
+  kable_paper("striped", full_width = FALSE)
 ```
 
 ```{r}
@@ -1626,17 +1627,19 @@ acierto<-sum(diag(MC))/sum(MC)
 error <- 1-acierto
 ```
 
-La tasa de acierto es  `r acierto`, la tasa de error es `r error`
+La tasa de acierto es  `r acierto`, la tasa de error es `r error`, por otro lado se observan predicciones fuera del rango de la variable respuesta, esto puede suceder si no se cumplen los supuestos del modelo.
 
 ### Bosque Aleatorio
+
+Se ajusta un Bosque Aleatorio con la función ranger
 
 ```{r}
 mod_RF <- ranger(
   Num_hijos~., 
   data = (trn_prop), 
-  num.trees = 500, 
-  mtry = 5, 
-  max.depth = 8,
+  num.trees = 500, # número de árboles
+  mtry = 5, # numero de variables a utilizar en cada árbol
+  max.depth = 8, # profundidad de cada árbol
   importance = 'impurity'
 )
 ```
@@ -1649,8 +1652,9 @@ pred_mod_RF <- predict(mod_RF, data = (tst_prop))
 
 ```{r, echo=FALSE}
 MC <- table(predicho = pred_mod_RF$predictions, real = (tst_prop)$Num_hijos)
-kable(MC)%>%
-  kable_styling(full_width = FALSE)
+kable(MC, align = "c")%>%
+  add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
+  kable_paper("striped", full_width = FALSE)
 ```
 
 ```{r, echo=FALSE}
@@ -1658,7 +1662,7 @@ acierto<-sum(diag(MC))/sum(MC)
 error <- 1-acierto
 ```
 
-La tasa de acierto es  `r acierto`, la tasa de error es `r error`
+La tasa de acierto es  `r acierto` y la tasa de error es `r error`
 
 ### Naive Bayes
 
@@ -1667,6 +1671,8 @@ library(e1071)
 library(caTools)
 library(caret)
 ```
+
+Se ajusta un clasficador por el método de Bayes ingenuo
 
 ```{r}
 mod_Naive_Bayes <- naiveBayes(Num_hijos ~ ., data = trn_prop)
@@ -1680,8 +1686,9 @@ pred_bayes <- predict(mod_Naive_Bayes, newdata = tst_prop, type="class")
 
 ```{r, echo=FALSE}
 MC <- table(tst_prop$Num_hijos, pred_bayes)
-kable(MC)%>%
-  kable_styling(full_width = FALSE)
+kable(MC, align = "c")%>%
+  add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
+  kable_paper("striped", full_width = FALSE)
 ```
 
 ```{r, echo=FALSE}
@@ -1689,15 +1696,17 @@ acierto<-sum(diag(MC))/sum(MC)
 error <- 1-acierto
 ```
 
-La tasa de acierto es  `r acierto`, la tasa de error es `r error`
+La tasa de acierto es  `r acierto` y la tasa de error es `r error`
 
 ### Knn
+
+Antes de aplicar el modelo se deben organizar las variables, como se muestra a continuación.
 
 ```{r, echo=FALSE}
 library(kknn)
 ```
 
-Conversion de las variables categoricas a variables dummy
+Conversión de las variables categoricas a variables dummy
 
 ```{r}
 library(dummies)
@@ -1716,7 +1725,7 @@ Se normalizan las Variables Numéricas
 ```{r}
 #Conjunto de entrenamiento
 datos_c_trn <- Base_KNN_dummy_trn
-datos_c_trn[,c(1,10)] <- scale(datos_c_trn[,c(1,10)])
+datos_c_trn[,c(1,10)] <- scale(datos_c_trn[,c(1,10)]) # normalización
 
 #Conjunto de prueba
 datos_c_tst <- Base_KNN_dummy_tst
@@ -1740,30 +1749,24 @@ library(gmodels)
 library(caret)
 ```
 
-### Ajuste modelo Knn
+Con el fin de elegir un K apropiado se entrena el modelo variando el K entre 1 y 30, después se escoge el que mejor se ajusta al conjunto de entrenamiento.
 
-Se entrena el modelo knn para que escoja el número k óptimo siendo el valor máximo k=30.
 
 ```{r, eval=FALSE}
 modelo <- train.kknn(Num_hijos ~ ., data = datos_c_trn, kmax = 30)
-modelo
 ```
 
-```{r, eval=FALSE}
-pred_knn <- predict(modelo, datos_c_tst)
-```
-
-Con el k óptimo se realiza el modelo se hacen las predicciones y se obtiene la matriz de confusión
+Con el k óptimo que es igual a 18 se ajusta el modelo knn, se hacen las predicciones y se obtiene la matriz de confusión
 
 ```{r}
 knn_model <- knn(train, test, cl = y_train, k = 18)
-summary(knn_model)
 ```
 
 ```{r, echo=FALSE}
-MC <- table(knn_model, y_test)
-kable(MC)%>%
-  kable_styling(full_width = FALSE)
+MC <- table("Predicciones" = knn_model, "Reales" = y_test)
+kable(MC, align = "c")%>%
+  add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
+  kable_paper("striped", full_width = FALSE)
 ```
 
 ```{r, echo=FALSE}
@@ -1771,11 +1774,10 @@ acierto<-sum(diag(MC))/sum(MC)
 error <- 1-acierto
 ```
 
-La tasa de acierto es  `r acierto`, la tasa de error es `r error`.
+La tasa de acierto es  `r acierto` y la tasa de error es `r error`.
 
 
 # Resultados
-<div>
 
 ## Selección del mejor modelo
 
@@ -1787,9 +1789,9 @@ df <- data.frame(df)
 colnames(df) <- c("Arbol_clasificacion","RandomForest", "NaiveBayes", "Knn")
 ```
 
-Para llenar la matriz anterior se realizó un for que ejecuta cada uno de los modelos 20 veces, escogiendo aleatoriamente el conjunto de entrenamiento y el conjunto de prueba
+Para llenar la matriz anterior se realiza un for que ejecuta cada uno de los modelos 20 veces, escogiendo aleatoriamente el conjunto de entrenamiento y el conjunto de prueba
 
-```{r, message=F, warning=F,eval=FALSE}
+```{r, message=F, warning=F, eval=FALSE}
 for(i in 1:20){
 
   set.seed(i) # Semilla
@@ -1866,8 +1868,6 @@ for(i in 1:20){
   
   tasa_knn <- matriz_confusion(pred_knn, y_test)
   
-  print(paste("Tasa acierto Knn:", tasa_knn))
-  
   tasas <- c(tasa_arbol_clasificacion, tasa_RF, tasa_Naive_Bayes, tasa_knn)
   
   df[i,] <- tasas
@@ -1883,12 +1883,12 @@ df <- rbind(df,colMeans(df))
 rownames(df) <- c(seq(1,20,1),"Media")
 
 kable(df,align = "c")%>%
-  kable_styling("striped",full_width = F)%>%
+  kable_paper("striped",full_width = F)%>%
   row_spec(21, background = "#82C9B8")
 ```
 
 
-El modelo final se escogió ya que no solo presenta una de las tasas de acierto más altas entre todos los modelos desarrollados, sino que a su vez nos permitió reducir la dimensionalidad del conjunto de datos, ya que este valoraba y utilizaba 5 variables principalmente para la modelación y predicción, además de que estas variables no contaban con valores faltantes permitiéndonos contar con el conjunto de datos completo que es una cantidad muy apreciable de registros.
+Bosques aleatorios se escogió ya que no solo presenta una de las tasas de acierto más altas entre todos los modelos desarrollados, sino que a su vez permite reducir la dimensionalidad del conjunto de datos, ya que este valoraba y utilizaba 5 variables tanto para la modelación, como para la predicción, además de que estas variables no tienen valores faltantes permitiendo contar con el conjunto de datos completo que es una cantidad muy apreciable de registros.
 
 Como último filtro, se busca reducir el número de árboles que se utilizó en el proceso anterior. Para esto se hace una prueba cambiando el tamaño del bosque a 100 árboles en lugar de 500
 
@@ -1903,13 +1903,15 @@ La tasa de acierto tanto con 100 y 500 árboles es de aproximadamente 0.86, es d
 
 ## Ajuste del modelo final con todas las observaciones
 
+Con el fin de presentar el modelo al público se hace uso de todos los registros para su entrenamiento. 
+
 ```{r,eval=FALSE}
 RandomForest <- ranger(Num_hijos~.,  data = Base_modelo,   num.trees = 100,  mtry = 5, 
              max.depth = 8,  importance = 'impurity')
 ```
 
 # Prueba de Escritorio
-<div>
+
 
 ```{r,echo=FALSE}
 load("RandomForest.Rdata")
@@ -1946,7 +1948,7 @@ f <- data.frame("Inverstigador" = c("Miguel", "Jennifer", "Juan", "Cristina", "S
                 "Valores_Reales" = c(1,2,2,1,2))
 
 kable(f,align = "c")%>%
-  kable_styling("striped",full_width = FALSE)
+  kable_paper("striped",full_width = FALSE)
 ```
 </center>
 
@@ -1954,11 +1956,13 @@ kable(f,align = "c")%>%
 
 
 # Conclusiones
-<div>
- falta
+
+ * En general aunque algunas veces la información no este explicita en los lugares a los que tenemos acceso, gracias a los métodos de aprendizaje estadístico podemos deducirla.
+ 
+ * En el mundo estadístico los Bosques Aleatorios son considerados por algunos como la panacea para los problemas de clasificación, en este problema se ve que este tipo de modelos es el que presenta mejores resultados, además, es un modelo parsimonioso, que se puede llevar a la práctica y presenta buenos resultados. 
 
 # Bibliografía
-<div>
+
 
 * Bonilla Jaime, G., & Garcia Valdez, E. (2009). Impacto de las condiciones socioeconomicas familiares en las decisiones de fertilidad (numero de hijos), utilizando un modelo de regresión poisson: período de estudio 2005-2006 (Bachelor's thesis).
 
