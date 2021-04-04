@@ -176,7 +176,7 @@ shinyUI(fluidPage(
                                                   tags$div(class="col",
                                                            tags$img(src = "Estado_civil.png", class="img-fluid rounded-circle mb-3 img-thumbnail shadow-sm"),
                                                            
-                                                           tags$h5("¿Cuál es el estado civil del jefe del hogar"),
+                                                           tags$h5("¿Cuál es el estado civil del jefe del hogar?"),
                                                            
                                                            hr(),
                                                            
