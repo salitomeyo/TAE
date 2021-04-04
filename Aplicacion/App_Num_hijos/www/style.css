@@ -1,5 +1,23 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css");
 
+#loading-content {
+    position: absolute;
+    background: #464646;
+    opacity: 0.9;
+    z-index: 100;
+    left: 0;
+    right: 0;
+    height: 100%;
+    text-align: center;
+    color: #FFFFFF;
+    display: table;
+}
+
+.cargando{
+    vertical-align: middle;
+    display: table-cell;
+}
+
 .jumbotron {
     font-size: 40px;
 }
@@ -71,26 +89,26 @@
 
 
 .selectize-input  { 
-    color: #262626;
+    color: white;
     font-size: 12px;
 } 
 
 .selectize-input.full{
     background-color: #3e8e8a;
     border-color: #367c79;
-    color: #262626;
+    color: white;
     font-size: 12px;
 }
 
 .selectize-dropdown-content{
     background-color: #3e8e8a;
-    color: #262626;
+    color: white;
     font-size: 12px;
 }
 
 .selectize-dropdown .active{
     background-color: #367c79;
-    color: #262626;
+    color: white;
     font-size: 12px;
 }
 
@@ -98,14 +116,14 @@
 .selectize-input {
     background-color: #3e8e8a;
     border-color: #367c79;
-    color: #262626;
+    color: white;
     font-size: 12px;
 }
 
 .form-control{
     background-color: #3e8e8a;
     border-color: #367c79;
-    color: #262626;
+    color: white;
     margin-bottom: 10%;
     font-size: 12px;
 }
@@ -113,7 +131,7 @@
 .form-control:focus{
     background-color: #3e8e8a;
     border-color: #367c79;
-    color: #262626;
+    color: white;
     font-size: 12px;
 }
 
