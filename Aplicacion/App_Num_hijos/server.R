@@ -40,21 +40,21 @@ shinyServer(function(input, output) {
       if(input$usuario == "Inmobiliaria"){
         
         tags$div(class = "jumbotron jumbo1",
-                 tags$h1("Número de hijos de los hogares colombianos", style = "color:white")
+                 tags$h1(class="titulo","Número de hijos de los hogares colombianos")
                  
         )
         
       }else if(input$usuario == "Empresa crediticia"){
         
         tags$div(class = "jumbotron jumbo2",
-                 tags$h1("Número de hijos de los hogares colombianos", style = "color:white")
+                 tags$h1(class="titulo","Número de hijos de los hogares colombianos")
                  
         )
         
       }else if(input$usuario == "Usuario natural"){
         
         tags$div(class = "jumbotron jumbo3",
-                 tags$h1("Número de hijos de los hogares colombianos", style = "color:white")
+                 tags$h1(class="titulo","Número de hijos de los hogares colombianos")
                  
         )
         

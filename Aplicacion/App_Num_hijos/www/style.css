@@ -22,6 +22,7 @@
     font-size: 40px;
 }
 
+
 .jumbo1 {
     position: absolute;
     width: 100%;
@@ -29,7 +30,11 @@
     left: 0px;
     top: 0px;
 
-    background: url("inmobiliaria.jpg");
+    background: 
+    linear-gradient(
+      rgba(6, 6, 6, 0.6),
+      rgba(6, 6, 6, 0.6)
+    ),url("inmobiliaria.jpg");
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -44,7 +49,11 @@
     left: 0px;
     top: 0px;
 
-    background: url("empresa_credito.jpg");
+    background: 
+    linear-gradient(
+      rgba(6, 6, 6, 0.6),
+      rgba(6, 6, 6, 0.6)
+    ),url("empresa_credito.jpg");
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -59,7 +68,11 @@
     left: 0px;
     top: 0px;
 
-    background: url("Edificios.jpg");
+    background: 
+    linear-gradient(
+      rgba(6, 6, 6, 0.6),
+      rgba(6, 6, 6, 0.6)
+    ),url("Edificios.jpg");
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -312,4 +325,9 @@ h2.body {
     padding: 10px;
     padding-left: 100px;
     padding-right: 100px;
+}
+
+a:hover{
+    color: #FFFFFF;
+    text-decoration: none;
 }
