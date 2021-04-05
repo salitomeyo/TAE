@@ -232,22 +232,24 @@ shinyUI(fluidPage(
                                        
                                        tags$p("Los datos que administrara no son íntimos o con los cuales se pueda 
                                               sentir incomodo, además de que es poca la información que proporcionara 
-                                              para tener la oportunidad de obtener una predicción del número de hijos 
+                                              para obtener una predicción del número de hijos 
                                               del hogar del cual proporcionó la información."),
                                               
                                         tags$p(
                                         
                                         "Para usarla vaya a el panel", tags$i(class="fa fa-child"),
-                                        "App y complete el formulario, cuanto todos los campos 
+                                        "App y complete el formulario, cuando todos los campos 
                                         tengan un valor valido se habilitará un botón que le 
                                         mostrará la predicción correspondiente."),
                                         
                                        
-                                       tags$p('Las predicciones sobre el número de hijos son dadas por un modelo de
-                                              Random Forest el cual fue entrenado sobre un conjunto de datos de la 
-                                              encuesta de calidad de vida del DANE en el año 2019 en el país de Colombia,
-                                              y que obtuvo una tasa de acierto del 86% sobre los datos que se usaron para su validación,
-                                              los detalles sobre como se llegó a este modelo pueden ser consultados en este informe.'),
+                                       tags$p("Las predicciones sobre el número de hijos son dadas por un modelo de
+                                              Random Forest el cual fue entrenado sobre un conjunto de datos de la", 
+                                              tags$a(href = "http://microdatos.dane.gov.co/index.php/catalog/678/study-description#page=overview&tab=study-desc" , class = "enlace-texto",
+                                                      "encuesta de calidad de vida del DANE en el año 2019"),
+                                              "en el país de Colombia, y que obtuvo una tasa de acierto del 86% sobre
+                                              los datos que se usaron para su validación, los detalles sobre como se llegó 
+                                              a este modelo pueden ser consultados en este informe."),
                                        
                                        
                                        hr(),

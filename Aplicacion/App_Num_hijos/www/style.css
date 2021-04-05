@@ -339,3 +339,10 @@ a:hover{
 .mb-0 {
     font-size: 15px;
 }
+
+.enlace-texto{
+    color: #cccccc;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+}
