@@ -5,7 +5,6 @@ require(ranger)
 
 load("RandomForest.Rdata")
 
-
 # Pasos iniciales ---------------------------------------------------------
 
 # Nombre de las varaibles
@@ -65,56 +64,100 @@ shinyServer(function(input, output) {
     
   })
   
+
   # Server para la predicción del numero de hijos ---------------------------
   
   observeEvent(input$submit, {
     
-    # Variables categoricas a números -----------------------------------------
+
+    # Mensajes de error cuando los inputs están  por fuera del rango ----------
     
-    GENERO <-  which(genero %in% input$Genero)
-    ESTADO_CIVIL <- which(E_civil %in% input$Estado_civil)
-    VIVE_HOGAR_MADRE <- which(vive_madre %in% input$Vive_hogar_madre)
-    
-    
-    # Variables discretas -----------------------------------------------------
-    
-    NUM_INTEGRANTES <- input$Num_integrantes
-    EDAD <- input$Edad
-    
-    
-    # Creación dataframe para la predicción ------------------------------------------------------
-    
-    datos_entrada <- cbind(NUM_INTEGRANTES, ESTADO_CIVIL, GENERO, EDAD, VIVE_HOGAR_MADRE)
-    datos_entrada <- as.data.frame(datos_entrada)
-    colnames(datos_entrada) <- var_names
-    
-    # Predicción con el modelo RF ---------------------------------------------
-    
-    prediccion <- predict(RandomForest, datos_entrada)
-    
-    prediccion <- prediccion$predictions
-    
-    # Se carga la silueta correspondiente
-    nom_silueta <- paste(prediccion, 'svg', sep = ".")
-    
-    
-    if(prediccion == 5){
-      prediccion <- "5 o más"
-    }
-    
-    # Se imprime la predicción ------------------------------------------------
-    
-    output$Resultado <- renderText({
-      paste("El número de hijos del hogar es: ", prediccion)
-    })
-    
-    
-    # Se imprime la silueta ---------------------------------------------------
-    
-    output$silueta <- renderUI({
-      tags$img(src = nom_silueta)
-    })
-    
+    if(input$Num_integrantes != round(input$Num_integrantes) ||
+       input$Edad != round(input$Edad)){
+      
+      output$error <- renderText({
+        
+        paste("Verifica que la edad o el número de integrantes sea un número entero")
+        
+      })
+      
+    }else if(input$Num_integrantes > 19){
+      
+      output$error <- renderText({
+        
+        paste("El número de integrantes del hogar debe estar entre 1 y 19")
+        
+      })
+      
+    }else if(input$Edad < 13 ||
+             input$Edad > 106){
+      
+      output$error <- renderText({
+        
+        paste("La edad del jefe de hogar debe estar entre los 13 y los 106 años")
+        
+      })
+      
+    }else{
+      
+
+    # Ejecución cuando los inputs son validaos --------------------------------
+
+      
+      # Variables categoricas a números -----------------------------------------
+      
+      GENERO <-  which(genero %in% input$Genero)
+      ESTADO_CIVIL <- which(E_civil %in% input$Estado_civil)
+      VIVE_HOGAR_MADRE <- which(vive_madre %in% input$Vive_hogar_madre)
+      
+      
+      # Variables discretas -----------------------------------------------------
+      
+      NUM_INTEGRANTES <- input$Num_integrantes
+      EDAD <- input$Edad
+      
+      # Creación dataframe para la predicción ------------------------------------------------------
+      
+      datos_entrada <- cbind(NUM_INTEGRANTES, ESTADO_CIVIL, GENERO, EDAD, VIVE_HOGAR_MADRE)
+      datos_entrada <- as.data.frame(datos_entrada)
+      colnames(datos_entrada) <- var_names
+      
+      # Predicción con el modelo RF ---------------------------------------------
+      
+      prediccion <- predict(RandomForest, datos_entrada)
+      
+      prediccion <- prediccion$predictions
+      
+      # Se carga la silueta correspondiente
+      nom_silueta <- paste(prediccion, 'svg', sep = ".")
+      
+      
+      if(prediccion == 5){
+        prediccion <- "5 o más"
+      }
+      
+      # Se imprime la predicción ------------------------------------------------
+      
+      output$Resultado <- renderText({
+        paste("El número de hijos del hogar es: ", prediccion)
+      })
+      
+      
+      # Se imprime la silueta ---------------------------------------------------
+      
+      output$silueta <- renderUI({
+        tags$img(src = nom_silueta)
+      }) 
+      
+
+      # Se limpia el mensaje de error -------------------------------------------
+
+      output$error <- renderText({
+        
+      })
+      
+    } 
+
   })
   
 

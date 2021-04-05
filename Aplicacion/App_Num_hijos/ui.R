@@ -102,17 +102,14 @@ shinyUI(fluidPage(
                                          # Predicción panel condicional --------------------------------------------
                                          
                                          conditionalPanel(
-                                           condition = "input.Num_integrantes != '0' && 
-                                     input.Genero != ' ' && 
-                                     input.Edad > 12 && 
-                                     input.Estado_civil != ' ' &&
-                                     input.Vive_hogar_madre != ' '",
-                                           
+                                           condition = "input.submit != 0 && output.error == ''",
+
                                            tags$div(id="resultado"),
                                            br(),
                                            uiOutput(outputId = "silueta"),
                                            tags$h1(textOutput("Resultado")),
                                            hr()
+                                           
                                          ),
                                          # Cuestionario ----------------------------------------------------------
                                          
@@ -196,15 +193,18 @@ shinyUI(fluidPage(
                                          
                                          # Botón Predicción ----------------------------------------------------------
                                          conditionalPanel(
-                                           condition = "input.Num_integrantes != '0' && 
+                                           condition = "input.Num_integrantes >= 1 && 
+                                     input.Num_integrantes <= 10000 &&
                                      input.Genero != ' ' && 
-                                     input.Edad > 12 && 
+                                     input.Edad >= 1 && 
+                                     input.Edad <= 10000 &&
                                      input.Estado_civil != ' ' &&
                                      input.Vive_hogar_madre != ' '",
                                            br(), 
                                            actionButton(inputId = "submit",  label = HTML("<a href='#resultado' class='button resultado'>obtener prediccion</a>")),
-                                           br()
-                                           
+                                           br(),
+                                           br(),
+                                           tags$h5(textOutput(outputId = "error"))
                                          ),
                                          tags$div(class="rectangle")
                                        )
