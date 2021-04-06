@@ -132,9 +132,10 @@ De los modelos ajustados inicialmente se consideraron los cuatro mejores. Poster
 
 Bosques Aleatorios (Random forest) resultó ser el mejor después de este procedimiento, teniendo la tasa de aciertos más alta entre los modelos probados y siendo uno de los más rápidos en cuanto al tiempo de predicción. 
 
-Para finalizar, se ajustó el mejor modelo con todo el conjunto de datos, con el fin de generar mejores predicciones por el hecho de contar con un mayor número de información y se agregó el modelo en una aplicación web que permite la interacción de los usuarios, esto muestra su potencial para predecir el número de hijos de un hogar colombiano según la estructura del mismo.
+Para finalizar, se ajustó el mejor modelo con todo el conjunto de datos, con el fin de generar mejores predicciones por el hecho de contar con un mayor número de información y se agregó el modelo en una aplicación web [(Aplicación Número de hijos)](https://jennifersalazar.shinyapps.io/App_Num_hijos/?_ga=2.63504679.928225558.1617730737-1104379532.1616517567) que permite la interacción de los usuarios, esto muestra su potencial para predecir el número de hijos de un hogar colombiano según la estructura del mismo.
 
 
+Todos los recursos utilizados para la elaboración del informe y la aplicación se encuentran en un repositorio de github que pueden visitar a continuación.....[Repositorio del proyecto Número de hijos de los hogares Colombianos](https://github.com/salitomeyo/TAE)
 
 # Retos
 
@@ -163,6 +164,7 @@ Inmobiliarias, empresas crediticias, en las cuales el número de hijos es una in
 Agencias o constructoras inmobiliarias en ocasiones tienen mucha información histórica de los clientes, sobretodo de los jefes de hogar, obteniendo así información relevante de las características de un hogar. En base a estas características podemos predecir el número de hijos del mismo, esta información puede ser utilizada por dichas empresas para lanzar nuevos proyectos y ofrecer atención más personalizada a sus usuarios.
 
 Adicionalmente, algunas empresas que facilitan el arriendo como intermediarios pueden tener políticas de arriendo como el hecho de que no se admiten hijos en los hogares, esto es común en residencias estudiantiles, entre otros.
+
 
 ### Hogar
 
