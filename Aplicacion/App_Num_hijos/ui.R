@@ -249,7 +249,8 @@ shinyUI(fluidPage(
                                                       "encuesta de calidad de vida del DANE en el año 2019"),
                                               "en el país de Colombia, y que obtuvo una tasa de acierto del 86% sobre
                                               los datos que se usaron para su validación, los detalles sobre como se llegó 
-                                              a este modelo pueden ser consultados en este informe."),
+                                              a este modelo pueden ser consultados en este", tags$a(href = "https://rpubs.com/Jennifer-Salazar/prediccion_hijos" , class = "enlace-texto",
+                                              "Informe")),
                                        
                                        
                                        hr(),
