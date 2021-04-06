@@ -211,7 +211,10 @@ shinyUI(fluidPage(
                               ),
                               
                               # Panel de video ----------------------------------------------------------
-                              tabPanel("Video", icon = icon("youtube")
+                              tabPanel("Video", icon = icon("youtube"),
+                                       
+                                       tags$video (width="320", height="240", controls="controls",
+                                                   tags$source (src="Video_App_TAE.mp4", type="video/mp4"))
                                        
                               ),
                               
