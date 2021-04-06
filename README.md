@@ -1,6 +1,4 @@
 # TAE
-Trabajo 1, prediccion del numero de hijos
+Trabajo 1 del Curso técnicas en aprendizaje estadístico 2021-1
 
-Por Salome, Jennifer, Miguel, Cristina y yo.
 
-Curso técnicas en aprendizaje estadístico 2021-1
