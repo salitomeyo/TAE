@@ -17,8 +17,10 @@ Para el proyecto se realizó un informe en cual pueden encontrar el la carpeta d
 
 Informe en la página de Rpubs:
 
-- https://rpubs.com/Jennifer-Salazar
+- https://rpubs.com/Jennifer-Salazar/prediccion_hijos
 
 App del proyecto en Shiny app:
 
-- 
+- https://jennifersalazar.shinyapps.io/App_Num_hijos/?_ga=2.63504679.928225558.1617730737-1104379532.1616517567
+
+
