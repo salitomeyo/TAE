@@ -17,6 +17,10 @@ output:
 
 <style>
 
+p{
+    text-align: justify;
+}
+
 #toc ul.nav li.active ul li a {
     background-color: #404040;
     color:white;
