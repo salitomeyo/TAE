@@ -346,3 +346,7 @@ a:hover{
     font-size: 18px;
     font-weight: bold;
 }
+
+video{
+    align-self: center;
+}
