@@ -1,0 +1,10 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/750251/12ddfe76ca2c4fd89bd1a025513e3a3c
+bundleId: https://api.rpubs.com/api/v1/document/750251/12ddfe76ca2c4fd89bd1a025513e3a3c
+url: http://rpubs.com/Jennifer-Salazar/750251
+when: 1617728212.57833

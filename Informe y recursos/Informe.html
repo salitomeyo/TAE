@@ -1960,16 +1960,16 @@ h1, h2, h3, h4, h5, h6{
 <p>En la actualidad, debido a la globalización es importante para las empresas conocer a sus clientes, la tecnología, sin duda ha permitido recaudar volúmenes enormes de información, sin embargo, en muchas ocasiones precisamente la información requerida por una empresa es difícil de obtener o representa información sensible para los usuarios, ya que invade su privacidad. No obstante, con los avances en analítica se han creado herramientas para lograr obtener la información necesaria de los usuarios sin invadir su intimidad y está ha podido utilizarse para estimar valores sobre el resto de la población, aun sin tener que preguntar directamente sobre la misma.</p>
 <p>Entre los datos que en algunos contextos pueden ser censurados u omitidos está el número de hijos en un hogar, lo que hace que sea una variable de la que no se dispone directamente; por lo tanto el problema en particular en el que se está interesado es la predicción del número de hijos en base a las características de los hogares colombianos.</p>
 <p>Se decidió abordar este problema como un problema de clasificación (aprendizaje supervisado). Para esto se tuvo en cuenta los siguiente:</p>
-<p>Se realizó una buena investigación y contextualización del conjunto de datos que fueron obtenidos de la ECV realizada por el DANE en el año 2019, mediante este se tuvo la oportunidad de establecer el número de hijos, a partir de, la combinación de algunas variables presentes en un conjunto de datos particular abordado en la encuesta, además de seleccionar las variables más relevantes para realizar un análisis y la modelación.</p>
+<p>Se realizó una buena investigación y contextualización del conjunto de datos que fueron obtenidos de <a href="http://microdatos.dane.gov.co/index.php/catalog/678/study-description">la ECV realizada por el DANE en el año 2019</a>, mediante este se tuvo la oportunidad de establecer el número de hijos, a partir de, la combinación de algunas variables presentes en un conjunto de datos particular abordado en la encuesta, además de seleccionar las variables más relevantes para realizar un análisis y la modelación.</p>
 <p>Se procedió a la selección de variables, las cuales posteriormente fueron unidas mediante indicadores de hogares. Este procedimiento fue realizado de manera muy cuidadosa para no obtener información incorrecta, después de este paso se llegó a una base de datos con las variables que los investigadores consideraron de interés.</p>
 <p>Previo a lo anterior, se procedió a realizar un análisis descriptivo sobre el conjunto de datos, que ayudaran a una mejor comprensión de las variables y a seleccionar cuales de estas eran más relevantes para predecir el número de hijos, se realizaron gráficos y demás análisis.</p>
 <p>Como paso siguiente se usaron técnicas estadísticas para la selección de variables mediante la formulación de modelos, los cuales en su mayoría coincidieron con las variables seleccionadas mediante el análisis descriptivo.</p>
-<p>Después de seleccionar las variables, se obtuvo un conjunto de datos con menos atributos, pero con el mismo número de registros, y asi se empezó a modelar el número de hijos como un problema de clasificación, donde cada nivel de la variable respuesta es una categoría.</p>
+<p>Después de seleccionar las variables, se obtuvo un conjunto de datos con menos atributos, pero con el mismo número de registros, y asi se empezó a modelar el número de hijos como un problema de clasificación, donde cada nivel de la variable respuesta es una categoría. Dado que el número de hijos variaba en el rango de 0 a 14, se decido dejar como categorías 0, 1, 2, 3, 4 y 5 o más.</p>
 <p>Los modelos seleccionados fueron considerados como los más adecuados para este problema en particular y son populares en el mundo del aprendizaje estadístico. Se realizaron ajustes con cada uno y se evaluó su rendimiento mediante validación cruzada (Calculando tasas de acierto y error).</p>
 <p>Después de ajustar varios modelos, se analizó la posibilidad de encontrar el mismo resultado con menos variables, encontrando que se obtenía la misma tasa de acierto, aunque, el número de atributos utilizados era menor; por lo tanto, se decidió nuevamente hacer una reducción del conjunto de datos, de tal manera que se obtuvieron modelos más parsimoniosos (Buenos resultados con menos variables) llegando finalmente a modelos con cinco variables.</p>
 <p>De los modelos ajustados inicialmente se consideraron los cuatro mejores. Posteriormente estos modelos se ponen en competencia mediante distintas muestras aleatorias, divididas en conjunto de entrenamiento y validación; de tal manera, que el mejor modelo sea aquel que obtenga mejores resultados en el conjunto de validación en las diferentes muestras.</p>
-<p>Bosques Aleatorios resultó ser el mejor después de este procedimiento, teniendo una alta tasa de aciertos. Después, se ajustó el mismo modelo con el conjunto de datos completo, con el fin de generar mejores predicciones por el hecho de contar con un mayor número de información.</p>
-<p>Como parte final, se aplicó el modelo obtenido en una aplicación web que permite la interacción con usuarios, esto mostrará su potencial para predecir el número de hijos de un hogar colombiano según la estructura del mismo.</p>
+<p>Bosques Aleatorios (Random forest) resultó ser el mejor después de este procedimiento, teniendo la tasa de aciertos más alta entre los modelos probados y siendo uno de los más rápidos en cuanto al tiempo de predicción.</p>
+<p>Para finalizar, se ajustó el mejor modelo con todo el conjunto de datos, con el fin de generar mejores predicciones por el hecho de contar con un mayor número de información y se agregó el modelo en una aplicación web que permite la interacción de los usuarios, esto muestra su potencial para predecir el número de hijos de un hogar colombiano según la estructura del mismo.</p>
 </div>
 <div id="retos" class="section level1">
 <h1>Retos</h1>
@@ -1979,7 +1979,7 @@ h1, h2, h3, h4, h5, h6{
 <li>Construir la variable número de hijos.</li>
 <li>Organizar la base de datos con variables que contribuyan de manera significativa a la solución del problema.</li>
 <li>Encontrar modelos que se ajusten a las necesidades del conjunto de datos.</li>
-<li>Seleccionar una solución óptima tanto para los investigadores como para los usuarios.</li>
+<li>Seleccionar una solución óptima tanto para los investigadores como para los usuarios de la app.</li>
 </ul>
 </div>
 <div id="contextualización-del-conjunto-de-datos" class="section level1">
@@ -8470,13 +8470,13 @@ Media
 </tr>
 </tbody>
 </table>
-<p>Bosques aleatorios se escogió ya que no solo presenta una de las tasas de acierto más altas entre todos los modelos desarrollados, sino que a su vez permite reducir la dimensionalidad del conjunto de datos, ya que este valoraba y utilizaba 5 variables tanto para la modelación, como para la predicción, además de que estas variables no tienen valores faltantes permitiendo contar con el conjunto de datos completo que es una cantidad muy apreciable de registros.</p>
-<p>Como último filtro, se busca reducir el número de árboles que se utilizó en el proceso anterior. Para esto se hace una prueba cambiando el tamaño del bosque a 100 árboles en lugar de 500</p>
+<p>Bosques aleatorios se escogió ya que presenta una de las tasas de acierto más altas entre todos los modelos desarrollados, el tiempo de predicción es bastante rápido, y permite reducir la dimensionalidad del conjunto de datos, ya que este valora y utiliza 5 variables tanto para la modelación, como para la predicción, además de que estas variables no tienen valores faltantes permitiendo contar con el conjunto de datos completo que 93993 registros.</p>
+<p>Como último filtro, buscando una experiencia más veloz para los usuarios de la app se decide reducir el número de árboles usados en el proceso anterior. Para esto se hace una prueba cambiando el tamaño del bosque a 100 árboles en lugar de 500</p>
 <div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1"></a>RF &lt;-<span class="st"> </span><span class="kw">ranger</span>(Num_hijos<span class="op">~</span>.,  <span class="dt">data =</span> (trn_prop),   <span class="dt">num.trees =</span> <span class="dv">100</span>,  <span class="dt">mtry =</span> <span class="dv">5</span>, </span>
 <span id="cb68-2"><a href="#cb68-2"></a>             <span class="dt">max.depth =</span> <span class="dv">8</span>,  <span class="dt">importance =</span> <span class="st">&#39;impurity&#39;</span>)</span>
 <span id="cb68-3"><a href="#cb68-3"></a>pred_RF &lt;-<span class="st"> </span><span class="kw">predict</span>(RF, <span class="dt">data =</span> (tst_prop))</span>
 <span id="cb68-4"><a href="#cb68-4"></a>tasa_RF &lt;-<span class="st"> </span><span class="kw">matriz_confusion</span>(pred_RF<span class="op">$</span>predictions, tst_prop<span class="op">$</span>Num_hijos)</span></code></pre></div>
-<p>La tasa de acierto tanto con 100 y 500 árboles es de aproximadamente 0.86, es decir, el tamaño del bosque no representa un cambio significativo a la hora de predecir, por lo que se decide implementar el modelo con 100 árboles.</p>
+<p>La tasa de acierto tanto con 100 y 500 árboles es de aproximadamente 0.86, es decir, el tamaño del bosque no representa un cambio significativo a la hora de predecir pero si en tiempo de ejecución, por lo que se decide implementar el modelo con 100 árboles.</p>
 </div>
 <div id="ajuste-del-modelo-final-con-todas-las-observaciones" class="section level2">
 <h2>Ajuste del modelo final con todas las observaciones</h2>
@@ -8487,7 +8487,7 @@ Media
 </div>
 <div id="prueba-de-escritorio" class="section level1">
 <h1>Prueba de Escritorio</h1>
-<p>A continuación se darán los datos que corresponden a la información de cada uno de los investigadores</p>
+<p>A continuación, se probarán de forma rápida las predicciones del modelo final usando como variables de entrada la información de los hogares de cada uno de los investigadores y contrastándola con el número de hijos real de cada hogar.</p>
 <div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1"></a><span class="kw">require</span>(ranger)</span>
 <span id="cb70-2"><a href="#cb70-2"></a><span class="co"># datos de los investigadores</span></span>
 <span id="cb70-3"><a href="#cb70-3"></a><span class="co"># Nombre &lt;- c(Num_integrantes, Estado_civil, Genero, Edad, Vive_hogar_madre)</span></span>
@@ -8587,16 +8587,17 @@ Salome
 </tbody>
 </table>
 </center>
+<p>Nótese que el modelo final predijo sin error el número de hijos en el hogar de cada uno de los investigadores.</p>
 </div>
 <div id="conclusiones" class="section level1">
 <h1>Conclusiones</h1>
 <ul>
-<li><p>En general aunque algunas veces la información no este explicita en los lugares a los que tenemos acceso, gracias a los métodos de aprendizaje estadístico podemos deducirla.</p></li>
 <li><p>En el mundo estadístico los Bosques Aleatorios son considerados por algunos como la panacea para los problemas de clasificación, en este problema se ve que este tipo de modelos es el que presenta mejores resultados, además, es un modelo parsimonioso, que se puede llevar a la práctica y presenta buenos resultados.</p></li>
-<li><p>A partir del número de variables que finalmente se obtuvo, da referencia a que se puede obtener información de la variable respuesta sin necesidad de tener en cuenta tantas variables como las que se consideraron inicialmente, esto realmente es algo bueno, ya que no se requiere mucha información para obtener buenos resultados y a la hora de requerir recolectar nueva información será un proceso más sencillo, esto es a lo que llamamos modelos parsimoniosos los cuales siempre serán el mejor resultado.</p></li>
-<li><p>Mediante los análisis realizados en el informe anterior cabe resaltar que muchas veces un hogar puede estar representado y ser estudiado de manera correcta a partir de información que viene principalmente del jefe de hogar y ser verídica.</p></li>
 <li><p>Dado que los resultados con los métodos de Random forest fueron muy buenos se recomienda para futuros estudios ensayar modelo tipo boosting.</p></li>
 <li><p>La predicción del número de hijos tiene bastantes utilidades en diferentes sectores por ejemplo en el caso de una inmobiliaria, que quiere arrendar una nueva propiedad y dejarla en manos de la familia ideal. La inmobiliaria no quiere invadir e incomodar la privacidad de sus clientes; pero con poca información y con ayuda de esta aplicación la inmobiliaria podrá saber cuántos de los futuros integrantes de este hogar son hijos y así saber un poco más sobre la familia que se mudará a la casa.</p></li>
+<li><p>A partir del número de variables que finalmente se obtuvo, da referencia a que se puede obtener información de la variable respuesta sin necesidad de tener en cuenta tantas variables como las que se consideraron inicialmente, esto realmente es algo bueno, ya que no se requiere mucha información para obtener buenos resultados y a la hora de requerir recolectar nueva información será un proceso más sencillo, esto es a lo que llamamos modelos parsimoniosos los cuales siempre serán el mejor resultado.</p></li>
+<li><p>Mediante los análisis realizados en el informe anterior cabe resaltar que muchas veces un hogar puede estar representado y ser estudiado de manera correcta a partir de información que viene principalmente del jefe de hogar y ser verídica.</p></li>
+<li><p>En general aunque algunas veces la información no este explicita en los lugares a los que tenemos acceso, gracias a los métodos de aprendizaje estadístico podemos deducirla.</p></li>
 <li><p>Cabe resaltar que en un inicio cuando se entrenaban los modelo para clasificar el número de hijos de 0 a 14, si bien los modelos basados en arboles presentaban un tiempo de ejecución corto estos solo eran capaces de predecir de 0 a 6 hijos, comparado con el modelo Knn que fue el único de los modelos probados capaz de predecir en las 14 clases.</p></li>
 </ul>
 </div>
