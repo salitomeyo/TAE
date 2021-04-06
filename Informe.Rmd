@@ -1,6 +1,13 @@
 ---
-title: "Informe"
-author: "Cristina Mercedes Ortega Benavides, Miguel Angel Londoño Ciceros, Jennifer Salazar Galvis, Juan Esteban Sanchez Pulgarin, Salome Aristizabal Giraldo"
+title: "Prediciendo el número de hijos de los hogares colombianos"
+subtitle: "Informe"
+author: 
+- "Cristina Mercedes Ortega Benavides"
+- "Miguel Angel Londoño Ciceros"
+- "Jennifer Salazar Galvis"
+- "Juan Esteban Sanchez Pulgarin"
+- "Salome Aristizabal Giraldo"
+
 date: "31/3/2021"
 output:
   rmdformats::readthedown:
@@ -95,13 +102,15 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE,warning = FALSE)
 
 <div style="text-align: justify">
 
+
+
 En la actualidad, debido a la globalización es importante para las empresas conocer a sus clientes, la tecnología, sin duda ha permitido recaudar volúmenes enormes de información, sin embargo, en muchas ocasiones precisamente la información requerida por una empresa es difícil de obtener o representa información sensible para los usuarios, ya que invade su privacidad. No obstante, con los avances en analítica se han creado herramientas para lograr obtener la información necesaria de los usuarios sin invadir su intimidad y está ha podido utilizarse para estimar valores sobre el resto de la población, aun sin tener que preguntar directamente sobre la misma.
 
 Entre los datos que en algunos contextos pueden ser censurados u omitidos está el número de hijos en un hogar, lo que hace que sea una variable de la que no se dispone directamente; por lo tanto el problema en particular en el que se está interesado es la predicción del número de hijos en base a las características de los hogares colombianos.
 
 Se decidió abordar este problema como un problema de clasificación (aprendizaje supervisado). Para esto se tuvo en cuenta los siguiente:
 
-Se realizó una buena investigación y contextualización del conjunto de datos que fueron obtenidos de la ECV realizada por el DANE en 2019, mediante este se tuvo la oportunidad de establecer el número de hijos, a partir de, la combinación de algunas variables presentes en un conjunto de datos particular abordado en la encuesta, además de seleccionar las variables más relevantes para realizar un análisis y la modelación.
+Se realizó una buena investigación y contextualización del conjunto de datos que fueron obtenidos de la ECV realizada por el DANE en el año 2019, mediante este se tuvo la oportunidad de establecer el número de hijos, a partir de, la combinación de algunas variables presentes en un conjunto de datos particular abordado en la encuesta, además de seleccionar las variables más relevantes para realizar un análisis y la modelación.
 
 Se procedió a la selección de variables, las cuales posteriormente fueron unidas mediante indicadores de hogares. Este procedimiento fue realizado de manera muy cuidadosa para no obtener información incorrecta, después de este paso se llegó a una base de datos con las variables que los investigadores consideraron de interés.
 
@@ -119,14 +128,14 @@ De los modelos ajustados inicialmente se consideraron los cuatro mejores. Poster
 
 Bosques Aleatorios resultó ser el mejor después de este procedimiento, teniendo una alta tasa de aciertos. Después, se ajustó el mismo modelo con el conjunto de datos completo, con el fin de generar mejores predicciones por el hecho de contar con un mayor número de información.
 
-Como parte final, se aplicó el modelo obtenido en una página web que permite la interacción con sus usuarios, esto mostrará su potencial para predecir el número de hijos de un hogar colombiano según la estructura del mismo.
+Como parte final, se aplicó el modelo obtenido en una aplicación web que permite la interacción con usuarios, esto mostrará su potencial para predecir el número de hijos de un hogar colombiano según la estructura del mismo.
 
 
 # Retos
 
  * Contextualizar la base de datos.
  * Seleccionar las variables.
- * Construir la variables número de hijos.
+ * Construir la variable número de hijos.
  * Organizar la base de datos con variables que contribuyan de manera significativa a la solución del problema.
  * Encontrar modelos que se ajusten a las necesidades del conjunto de datos.
  * Seleccionar una solución óptima tanto para los investigadores como para los usuarios.
@@ -573,24 +582,28 @@ Caracteristicas_hogar_personas <- read.table("Caracteristicas y composicion del 
 
 Debido a que la variable P6051 muestra el parentesco de los integrantes de la familia con el jefe de hogar, solo será utilizada para la creación de la variable número de hijos, es decir, no se tiene en cuenta como covariable para el ajuste de modelos:
 
+Selección de las variables que permitiran la creación de la variable respuesta **número de hijos** a partir del conjunto de datos Caracteristicas y composición del hogar:
+
 ```{r}
 #Selección de las variables necesarias
 aux_creacion_respuesta<-Caracteristicas_hogar_personas[,c("ï..DIRECTORIO","SECUENCIA_P","P6051")]
 ```
 
-Para obtener el número de hijos por hogar se filtran las filas, si tienen una relacion de hijo/hija o nieto/nieta con el jefe de hogar y se cuenta el número de hijos por hogar. Los hogares se describen con el código único de ï..DIRECTORIO, SECUENCIA_P
+Para obtener el número de hijos por hogar se filtran las filas, si tienen una relacion de hijo/hija/hijastro(a) o nieto/nieta con el jefe de hogar y se cuenta el número de hijos por hogar. Los hogares se describen con el código único de ï..DIRECTORIO, SECUENCIA_P.
+
+El conjunto de datos presente a continuación solo contiene a los hogares con hijos:
 
 ```{r}
 require(tidyverse)
 require(dplyr)
 
-# P6051 = 3 : Hijo/hija/hijastro
+# P6051 = 3 : Hijo/hija/hijastro(a)
 # P6051 = 4 : Nieto/nieta
 
 num_hijos <- aux_creacion_respuesta %>%
-  filter(P6051 == 3 | P6051 == 4)%>%
-  group_by(ï..DIRECTORIO, SECUENCIA_P)%>%
-  count(SECUENCIA_P)
+  filter(P6051 == 3 | P6051 == 4)%>% #filtro
+  group_by(ï..DIRECTORIO, SECUENCIA_P)%>% # agrupando por el identificador del hogar
+  count(SECUENCIA_P) # Conteo del número de hijos por hogar
 ```
 
 
@@ -608,8 +621,8 @@ A continuación, se procede a calcular el número de integrantes que pertenecen 
 ```{r}
 require(dplyr)
 num_integrantes <- Caracteristicas_hogar_personas %>%
-  group_by(ï..DIRECTORIO, SECUENCIA_P) %>%
-  count(SECUENCIA_P)
+  group_by(ï..DIRECTORIO, SECUENCIA_P) %>% # agrupación por el indicador de los hogares
+  count(SECUENCIA_P) #Conteo del número de integrantes por hogar
 ```
 
 
@@ -623,8 +636,10 @@ El número de hogares es `r dim(num_integrantes)[1]`.
 
 Finalmente, con la función _merge_ se obtiene el número de hijos en cada hogar, uniendo las bases de datos _num_integrantes_ y _num_hijos_ como sigue:
 
+* el all.x = TRUE hace que se conserven todos los identificadores de los hogares que tienen integrantes y no sólo de los que poseen hijos.
+
 ```{r}
-num_hijos_final <- merge(num_integrantes, num_hijos, by =c("ï..DIRECTORIO","SECUENCIA_P"), all.x=TRUE)
+num_hijos_final <- merge(num_integrantes, num_hijos, by =c("ï..DIRECTORIO","SECUENCIA_P"), all.x=TRUE) # merge de las dos bases de datos creadas anteriormente.
 
 num_hijos_final$n.y[is.na(num_hijos_final$n.y)] <- 0 # Los datos faltantes indican que el hogar no tiene hijos
 
@@ -705,24 +720,30 @@ Se creó una única base de datos con la variable de interés (Número de hijos)
 
 # Merge de la base de datos de caracteristicas del hogar con condiciones de vida
 
+# SECUENCIA_P Y SECUENCIA_ENCUESTA son las mismas variables pero toman un nombre distinto en ambas bases de datos.
 Base1 <- merge(Caracteristicas_hogar_personas, condiciones_de_vida, by.x = c("ï..DIRECTORIO","SECUENCIA_P"), by.y = c("ï..DIRECTORIO","SECUENCIA_ENCUESTA"), all.x =TRUE)
 
 # Merge de Base1 con datos vivienda
 
+# Se realiza el merge solo por "ï..DIRECTORIO" ya que es el identificador de la vivienda y no del hogar, por lo tanto varios hogares de una misma vivienda recibiran la misma información sobre las variables de Datos_vivienda.
 Base2 <- merge(Base1, Datos_vivienda, by="ï..DIRECTORIO", all.x=T)
 
 # Merge de Base2 con educación
 
+# el merge se realiza con tres identificadores debido a que se selecciona la información del hogar solo por el jefe de la misma respecto a la educación.
 Base3 <- merge(Base2, Educacion, by =c("ï..DIRECTORIO","SECUENCIA_P", "ORDEN"), all.x=TRUE)
 
 # Merge de todas las bases de datos restantes
 
-## Bases de personas
+## Bases de personas 
+#(por cada integrante del hogar) 
+#(el merge sirve para obtener un solo registro por hogar)
 
 Base4 <- Reduce(function(...) merge (..., by=c("ï..DIRECTORIO","SECUENCIA_P", "ORDEN"), all=T), list(Base3, fuerza_trabajo, Salud, tecn_inf_comunicacion))
 Base4[,c("ORDEN")] <- NULL
 
-## Bases de hogares
+## Bases de hogares 
+#(información general del hogar)
 
 Base5 <- Reduce(function(...) merge (..., by= c("ï..DIRECTORIO","SECUENCIA_ENCUESTA", "ORDEN"), all=T), list(ServiciosDelHogar, financiacion_vivienda, energeticos_hogar))
 Base5[,c("ORDEN")] <- NULL
@@ -753,12 +774,45 @@ kable(head(Base_final), align = "c")%>%
   scroll_box(width = "100%", height = "330px")
 ```
 
+```{r echo=F}
+library(tidyverse)
+nombres <- c("Genero","Edad","Estado_civil","Lugar_nacimiento","Vive_hogar_padre","Educacion_padre","Vive_hogar_madre","Educacion_madre","Etnia","Num_Subsidios","Cant_hogares_vivienda","Tipo_vivienda","Material_pisos","Energia_electrica","Estrato","Acueducto","Alcantarillado","Basuras_semana","Nivel_educativo","Estudia","Afiliado","Salud_general","Uso_celular","Num_cuartos","Gas_natural","Telefonia_fija","Ingresos_hogar","Contrato_vivienda","Ultimo_pago_energia","Pago_mes_energia","Num_integrantes", "Num_hijos")
+
+colnames(Base_final) <- nombres
+Base_final <- Base_final %>% 
+  mutate(Genero = factor(Genero),
+    Estado_civil = factor(Estado_civil),
+    Lugar_nacimiento = factor(Lugar_nacimiento),
+    Vive_hogar_padre = factor(Vive_hogar_padre),
+    Educacion_padre = factor(Educacion_padre),
+    Vive_hogar_madre = factor(Vive_hogar_madre),
+    Educacion_madre = factor(Educacion_madre),
+    Etnia = factor(Etnia),
+    Tipo_vivienda = factor(Tipo_vivienda),
+    Material_pisos = factor(Material_pisos),
+    Energia_electrica = factor(Energia_electrica),
+    Estrato = factor(Estrato),
+    Acueducto = factor(Acueducto),
+    Alcantarillado = factor(Alcantarillado),
+    Nivel_educativo = factor(Nivel_educativo),
+    Estudia = factor(Estudia),
+    Afiliado = factor(Afiliado),
+    Salud_general = factor(Salud_general),
+    Uso_celular = factor(Uso_celular),
+    Gas_natural = factor(Gas_natural),
+    Telefonia_fija = factor(Telefonia_fija),
+    Contrato_vivienda = factor(Contrato_vivienda)
+)
+```
+
+
 ### Medidas de localización y escala
 
 Se realiza un análisis descriptivo a cada variable donde se identifica el rango y media de las variables continuas y discretas respectivamente, y la proporción de cada clase en las variables categóricas, además de la identificación de las variables con valores faltantes.
 
 ```{r}
 require(knitr)
+require(kableExtra)
 kable(summary(Base_final), align = "c")%>%
   kable_paper("striped")%>%
   scroll_box(width = "100%", height = "300px")
@@ -1617,7 +1671,7 @@ y <- Base_menos_Nas$Num_hijos # Variable respuesta
 require(glmnet)
 
 gridz <- 10^seq(-2,10, length = 100) # Malla de lambdas
-lasso.mod <- glmnet(x, y, alpha = 1, lambda = gridz)
+lasso.mod <- glmnet(x, y, alpha = 1, lambda = gridz) # Ajuste del modelo
 ```
 
 Se hace validación cruzada para seleccionar el $\lambda$ óptimo, que se aplicará en el modelo
@@ -1837,9 +1891,9 @@ kable(head(Base_modelar))%>%
 
 ## Modelamiento
 
-Los modelos escogidos son de regresión y clasificación, en cada uno se adaptó la variable respuesta. En los de clasificación se obtienen las predicciones como el número de hijos puntual, en los de regresión se obtienen aproximaciones decimales las cuales previamente debían ser redondeadas para ser comparadas con los valores reales, en general por este último procedimiento se podía notar que funcionaban mucho mejor los modelos de clasificación (su tasa de aciertos era la más alta) por lo tanto finalmente estos fueron considerados como los favoritos y continuaron en el proceso de selección de modelos, además, cabe aclarar que a cada modelo le fue ingresado las variables como se debía según su proceso de ajuste, por ejemplo, en el modelo de Knn las variables explicativas fueron ingresadas, estandarizadas las que son numéricas y se crearon variables dummy para las categóricas, en general el desempeño de este modelo fue muy bueno, pero su tiempo de ejecución fue superior al de los otros; este es uno de los criterios utilizados en la selección.
+La mayoría de las variables escogidas como significativas corresponden a variables categóricas, se seleccionaron modelos que permiten el correcto manejo de las mismas. A continuación se ilustra la etapa de modelamiento:
 
-Ya que la mayoría de las variables escogidas como significativas corresponden a variables categóricas, se seleccionaron modelos que permiten el correcto manejo de las mismas. A continuación se ilustra la etapa de modelamiento.
+
 
 ```{r, echo=FALSE}
 load("Base_modelar.RData")
@@ -1856,6 +1910,8 @@ grid()
 ```
 
 Se deduce que la mayoría de las familias tienen entre 0 y 2 hijos, sin embargo, hay una proporción considerable de hogares que poseen 3, 4 y 5 hijos. Pero, a partir de los 6 hijos la proporción decae, por lo que se podría pensar en agrupar a los hogares en 5 categorías comprendidas como: 0, 1, 2, 3, 4, 5+.  
+
+Además, que en una situación real resulta poco relevante determinar con precisión el número de hijos cuando estos son muchos, ya que con la información de que es una cantidad numerosa de hijos es suficiente para tomar la decisión que se requiera.
 
 
 ```{r}
@@ -1945,6 +2001,16 @@ kable(colSums(is.na(Base_de_ensayo)), align = "c", col.names = "Cantidad de NA")
 
 Aunque Ingresos_hogar, Nivel_educativo, Uso_celular, Ultimo_pago_energia, Educacion_madre y Estrato en primera instancia tienen una importancia elevada para el modelo se decide eliminarlas ya que contienen una gran cantidad de datos faltantes.
 
+
+Dado que el anterior modelo fue ajustado eliminando todas las filas con NAs, se procedió a eliminar una a una según el orden de importancia las columnas con NAs y a verificar su impacto en la tasa de acierto en el conjunto de validación. 
+
+El resultado que se obtuvo fue que la tasa de acierto levemente aumentó a medida que se excluyeron las columnas con NAs y por ende no se eliminaba ninguna fila del conjunto de entrenamiento.
+
+Por último, en busca de un modelo parsimonioso se ajustó excluyendo una a una las variables restantes (sin NAs) según el orden de importancia en el modelo Random Forest; Donde se tuvo en cuenta que el orden de importancia no se viera dramáticamente afectado de modelo a modelo y que la tasa de acierto no disminuyera drásticamente.
+
+Del resultado anterior se determinó conservar las siguientes 5 variables.
+
+
 ### Variables escogidas
 
 Las variables a utilizar en los modelos son las escogidas en orden de importancia por Bosques Aleatorios, se muestran a continuación:
@@ -1969,8 +2035,11 @@ var_imprt <-  c(
     "Num_hijos"
   )
 
-# Se convierte la variable Num_hijos a factor
+
+# Conjunto de datos con las variables importantes
 Base_modelar_f <- Base_de_ensayo[,var_imprt]
+
+# Se convierte la variable Num_hijos a factor
 Base_modelar_f$Num_hijos <- as.factor(Base_modelar_f$Num_hijos) 
 
 set.seed(15234) # Semilla
@@ -1998,7 +2067,7 @@ Se debe convertir la variable respuesta nuevamente a numérica para poder aplica
 modelo1 <- lm(as.numeric(as.character(Num_hijos))~., data=trn_prop)
 ```
 
-El error del modelo es `r summary(modelo1)$sigma`
+El error estándar del modelo es `r summary(modelo1)$sigma`
 
 Análisis de residuales.
 
@@ -2048,7 +2117,7 @@ mod1_arboles <- rpart(Num_hijos~., data = trn_prop)
 prp(mod1_arboles, type = 2, extra = 6, split.font = 3, box.col = c("#009999","#00e6e6","#0099e6","#00d6e6","#5cd6d6","#00cc99")[mod1_arboles$frame$yval])
 ```
 
-Se observa que la variable Num_integrantes es una de las más importantes, en la creación del árbol de regresión.
+Se observa que la variable Num_integrantes es una de las más importantes, en la creación del árbol de clasificación.
 
 Se hacen las predicciones y se obtiene la siguiente matriz de confusión
 
@@ -2283,6 +2352,13 @@ error <- 1-acierto
 
 La tasa de acierto es  `r acierto` y la tasa de error es `r error`.
 
+<br>
+
+## Conclusión del ajuste de modelos
+
+Los modelos escogidos son de regresión y clasificación, en cada uno se adaptó la variable respuesta. En los de clasificación se obtienen las predicciones como el número de hijos puntual, en los de regresión se obtienen aproximaciones decimales las cuales previamente debían ser redondeadas para ser comparadas con los valores reales, en general por este último procedimiento se podía notar que funcionaban mucho mejor en los modelos de clasificación (su tasa de aciertos era la más alta) por lo tanto finalmente estos fueron considerados como los favoritos y continuaron en el proceso de selección de modelos, además, cabe aclarar que a cada modelo le fue ingresado las variables como se debía según su proceso de ajuste, por ejemplo, en el modelo de Knn las variables explicativas fueron ingresadas, estandarizadas las que son numéricas y se crearon variables dummy para las categóricas, en general el desempeño de este modelo fue muy bueno, pero su tiempo de ejecución fue superior al de los otros; este es uno de los criterios utilizados en la selección.
+
+
 
 # Resultados
 
@@ -2428,28 +2504,34 @@ A continuación se darán los datos que corresponden a la información de cada u
 
 ```{r}
 require(ranger)
+# datos de los investigadores
+# Nombre <- c(Num_integrantes, Estado_civil, Genero, Edad, Vive_hogar_madre)
 Miguel <- c(3, 6, 1, 52, 2)
 Jennifer <- c(4, 2, 2, 43, 3)
 Juan <- c(4, 6, 1, 59, 2)
 Cristina <- c(3, 2, 2, 50, 2)
 Salome <- c(3, 4, 2, 53, 3)
 
+# Poniendo los datos en un data.frame para realizar predicciones
+df <- rbind(Miguel, Jennifer, Juan, Cristina, Salome) #Unión de los datos
+df <- data.frame(df) #Conversión a data.frame
 
-df <- rbind(Miguel, Jennifer, Juan, Cristina, Salome)
-df <- data.frame(df)
+# Nombres de las variables
 colnames(df) <- c("Num_integrantes",  
                   "Estado_civil", 
                   "Genero", 
                   "Edad",
                   "Vive_hogar_madre")
 
-real <- factor(c(1,2,2,1,2),levels = c("0","1","2","3","4","5"))
-prediccion <- predict(RandomForest, df)
-prediccion$predictions
+
+prediccion <- predict(RandomForest, df) # Predicción con el Random Forest
+prediccion$predictions # Imprime las predicciones
 ```
+
 
 <center>
 ```{r,echo=FALSE}
+real <- factor(c(1,2,2,1,2),levels = c("0","1","2","3","4","5"))
 f <- data.frame("Inverstigador" = c("Miguel", "Jennifer", "Juan", "Cristina", "Salome"),
                 "Valores_predichos" = prediccion$predictions,
                 "Valores_Reales" = c(1,2,2,1,2))
@@ -2467,6 +2549,17 @@ kable(f,align = "c")%>%
  * En general aunque algunas veces la información no este explicita en los lugares a los que tenemos acceso, gracias a los métodos de aprendizaje estadístico podemos deducirla.
  
  * En el mundo estadístico los Bosques Aleatorios son considerados por algunos como la panacea para los problemas de clasificación, en este problema se ve que este tipo de modelos es el que presenta mejores resultados, además, es un modelo parsimonioso, que se puede llevar a la práctica y presenta buenos resultados. 
+ 
+ * A partir del número de variables que finalmente se obtuvo, da referencia a que se puede obtener información de la variable respuesta sin necesidad de tener en cuenta tantas variables como las que se consideraron inicialmente, esto realmente es algo bueno, ya que no se requiere mucha información para obtener buenos resultados y a la hora de requerir recolectar nueva información será un proceso más sencillo, esto es a lo que llamamos modelos parsimoniosos los cuales siempre serán el mejor resultado.
+
+ * Mediante los análisis realizados en el informe anterior cabe resaltar que muchas veces un hogar puede estar representado y ser estudiado de manera correcta a partir de información que viene principalmente del jefe de hogar y ser verídica. 
+
+ * Dado que los resultados con los métodos de Random forest fueron muy buenos se recomienda para futuros estudios ensayar modelo tipo boosting.
+
+ * La predicción del número de hijos tiene bastantes utilidades en diferentes sectores por ejemplo en el caso de una inmobiliaria, que quiere arrendar una nueva propiedad y dejarla en manos de la familia ideal. La inmobiliaria no quiere invadir e incomodar la privacidad de sus clientes; pero con poca información y con ayuda de esta aplicación la inmobiliaria podrá saber cuántos de los futuros integrantes de este hogar son hijos y así saber un poco más sobre la familia que se mudará a la casa.
+ 
+ * Cabe resaltar que en un inicio cuando se entrenaban los modelo para clasificar el número de hijos de 0 a 14, si bien los modelos basados en arboles presentaban un tiempo de ejecución corto estos solo eran capaces de predecir de 0 a 6 hijos, comparado con el modelo Knn que fue el único de los modelos probados capaz de predecir en las 14 clases.
+
 
 # Bibliografía
 
@@ -2480,3 +2573,8 @@ kable(f,align = "c")%>%
 * Robayo, E. P. (2019). Tipología del hogar en Colombia  (2000-2015): Características Sociodemográficas de las mujeres. (Tesis de Maestría, Universidad Externado de Colombia). Recuperada de https://bdigital.uexternado.edu.co/bitstream/001/2223/1/DKA-spa-2019-Tipologias_de_hogar_en_Colombia_2000_2015_caracteristicas_sociodemograficas_de_las_mujeres 
 
 * Wright, M. N. & Ziegler, A. (2017). ranger: A fast implementation of random forests for high dimensional data in C++ and R. J Stat Softw 77:1-17. https://doi.org/10.18637/jss.v077.i01.
+
+
+</div>
+
+
