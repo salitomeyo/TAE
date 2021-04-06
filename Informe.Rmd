@@ -1,0 +1,2584 @@
+---
+title: "Prediciendo el número de hijos de los hogares colombianos"
+subtitle: "Informe"
+author: 
+- "Cristina Mercedes Ortega Benavides"
+- "Miguel Angel Londoño Ciceros"
+- "Jennifer Salazar Galvis"
+- "Juan Esteban Sanchez Pulgarin"
+- "Salome Aristizabal Giraldo"
+
+date: "31/3/2021"
+output:
+  rmdformats::readthedown:
+  css: "style.css"
+    
+---
+
+<style>
+
+p{
+    text-align: justify;
+}
+
+#toc ul.nav li.active ul li a {
+    background-color: #404040;
+    color:white;
+    border-right: solid 1px #404040 !important;
+}
+
+#postamble .author {
+    font-size: 10px;
+}
+
+#sidebar h2 a:hover {
+    color: #4DAEA9;
+}
+
+#postamble .date {
+    font-size: 10px;
+}
+
+#postamble {
+    color: white;
+    background: #262626;
+    border-top: solid 0px #211103;
+}
+
+#toc {
+    background-color: #262626;
+}
+
+#toc a{
+  border-bottom: solid 2px #4DAEA9;
+}
+
+#sidebar a:hover {
+    color:#262626;
+    background-color: #4DAEA9;
+    cursor: pointer;
+}
+
+button{
+  width: 100%;
+  color:#4DAEA9;
+}
+
+#sidebar h2 {
+  background-color: #00798e;
+  margin-bottom:0px;
+}
+
+#sidebar a{
+  color: white;
+}
+
+.nav>li>a:focus, .nav>li>a:hover {
+  text-decoration: none;
+  background-color: #71c1bb;
+}
+
+a:visited {
+  color: #00798e;
+}
+
+#toc ul.nav li.active a {
+    color: #4DAEA9 !important;
+    font-weight: bold;
+    background-color: #333333;
+    border-right: solid 0px #333333 !important;
+    border-bottom: solid 2px #4DAEA9;
+}
+
+h1, h2, h3, h4, h5, h6{
+    color: #4DAEA9;
+}
+
+</style>
+
+<script language="JavaScript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE,warning = FALSE)
+```
+
+# Introducción
+
+<div style="text-align: justify">
+
+
+
+En la actualidad, debido a la globalización es importante para las empresas conocer a sus clientes, la tecnología, sin duda ha permitido recaudar volúmenes enormes de información, sin embargo, en muchas ocasiones precisamente la información requerida por una empresa es difícil de obtener o representa información sensible para los usuarios, ya que invade su privacidad. No obstante, con los avances en analítica se han creado herramientas para lograr obtener la información necesaria de los usuarios sin invadir su intimidad y está ha podido utilizarse para estimar valores sobre el resto de la población, aun sin tener que preguntar directamente sobre la misma.
+
+Entre los datos que en algunos contextos pueden ser censurados u omitidos está el número de hijos en un hogar, lo que hace que sea una variable de la que no se dispone directamente; por lo tanto el problema en particular en el que se está interesado es la predicción del número de hijos en base a las características de los hogares colombianos.
+
+Se decidió abordar este problema como un problema de clasificación (aprendizaje supervisado). Para esto se tuvo en cuenta los siguiente:
+
+Se realizó una buena investigación y contextualización del conjunto de datos que fueron obtenidos de la ECV realizada por el DANE en el año 2019, mediante este se tuvo la oportunidad de establecer el número de hijos, a partir de, la combinación de algunas variables presentes en un conjunto de datos particular abordado en la encuesta, además de seleccionar las variables más relevantes para realizar un análisis y la modelación.
+
+Se procedió a la selección de variables, las cuales posteriormente fueron unidas mediante indicadores de hogares. Este procedimiento fue realizado de manera muy cuidadosa para no obtener información incorrecta, después de este paso se llegó a una base de datos con las variables que los investigadores consideraron de interés.
+
+Previo a lo anterior, se procedió a realizar un análisis descriptivo sobre el conjunto de datos, que ayudaran a una mejor comprensión de las variables y a seleccionar cuales de estas eran más relevantes para predecir el número de hijos, se realizaron gráficos y demás análisis.
+
+Como paso siguiente se usaron técnicas estadísticas para la selección de variables mediante la formulación de modelos, los cuales en su mayoría coincidieron con las variables seleccionadas mediante el análisis descriptivo.  
+
+Después de seleccionar las variables, se obtuvo un conjunto de datos con menos atributos, pero con el mismo número de registros, y asi se empezó a modelar el número de hijos como un problema de clasificación, donde cada nivel de la variable respuesta es una categoría.
+
+Los modelos seleccionados fueron considerados como los más adecuados para este problema en particular y son populares en el mundo del aprendizaje estadístico. Se realizaron ajustes con cada uno y se evaluó su rendimiento  mediante validación cruzada (Calculando tasas de acierto y error).
+
+Después de ajustar varios modelos, se analizó la posibilidad de encontrar el mismo resultado con menos variables, encontrando que se obtenía la misma tasa de acierto, aunque, el número de atributos utilizados era menor; por lo tanto, se decidió nuevamente hacer una reducción del conjunto de datos, de tal manera que se obtuvieron modelos más parsimoniosos (Buenos resultados con menos variables) llegando finalmente a modelos con cinco variables.
+
+De los modelos ajustados inicialmente se consideraron los cuatro mejores. Posteriormente estos modelos se ponen en competencia mediante distintas muestras aleatorias, divididas en conjunto de entrenamiento y validación; de tal manera, que el mejor modelo sea aquel que obtenga mejores resultados en el conjunto de validación en las diferentes muestras. 
+
+Bosques Aleatorios resultó ser el mejor después de este procedimiento, teniendo una alta tasa de aciertos. Después, se ajustó el mismo modelo con el conjunto de datos completo, con el fin de generar mejores predicciones por el hecho de contar con un mayor número de información.
+
+Como parte final, se aplicó el modelo obtenido en una aplicación web que permite la interacción con usuarios, esto mostrará su potencial para predecir el número de hijos de un hogar colombiano según la estructura del mismo.
+
+
+# Retos
+
+ * Contextualizar la base de datos.
+ * Seleccionar las variables.
+ * Construir la variable número de hijos.
+ * Organizar la base de datos con variables que contribuyan de manera significativa a la solución del problema.
+ * Encontrar modelos que se ajusten a las necesidades del conjunto de datos.
+ * Seleccionar una solución óptima tanto para los investigadores como para los usuarios.
+
+# Contextualización del conjunto de datos:
+
+El número de hijos en un hogar es una variable muy simple y poco estudiada en algunos contextos, por eso los volúmenes de datos que se encuentran en la web muchas veces no disponen de este tipo de información, pero para entidades como inmobiliarias, empresas crediticias, etc; puede serles de sumo interés, por ello, bajo trabajos de investigación se llega a la conclusión de que estas variables pueden ser deducidas a partir de otras que siguen en el mismo contexto, en este caso particular el número de hijos puede ser deducida a partir de conjuntos de datos relacionados con información acerca de los hogares del país, por lo tanto, una de las bases de datos que se considera tienen más relación con las viviendas y hogares de Colombia es la encuesta de Calidad de vida, donde la más actualizada hasta la fecha es la realizada en el año 2019.
+
+La Encuesta de Calidad de Vida (ECV) es una investigación que realiza el DANE, con el objetivo de recoger información sobre diferentes aspectos y dimensiones del bienestar de los hogares, incluyendo aspectos como el acceso a bienes y servicios públicos, privados o comunales, salud, educación, cuidado de niños y niñas menores de 5 años, entre otros. Esta información posibilita efectuar análisis posteriores de los factores que explican los diferentes niveles de vida existentes en la población colombiana.
+
+Por ello mediante este conjunto de datos que tiene un gran volumen, se intenta extraer aquellas variables que se consideran más representativas para intentar predecir el número de hijos que tiene cada uno de los hogares; antes de ello, se debe definir para esta investigación que es un hogar y que es el número de hijos, para realizar todos los análisis posteriores en función de esta variable (Número de hijos en el hogar).
+
+
+## Definiciones importantes
+
+### Usuario
+
+Inmobiliarias, empresas crediticias, en las cuales el número de hijos es una información sensible, ya que esto puede suponerse como un impedimento ya sea a la hora de conseguir o rentar apartamento, o para conseguir préstamos; debido a que, se concibe que el mantenimiento de los hijos es elevado y este sube cuantos más hijos posee el prestatario, por lo que resulta más complicado para los padres de familia acceder a los mismos. 
+
+Agencias o constructoras inmobiliarias en ocasiones tienen mucha información histórica de los clientes, sobretodo de los jefes de hogar, obteniendo así información relevante de las características de un hogar. En base a estas características podemos predecir el número de hijos del mismo, esta información puede ser utilizada por dichas empresas para lanzar nuevos proyectos y ofrecer atención más personalizada a sus usuarios.
+
+Adicionalmente, algunas empresas que facilitan el arriendo como intermediarios pueden tener políticas de arriendo como el hecho de que no se admiten hijos en los hogares, esto es común en residencias estudiantiles, entre otros.
+
+### Hogar
+
+Según el DANE se entiende como hogar a una persona o grupo de personas que ocupan la totalidad o parte de una vivienda y que se han asociado para compartir su lugar de descanso, alimentos y demás necesidades básicas (si se trata de hogar-unidad doméstica) . Pueden ser familiares o no entre sí.
+
+Un hogar no puede dividirse en más de una vivienda, pero dentro de cada vivienda, puede haber más de un hogar, conformado por una o más personas con o sin vínculos de parentesco.
+
+### Número de hijos
+
+Se define el número de hijos de acuerdo con los hogares colombianos promedio, definidos por el DANE, en los cuales se tienen:
+
+* Parejas con hijos.
+* Una persona sola.
+* Padre o madre y sus hijos.
+* Parejas sin hijos.
+* Hogar extenso-compuesto, definido como hogares nucleares (alguna de las opciones anteriormente mencionadas)  más otros parientes.
+
+Se muestra a continuación una imagen que ejemplifica mejor lo antes mencionado:
+
+<center>
+
+![](hogares.png)
+
+
+</center>
+
+En base a esto se considera como el número de hijos, a los hijos, hijastros y nietos del jefe del hogar, sin discriminar por edad, ya que está es la forma que en general funciona mejor, en base a la mayoría de estructuras de los hogares en Colombia.
+
+En casos generales funciona esta estructura ya que en la mayoría de hogares cuenta con padres y si estos no están presentes, los abuelos de los hijos lo están, cuando se considera que hay varios grupos familiares en una misma vivienda, como lo son por ejemplo, varios hermanos con sus respectivos hijos, estos se dividirán en diferentes hogares; ya que son varios núcleos familiares en una misma vivienda, los cuales deben ser tomados como hogares de manera independiente, por lo tanto, estructuras como estas no sesgan la elección de la variable __número de hijos__. Además, cabe aclarar que la encuesta de calidad de vida hace esta misma división, ya que en una misma vivienda se ven presentes varios hogares(siendo 5 el máximo), por lo tanto, esta variable fue seleccionada con los hijos/hijastros y nietos del jefe del hogar; en base a la estructura de la encuesta de calidad de vida y en la perspectiva de los investigadores.
+
+
+# Materiales
+
+## Variables preselecionadas
+
+### Características y composición del hogar.
+
+Compuesta por 46 variables de las cuales se escogieron
+
+<table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Pregunta</th>
+        </tr>
+        <tr>
+            <td>P6040</td>
+            <td>Genero</td>
+            <td>Sexo:
+                1 Hombre
+                2 Mujer                 
+            </td>
+        </tr>
+        <tr>
+            <td>P6040</td>
+            <td>Edad</td>
+            <td>¿Cuántos años cumplidos tiene … ?</td>
+        </tr>
+        <tr>
+            <td>P6051</td>
+            <td>-</td>  
+            <td>¿Cuál es el parentesco de ___ con el jefe o la jefa de este hogar?
+                1 Jefe (a) del hogar
+                2 Pareja, esposo (a), cónyuge, compañero(a)
+                3 Hijo(a) hijastro(a)
+                4 Nieto (a)
+                5 Padre, madre, padrastro y madrastra
+                6 Suegro o suegra
+                7 Hermano (a), hermanastro (a)
+                8 Yerno, nuera
+                9 Otro pariente del jefe(a)
+                10 Empleado(a) del servicio doméstico
+                11 Parientes del servicio doméstico
+                12 Trabajador
+                13 Pensionista
+                14 Otro pariente                
+            </td>
+        </tr>
+        <tr>
+            <td>P5502</td>
+            <td>Estado_civil</td>
+            <td>Actualmente el jefe del hogar:
+                1 No está casado(a) y vive en pareja hace menos de dos años
+                2 No está casado(a) y vive en pareja hace dos años o más
+                3 Está viudo(a)
+                4 Está separado(a) o divorciado(a)
+                5 Está soltero(a)
+                6 Está casado(a)
+            </td>
+        </tr>
+        <tr>
+            <td>P756</td>
+            <td>Lugar_nacimiento</td>
+            <td>¿Dónde nació el jefe del hogar?
+                1 En este municipio
+                2 En otro municipio
+                3 En otro país    
+            </td>
+        </tr>
+        <tr>
+            <td>P6081</td>
+            <td>Vive_hogar_padre</td>
+            <td>¿El padre del jefe del hogar vive en este hogar?</td>
+        </tr>
+        <tr>
+            <td>P6087</td>
+            <td>Educacion_padre</td>
+            <td>¿Cuál es o fue el nivel de educación más alto alcanzado por el padre del jefe del hogar?</td>
+        </tr>
+        <tr>
+            <td>P6083</td>
+            <td>Vive_hogar_madre</td>
+            <td>¿La madre del jefe del hogar vive en este hogar?</td>
+        </tr>
+        <tr>
+            <td>P6088</td>
+            <td>Educacion_madre</td>
+            <td>¿Cuál es o fue el nivel de educación más alto alcanzado por la madre del jefe del hogar?</td>
+        </tr>
+        <tr>
+            <td>P6080</td>
+            <td>Etnia</td>
+            <td>De acuerdo con su cultura, pueblo o rasgos físicos, _____ es o se reconoce como:
+                1 Indígena
+                2 Gitano (a) (Rom)
+                3 Raizal del archipiélago de San Andrés, Providencia y Santa Catalina
+                4 Palenquero (a) de San Basilio
+                5 Negro (a), mulato (a) (afrodescendiente), afrocolombiano(a)
+                6 Ninguno de los anteriores
+            </td>
+        </tr>
+</table>
+
+### Condiciones de vida del hogar y tenencia de bienes (programas).
+
+Compuesta por 8 variables de las cuales se escogió:
+
+<table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Pregunta</th>
+        </tr>
+        <tr>
+            <td>P784S4A3</td>
+            <td>Num_subsidios</td>
+            <td>¿Cuántos miembros del hogar reciben subsidios?</td>
+        </tr>
+</table>
+
+### Datos de la vivienda.
+
+Compuesta por 35 variables de las cuales se escogieron:
+
+<table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Pregunta</th>
+        </tr>
+        <tr>
+            <td>P1070</td>
+            <td>Tipo_vivienda</td>
+            <td>Tipo de vivienda:
+                1 Casa
+                2 Apartamento
+                3 Cuarto(s)
+                4 Vivienda tradicional indigena
+                5 Otro (carpa, contenedor, vagón, embarcación, cueva, refugio natural, etc
+            </td>
+        </tr>
+        <tr>
+            <td>P4015</td>
+            <td>Material_pisos</td>
+            <td>Material predominante de los pisos:
+                1 Alfombra o tapete de pared a pared
+                2 Madera pulida y lacada, parqué
+                3 Mármol
+                4 Baldosa, vinilo, tableta, ladrillo, laminado
+                5 Madera burda, tabla, tablón, otro vegetal
+                6 Cemento, gravilla
+                7 Tierra, arena
+            </td>
+        </tr>
+        <tr>
+            <td>P8520S1</td>
+            <td>Energia_electrica</td>
+            <td>¿La vivienda cuenta con energía eléctrica?
+                1 Sí
+                2 No
+            </td>
+        </tr>
+        <tr>
+            <td>P8520S1A1</td>
+            <td>Estrato</td>
+            <td>Estrato para tarifa de la energía eléctrica:
+                1 Bajo - Bajo
+                2 Bajo
+                3 Medio - Bajo
+                4 Medio
+                5 Medio - Alto
+                6 Alto
+                8 Planta eléctrica
+                9 No conoce el estrato o no cuenta con recibo de pago.
+                0 Recibos sin estrato o el servicio es pirata
+            </td>
+        </tr>
+        <tr>
+            <td>P8520S5</td>
+            <td>Acueducto</td>
+            <td>¿La vivienda cuenta con acueducto?
+                1 Sí
+                2 No
+            </td>
+        </tr>
+        <tr>
+            <td>P8520S3</td>
+            <td>Alcantarillado</td>
+            <td>¿La vivienda cuenta con alcantarillado?
+                1 Sí
+                2 No
+            </td>
+        </tr>
+        <tr>
+            <td>P8520S4</td>
+            <td>Basuras_semana</td>
+            <td>¿Cuenta con servicio de Recolección de basuras?
+                1 Sí
+                2 No
+            </td>
+        </tr>
+</table>
+
+### Educación.
+
+Compuesta por 58 variables de las cuales se escogieron:
+
+<table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Pregunta</th>
+        </tr>
+        <tr>
+            <td>P8586</td>
+            <td>Estudia</td>
+            <td>¿El jefe del hogar actualmente estudia? (asiste al preescolar, escuela, colegio o universidad)
+                1 Sí
+                2 No
+            </td>
+        </tr>
+        <tr>
+            <td>P8587</td>
+            <td>Nivel_educativo</td>
+            <td>¿Cuál es el nivel educativo más alto alcanzado por el jefe del hogar  y el último año o grado aprobado en este nivel?
+                1 Ninguno
+                2 Preescolar
+                3 Básica Primaria (1º - 5º)
+                4 Básica secundaria (6º--9º)
+                5 Media (10º--13º)
+                6 Técnico sin título
+                7 Técnico con título
+                8 Tecnológico sin título
+                9 Tecnológico con título
+                10 Universitario sin titulo
+                11 Universitario con titulo
+                12 Postgrado sin titulo
+                13 Postgrado con titulo
+            </td>
+        </tr>
+</table>
+
+### Salud.
+
+Compuesta por 103 variables de las cuales se escogieron:
+
+<table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Pregunta</th>
+        </tr>
+        <tr>
+            <td>P6090</td>
+            <td>Afiliado</td>
+            <td>¿El jefe del hogar está afiliado (a), es cotizante o es beneficiario (a) de alguna entidad de seguridad social en salud? (Entidad promotora de salud [EPS] o entidad promotora de salud subsidiada EPS-S)
+                1 Sí
+                2 No
+                9 No sabe, no informa
+            </td>
+        </tr>
+        <tr>
+            <td>P6127</td>
+            <td>Salud_general</td>
+            <td>El estado de salud del jefe del hogar en general, es:
+                1 Muy bueno
+                2 Bueno
+                3 Regular
+                4 Malo
+            </td>
+        </tr>
+</table>
+    
+### Servicios del hogar.
+
+Compuesta por 64 variables de las cuales se escogieron:
+
+<table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Pregunta</th>
+        </tr>
+        <tr>
+            <td>P5666</td>
+            <td>Gas_natural</td>
+            <td>¿En este hogar tienen servicio de Gas Natural conectado a red pública?
+                1 Sí
+                2 No
+            </td>
+        </tr>
+        <tr>
+            <td>P5305</td>
+            <td>Telefonia_fija</td>
+            <td>¿En este hogar tienen servicio telefónico fijo?
+                1 Sí
+                2 No
+            </td>
+        </tr>
+        <tr>
+            <td>I_HOGAR</td>
+            <td>Ingresos_hogar</td>
+            <td>Ingreso Mensual Total del Hogar</td>
+        </tr>
+</table>
+
+### Tenencia y financiación de la vivienda que ocupa el hogar.
+
+Compuesta por 20 variables de las cuales se escogieron:
+
+<table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Pregunta</th>
+        </tr>
+        <tr>
+            <td>P5095</td>
+            <td>Contrato_vivienda</td>
+            <td>¿La vivienda ocupada por este hogar es?
+                1. Propia, totalmente pagada
+                2. Propia, la están pagando
+                3. En arriendo o subarriendo
+                4. Con permiso del propietario, sin pago alguno (usufructuario)
+                5. Posesión sin título (ocupante de hecho)
+                6. Propiedad colectiva
+            </td>
+        </tr>
+</table>
+    
+### Uso de energéticos del hogar.
+
+Compuesta por 45 variables de las cuales se escogieron:
+
+<table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Pregunta</th>
+        </tr>
+        <tr>
+            <td>P5018</td>
+            <td>Ultimo_pago_energia</td>
+            <td>¿Cuánto pagaron EL MES PASADO o la última vez por la electricidad consumida?</td>
+        </tr>
+        <tr>
+            <td>P5018S1</td>
+            <td>-</td>
+            <td>¿A cuántos meses corresponde el pago de la última vez por la electricidad consumida?</td>
+        </tr>
+</table>
+
+### Variables construidas a partir de otras.
+
+<table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Variables utilizadas</th>
+        </tr>
+        <tr>
+            <td>P5018S</td>
+            <td>Pago_mes_energia</td>
+            <td>Esta variable fue creada dividiendo P5018/P5018S1 con el fin de obtener el pago mensual de electricidad</td>
+        </tr>
+        <tr>
+            <td>Num_integrantes</td>
+            <td>Num_integrantes</td>
+            <td>Esta variable fue creada sumando 1 unidad cada vez que el número de ORDEN cambiaba</td>
+        </tr>
+        <tr>
+            <td>Num_hijos</td>
+            <td>Num_hijos</td>
+            <td>Esta variable fue creada sumando 1 cada vez que la pregunta código P6051 toma el valor de 3 o 4 correspondiente a hijo o nieto</td>
+        </tr>
+</table>
+
+
+# Metodología
+
+## Preprocesamiento de los datos
+
+### Creación de la variable número de hijos 
+
+Debido a que la variable de interés (Número de hijos) no aparece de manera explícita, se llevó a cabo un proceso de construcción de la misma. Esto fue posible gracias a algunas de las variables de la base de datos Características y composición del hogar, presente en la ECV(2019) que permiten conocer la relación de cada individuo con el jefe del hogar.
+
+Como primer paso se realiza la lectura de las bases de datos:
+
+```{r}
+Caracteristicas_hogar_personas <- read.table("Caracteristicas y composicion del hogar.csv", sep = ";", header = T)
+```
+
+Debido a que la variable P6051 muestra el parentesco de los integrantes de la familia con el jefe de hogar, solo será utilizada para la creación de la variable número de hijos, es decir, no se tiene en cuenta como covariable para el ajuste de modelos:
+
+Selección de las variables que permitiran la creación de la variable respuesta **número de hijos** a partir del conjunto de datos Caracteristicas y composición del hogar:
+
+```{r}
+#Selección de las variables necesarias
+aux_creacion_respuesta<-Caracteristicas_hogar_personas[,c("ï..DIRECTORIO","SECUENCIA_P","P6051")]
+```
+
+Para obtener el número de hijos por hogar se filtran las filas, si tienen una relacion de hijo/hija/hijastro(a) o nieto/nieta con el jefe de hogar y se cuenta el número de hijos por hogar. Los hogares se describen con el código único de ï..DIRECTORIO, SECUENCIA_P.
+
+El conjunto de datos presente a continuación solo contiene a los hogares con hijos:
+
+```{r}
+require(tidyverse)
+require(dplyr)
+
+# P6051 = 3 : Hijo/hija/hijastro(a)
+# P6051 = 4 : Nieto/nieta
+
+num_hijos <- aux_creacion_respuesta %>%
+  filter(P6051 == 3 | P6051 == 4)%>% #filtro
+  group_by(ï..DIRECTORIO, SECUENCIA_P)%>% # agrupando por el identificador del hogar
+  count(SECUENCIA_P) # Conteo del número de hijos por hogar
+```
+
+
+```{r,echo=FALSE}
+require(kableExtra)
+kable(head(num_hijos), align = "c")%>%
+  kable_paper("striped", full_width = F)
+```
+
+El número de hogares que tiene al menos un hijo es de: `r dim(num_hijos)[1]` hogares.
+
+A continuación, se procede a calcular el número de integrantes que pertenecen a cada hogar:
+
+
+```{r}
+require(dplyr)
+num_integrantes <- Caracteristicas_hogar_personas %>%
+  group_by(ï..DIRECTORIO, SECUENCIA_P) %>% # agrupación por el indicador de los hogares
+  count(SECUENCIA_P) #Conteo del número de integrantes por hogar
+```
+
+
+```{r,echo=FALSE}
+require(kableExtra)
+kable(head(num_integrantes), align = "c")%>%
+  kable_paper("striped",full_width = F)
+```
+
+El número de hogares es `r dim(num_integrantes)[1]`.
+
+Finalmente, con la función _merge_ se obtiene el número de hijos en cada hogar, uniendo las bases de datos _num_integrantes_ y _num_hijos_ como sigue:
+
+* el all.x = TRUE hace que se conserven todos los identificadores de los hogares que tienen integrantes y no sólo de los que poseen hijos.
+
+```{r}
+num_hijos_final <- merge(num_integrantes, num_hijos, by =c("ï..DIRECTORIO","SECUENCIA_P"), all.x=TRUE) # merge de las dos bases de datos creadas anteriormente.
+
+num_hijos_final$n.y[is.na(num_hijos_final$n.y)] <- 0 # Los datos faltantes indican que el hogar no tiene hijos
+
+colnames(num_hijos_final) <- c("ï..DIRECTORIO","SECUENCIA_P", "Num Integrantes", "Num Hijos")
+```
+
+```{r,echo=FALSE}
+require(kableExtra)
+kable(head(num_hijos_final,10), align = "c")%>%
+  kable_paper("striped",full_width = F)
+```
+
+
+### Selección de variables
+
+Como paso siguiente se realizó de manera exhaustiva en cada una de las bases de la ECV, una preselección de covariables que a criterio de los investigadores, podrían tener alguna relación con la variable respuesta. Con la información anterior se procede a construir la base de datos para el paso siguiente.
+
+A continuación se muestra la base que se obtuvo con las variables preseleccionadas que aparecen listadas en la contextualización de los datos:
+
+```{r,eval=FALSE}
+
+# Características del hogar
+
+Caracteristicas_hogar_personas <- read.table("Caracteristicas y composicion del hogar.csv", sep = ";", header = T)
+Caracteristicas_hogar_personas<-Caracteristicas_hogar_personas[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P6020", "P6040","P6051", "P5502", "P756","P6081", "P6087","P6083","P6088","P6080")]
+
+# Condiciones de vida del hogar y tenencia de bienes (programas)
+
+condiciones_de_vida <- read.table("Condiciones de vida del hogar y tenencia de bienes (programas).csv", sep=";", header = T)
+condiciones_de_vida <- condiciones_de_vida[, c("ï..DIRECTORIO","SECUENCIA_ENCUESTA","ORDEN","P784S4A3")]
+
+# Datos de la vivienda
+
+Datos_vivienda <- read.table("Datos de la vivienda.csv", sep = ";", header = T)
+Datos_vivienda<-Datos_vivienda[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","CANT_HOGARES_VIVIENDA","P1070","P4015","P8520S1","P8520S1A1","P8520S5","P8520S3", "P8520S4A1")]
+
+# Educación
+
+Educacion<- read.table("Educacion.csv", sep = ";", header = T)
+Educacion<-Educacion[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P8587","P8586")]
+
+# Fuerza de trabajo 
+
+fuerza_trabajo <- read.table("Fuerza de trabajo.csv", sep=";", header = T)
+fuerza_trabajo <- fuerza_trabajo[, c("ï..DIRECTORIO","SECUENCIA_P","ORDEN", "P6435")]
+
+# Salud
+
+Salud<- read.table("Salud.csv", sep = ";", header = T)
+Salud<-Salud[,c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P6090","P6127")]
+
+# Servicios del hogar
+
+ServiciosDelHogar<- read.table("Servicios del hogar.csv", sep = ";", dec=",", header = T)
+ServiciosDelHogar<-ServiciosDelHogar[,c("ï..DIRECTORIO","SECUENCIA_ENCUESTA","ORDEN","P5000","P5666","P5305", "I_HOGAR")]
+
+# Tecnología e información y comunicación
+
+tecn_inf_comunicacion <- read.table("Tecnologías de información y comunicación.csv", sep=";", header = T) 
+tecn_inf_comunicacion <- tecn_inf_comunicacion[, c("ï..DIRECTORIO","SECUENCIA_P","ORDEN","P769")]
+
+# Tenencia y financiación de la vivienda que ocupa el hogar
+
+financiacion_vivienda <- read.table("Tenencia y financiación de la vivienda que ocupa el hogar.csv", sep=";", header = T)
+financiacion_vivienda <- financiacion_vivienda[,c("ï..DIRECTORIO","SECUENCIA_ENCUESTA","ORDEN","P5095")]
+
+# Uso de energéticos del hogar
+
+energeticos_hogar <- read.table("Uso de energéticos del hogar.csv", sep=";", header = T)
+energeticos_hogar <- energeticos_hogar[,c("ï..DIRECTORIO","SECUENCIA_ENCUESTA","ORDEN", "P5018", "P5018S1")]
+```
+
+### Unión de las bases de datos:
+
+Se creó una única base de datos con la variable de interés (Número de hijos) y las demás variables seleccionadas. Dado que las posibles variables explicativas provenían de diferentes tablas, se procedió a realizar un merge entre ellas, usando como variable de referencia la columna “Directorio” y “Secuencia” que son las dos variables que identifican a un hogar, y teniendo especial cuidado en la unión de tablas donde las preguntas pueden ser por vivienda, hogar o integrantes y se debía llevar a una misma estructura de hogares.
+
+```{r,eval=FALSE}
+
+# Merge de la base de datos de caracteristicas del hogar con condiciones de vida
+
+# SECUENCIA_P Y SECUENCIA_ENCUESTA son las mismas variables pero toman un nombre distinto en ambas bases de datos.
+Base1 <- merge(Caracteristicas_hogar_personas, condiciones_de_vida, by.x = c("ï..DIRECTORIO","SECUENCIA_P"), by.y = c("ï..DIRECTORIO","SECUENCIA_ENCUESTA"), all.x =TRUE)
+
+# Merge de Base1 con datos vivienda
+
+# Se realiza el merge solo por "ï..DIRECTORIO" ya que es el identificador de la vivienda y no del hogar, por lo tanto varios hogares de una misma vivienda recibiran la misma información sobre las variables de Datos_vivienda.
+Base2 <- merge(Base1, Datos_vivienda, by="ï..DIRECTORIO", all.x=T)
+
+# Merge de Base2 con educación
+
+# el merge se realiza con tres identificadores debido a que se selecciona la información del hogar solo por el jefe de la misma respecto a la educación.
+Base3 <- merge(Base2, Educacion, by =c("ï..DIRECTORIO","SECUENCIA_P", "ORDEN"), all.x=TRUE)
+
+# Merge de todas las bases de datos restantes
+
+## Bases de personas 
+#(por cada integrante del hogar) 
+#(el merge sirve para obtener un solo registro por hogar)
+
+Base4 <- Reduce(function(...) merge (..., by=c("ï..DIRECTORIO","SECUENCIA_P", "ORDEN"), all=T), list(Base3, fuerza_trabajo, Salud, tecn_inf_comunicacion))
+Base4[,c("ORDEN")] <- NULL
+
+## Bases de hogares 
+#(información general del hogar)
+
+Base5 <- Reduce(function(...) merge (..., by= c("ï..DIRECTORIO","SECUENCIA_ENCUESTA", "ORDEN"), all=T), list(ServiciosDelHogar, financiacion_vivienda, energeticos_hogar))
+Base5[,c("ORDEN")] <- NULL
+```
+
+Una vez obtenida la base 4 agrupada por i..DIRECTORIO y SECUENCIA_P y la base 5 agrupada por i..DIRECTORIO y SECUENCIA_ENCUESTA, se procede a agruparlas igualando SECUENCIA_P con SECUENCIA_ENCUESTA.
+
+```{r,eval=FALSE}
+Base6 <- merge(Base4, Base5, by.x =c("ï..DIRECTORIO","SECUENCIA_P"),
+               by.y =c("ï..DIRECTORIO","SECUENCIA_ENCUESTA"), all=TRUE)
+```
+
+Finalmente, se agrupa la base anterior con la base que contiene el número de hijos, obteniendo:
+
+```{r,eval=FALSE}
+
+# Base final
+
+Base_final <- merge(Base6, num_hijos_final, by =c("ï..DIRECTORIO","SECUENCIA_P"), all.x=TRUE)
+Base_final[,c("P6435","P6051","P5018S1","ï..DIRECTORIO","SECUENCIA_P")] <- NULL
+
+```
+
+```{r,echo=FALSE}
+load(file = "datos.RData")
+kable(head(Base_final), align = "c")%>%
+  kable_paper("striped", full_width = F)%>%
+  scroll_box(width = "100%", height = "330px")
+```
+
+```{r echo=F}
+library(tidyverse)
+nombres <- c("Genero","Edad","Estado_civil","Lugar_nacimiento","Vive_hogar_padre","Educacion_padre","Vive_hogar_madre","Educacion_madre","Etnia","Num_Subsidios","Cant_hogares_vivienda","Tipo_vivienda","Material_pisos","Energia_electrica","Estrato","Acueducto","Alcantarillado","Basuras_semana","Nivel_educativo","Estudia","Afiliado","Salud_general","Uso_celular","Num_cuartos","Gas_natural","Telefonia_fija","Ingresos_hogar","Contrato_vivienda","Ultimo_pago_energia","Pago_mes_energia","Num_integrantes", "Num_hijos")
+
+colnames(Base_final) <- nombres
+Base_final <- Base_final %>% 
+  mutate(Genero = factor(Genero),
+    Estado_civil = factor(Estado_civil),
+    Lugar_nacimiento = factor(Lugar_nacimiento),
+    Vive_hogar_padre = factor(Vive_hogar_padre),
+    Educacion_padre = factor(Educacion_padre),
+    Vive_hogar_madre = factor(Vive_hogar_madre),
+    Educacion_madre = factor(Educacion_madre),
+    Etnia = factor(Etnia),
+    Tipo_vivienda = factor(Tipo_vivienda),
+    Material_pisos = factor(Material_pisos),
+    Energia_electrica = factor(Energia_electrica),
+    Estrato = factor(Estrato),
+    Acueducto = factor(Acueducto),
+    Alcantarillado = factor(Alcantarillado),
+    Nivel_educativo = factor(Nivel_educativo),
+    Estudia = factor(Estudia),
+    Afiliado = factor(Afiliado),
+    Salud_general = factor(Salud_general),
+    Uso_celular = factor(Uso_celular),
+    Gas_natural = factor(Gas_natural),
+    Telefonia_fija = factor(Telefonia_fija),
+    Contrato_vivienda = factor(Contrato_vivienda)
+)
+```
+
+
+### Medidas de localización y escala
+
+Se realiza un análisis descriptivo a cada variable donde se identifica el rango y media de las variables continuas y discretas respectivamente, y la proporción de cada clase en las variables categóricas, además de la identificación de las variables con valores faltantes.
+
+```{r}
+require(knitr)
+require(kableExtra)
+kable(summary(Base_final), align = "c")%>%
+  kable_paper("striped")%>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+Se decidió remover de la base de datos a aquellas variables cuyos valores faltantes superar un tercio de la cantidad de registros en la base de datos.
+
+### Gráficos descriptivos 
+
+Con el fin de depurar la base de datos, mediante gráficos se realizó un análisis descriptivo de las variables.
+
+```{r, echo=FALSE}
+nombres <- c(
+  "Genero","Edad","Estado_civil","Lugar_nacimiento","Vive_hogar_padre","Educacion_padre","Vive_hogar_madre","Educacion_madre","Etnia","Num_Subsidios","Cant_hogares_vivienda","Tipo_vivienda","Material_pisos","Energia_electrica","Estrato","Acueducto","Alcantarillado","Basuras_semana","Nivel_educativo","Estudia","Afiliado","Salud_general","Uso_celular","Num_cuartos","Gas_natural","Telefonia_fija","Ingresos_hogar","Contrato_vivienda","Ultimo_pago_energia","Pago_mes_energia","Num_integrantes","Num_hijos"
+)
+colnames(Base_final) <- nombres
+```
+
+Para finalizar la etapa de preprocesamiento, se crearon gráficos Boxplots del Número de hijos vs las variables categóricas, respectivamente, con el fin de analizar la posible influencia o relación de cada predictora con la respuesta.
+
+```{r, eval=FALSE}
+sapply(1:32, function(i){
+  boxplot(Base_final$Num_hijos~Base_final[, i], xlab = nombres[i])
+})
+```
+
+```{r, echo=F}
+require(ggplot2)
+
+gra1 <- ggplot(Base_final,aes(x=factor(Genero),y=Num_hijos,fill=factor(Genero)))+
+  geom_boxplot()+
+  xlab("Genero")+ylab("Número de hijos") +
+   scale_x_discrete(labels = c("Masculino", "Femenino")) +
+   scale_fill_brewer()+
+   theme(legend.position = "NONE")
+
+gra2 <- ggplot(Base_final,aes(x=factor(Estado_civil),y=Num_hijos,fill=factor(Estado_civil)))+
+  geom_boxplot()+
+  xlab("Estado civil del jefe del hogar")+ylab("Número de hijos") +
+  labs(fill = "Estado Civil") +
+  scale_fill_brewer(labels = c("1 No está casado(a) y vive 
+  en pareja hace menos
+  de dos años", "2 No está casado(a) y vive 
+  en pareja hace
+  dos años o más", "3 Está viudo(a)", "4 Está separado(a)
+  o divorciado(a)", "5 Está soltero(a)", "6 Está casado(a)"))+
+   theme(legend.position = "bottom")
+
+gra3 <- ggplot(Base_final,aes(x=factor(Lugar_nacimiento),y=Num_hijos,fill=factor(Lugar_nacimiento)))+
+  geom_boxplot()+
+  xlab("Lugar de nacimiento 
+       del jefe del hogar")+ylab("Número de hijos") +
+  scale_x_discrete(labels = c("1 En este
+  municipio", "2 En otro
+  municipio", "3 En otro
+  país"))+
+  scale_fill_brewer() + 
+  theme(legend.position = "NONE")
+
+gra4 <- ggplot(Base_final,aes(x=factor(Vive_hogar_padre),y=Num_hijos,fill=factor(Vive_hogar_padre)))+
+  geom_boxplot()+
+  xlab("el padre del jefe del hogar vive con el")+ylab("Número de hijos")  +
+  scale_x_discrete(labels = c("1 Si", "2 No", "3 Fallecido")) +
+  scale_fill_brewer() + 
+  theme(legend.position = "NONE")
+
+gra5 <- ggplot(Base_final,aes(x=factor(Educacion_padre),y=Num_hijos,fill=factor(Educacion_padre)))+
+  geom_boxplot()+
+  xlab("Educación del padre del jefe de hogar")+ylab("Número de hijos") +
+  labs(fill = "Educación del padre") +
+  scale_fill_brewer(labels = c("1 Algunos años de primaria", "2 Toda la primaria",
+"3 Algunos años de secundaria", "4 Toda la secundaria", "5 Uno o mas años 
+de técnica o tecnológica", "6 Técnica o tecnológica completa", "7 Uno o mas años
+de universidad", "8 Universitaria completa", "9 Ninguno", "10 No sabe")) +
+  theme(legend.position = "bottom")
+
+
+gra6 <- ggplot(Base_final,aes(x=factor(Vive_hogar_madre),y=Num_hijos,fill=factor(Vive_hogar_madre)))+
+  geom_boxplot()+
+  xlab("La madre del jefe del hogar vive con él")+ylab("Número de hijos")  +
+  scale_x_discrete(labels = c("1 Si", "2 No", "3 Fallecida")) +
+  scale_fill_brewer() + 
+  theme(legend.position = "NONE")
+
+gra7 <- ggplot(Base_final,aes(x=factor(Educacion_madre),y=Num_hijos,fill=factor(Educacion_madre)))+
+  geom_boxplot()+
+  xlab("Educación de la madre del jefe de hogar")+ylab("Número de hijos") +
+  labs(fill = "Educación de la madre") +
+  scale_fill_brewer(labels = c("1 Algunos años de primaria", "2 Toda la primaria",
+"3 Algunos años de secundaria", "4 Toda la secundaria", "5 Uno o mas años 
+de técnica o tecnológica", "6 Técnica o tecnológica completa", "7 Uno o mas años
+de universidad", "8 Universitaria completa", "9 Ninguno", "10 No sabe")) +
+  theme(legend.position = "bottom")
+
+gra8 <- ggplot(Base_final,aes(x=factor(Etnia),y=Num_hijos,fill=factor(Etnia)))+
+  geom_boxplot()+
+  xlab("Etnia del jefe del hogar")+ylab("Número de hijos") +
+  labs(fill = "Etnia") +
+  scale_fill_brewer(labels = c("1 Indígena", "2 Gitano(a)", "3 Raizal", "4 Palenquero(a)
+  de San Basilio", "5 Negro (a), mulato (a)
+  (afrodescendiente)
+  afrocolombiano(a)", "6 Ninguno de los anteriores")) +
+  theme(legend.position = "bottom")
+
+gra9 <- ggplot(Base_final,aes(x=factor(Num_Subsidios),y=Num_hijos,fill=factor(Num_Subsidios)))+
+  geom_boxplot()+
+  xlab("Número de subsidios del hogar")+ylab("Número de hijos") +
+  scale_fill_brewer() +
+  theme(legend.position = "NONE")
+
+gra10 <- ggplot(Base_final,aes(x=factor(Cant_hogares_vivienda),y=Num_hijos,fill=factor(Cant_hogares_vivienda)))+
+  geom_boxplot()+
+  xlab("Cantidad de hogares en la vivienda")+ylab("Número de hijos") +
+  scale_fill_brewer() +
+  theme(legend.position = "NONE")
+
+gra11 <- ggplot(Base_final,aes(x=factor(Tipo_vivienda),y=Num_hijos,fill=factor(Tipo_vivienda)))+
+  geom_boxplot()+
+  xlab("Tipo de vivienda del hogar")+ylab("Número de hijos") +
+  scale_x_discrete(labels = c("1 Casa", "2 Apartamento", "3 Cuarto(s)", "4 Vivienda
+  tradicional
+  indigena", "5 Otro")) +
+  scale_fill_brewer() +
+  theme(legend.position = "NONE")
+
+gra12 <- ggplot(Base_final,aes(x=factor(Material_pisos),y=Num_hijos,fill=factor(Material_pisos)))+
+  geom_boxplot()+
+  xlab("Material del piso del hogar")+ylab("Número de hijos") +
+  labs(fill = "Material del piso") +
+   scale_fill_brewer(labels = c("1 Alfombra o tapete", "2 Madera pulida y lacada", "3 Mármol", "4 Baldosa, vinilo,
+   tableta, ladrillo,
+   laminado", "5 Madera burda,
+   tabla, tablón,
+   otro vegetal", "6 Cemento, gravilla", "7 Tierra, arena")) +
+  theme(legend.position = "bottom")
+
+gra13 <- ggplot(Base_final,aes(x=factor(Energia_electrica),y=Num_hijos,fill=factor(Energia_electrica)))+
+  geom_boxplot()+
+  xlab("Energia eléctrica en el hogar")+ylab("Número de hijos") +
+  scale_x_discrete(labels = c("Si","No")) +
+   scale_fill_brewer()+
+  theme(legend.position = "NONE")
+
+gra14 <- ggplot(Base_final,aes(x=factor(Estrato),y=Num_hijos,fill=factor(Estrato)))+
+  geom_boxplot()+
+  xlab("Estrato del hogar")+ylab("Número de hijos") +
+  labs(fill = "Estrato") +
+   scale_fill_brewer(labels = c("1 Bajo-Bajo", "2 Bajo", "3 Medio-Bajo", "4 Medio", "5 Medio-Alto", "6 Alto", "8 Planta eléctrica", "9 No conoce el estrato
+   o no cuenta con
+   recibo de pago", "0 Recibos sin estrato
+   o el servicio es pirata")) +
+  theme(legend.position = "bottom")
+
+gra15 <- ggplot(Base_final,aes(x=factor(Acueducto),y=Num_hijos,fill=factor(Acueducto)))+
+  geom_boxplot()+
+  xlab("Acueducto en el hogar")+ylab("Número de hijos") +
+  scale_x_discrete(labels = c("Si","No")) +
+   scale_fill_brewer()+
+  theme(legend.position = "NONE")
+
+gra16 <- ggplot(Base_final,aes(x=factor(Alcantarillado),y=Num_hijos,fill=factor(Alcantarillado)))+
+  geom_boxplot()+
+  xlab("Alcantarillado en el hogar")+ylab("Número de hijos") +
+  scale_x_discrete(labels = c("Si","No")) +
+   scale_fill_brewer()+
+  theme(legend.position = "NONE")
+
+gra17 <- ggplot(Base_final,aes(x=factor(Basuras_semana),y=Num_hijos,fill=factor(Basuras_semana)))+
+  geom_boxplot()+
+  xlab("Número de veces que se 
+       recoge las basuras por semana")+ylab("Número de hijos") + 
+  scale_fill_brewer()+
+  theme(legend.position = "NONE")
+
+gra18 <- ggplot(Base_final,aes(x=factor(Nivel_educativo),y=Num_hijos,fill=factor(Nivel_educativo)))+
+  geom_boxplot()+
+  xlab("Nivel educativo del jefe del hogar")+ylab("Número de hijos") +
+  labs(fill = "Nivel educativo") +
+  scale_fill_grey(start = 0.1, end = 0.8, na.value
+= "white", labels = c("1 Ninguno", "2 Preescolar", "3 Básica Primaria
+   (1º - 5º)", "4 Básica secundaria
+   (6º–9º)", "5 Media (10º–13º)", "6 Técnico sin título", "7 Técnico con título", "8 Tecnológico
+   sin título", "9 Tecnológico 
+   con título", "10 Universitario
+   sin titulo", "11 Universitario 
+   con titulo", "12 Postgrado sin
+   titulo", "13 Postgrado 
+   con titulo")) +
+  theme(legend.position = "bottom")
+
+gra19 <- ggplot(Base_final,aes(x=factor(Estudia),y=Num_hijos,fill=factor(Estudia)))+
+  geom_boxplot()+
+  xlab("Estudia el jefe hogar")+ylab("Número de hijos") +
+  scale_x_discrete(labels = c("Si","No")) +
+   scale_fill_brewer()+
+  theme(legend.position = "NONE")
+
+gra20 <- ggplot(Base_final,aes(x=factor(Afiliado),y=Num_hijos,fill=factor(Afiliado)))+
+  geom_boxplot()+
+  xlab("El jefe hogar está afiliado
+       a seguridad social")+ylab("Número de hijos") +
+  scale_x_discrete(labels = c("Si","No", "No informa")) +
+   scale_fill_brewer()+
+  theme(legend.position = "NONE")
+
+gra21 <- ggplot(Base_final,aes(x=factor(Salud_general),y=Num_hijos,fill=factor(Salud_general)))+
+  geom_boxplot()+
+  xlab("Estado de salud del jefe de hogar")+ylab("Número de hijos") +
+  scale_x_discrete(labels = c("Muy bueno","Bueno", "Regular", "Malo")) +
+   scale_fill_brewer()+
+  theme(legend.position = "NONE")
+
+gra22 <- ggplot(Base_final,aes(x=factor(Uso_celular),y=Num_hijos,fill=factor(Uso_celular)))+
+  geom_boxplot()+
+  xlab("Uso del celular del jefe de hogar")+ylab("Número de hijos") +
+  labs(fill = "Uso del celular") +
+   scale_fill_brewer(labels = c("1 Todos los
+   días de la semana",
+"2 Al menos una
+vez a la semana,
+pero no cada día",
+"3 Al menos una
+vez al mes,
+pero no cada semana",
+"4 Al menos una
+vez al año,
+pero no cada mes",
+" No utiliza
+teléfono celular")) +
+  theme(legend.position = "bottom")
+
+gra23 <- ggplot(Base_final,aes(x=factor(Num_cuartos),y=Num_hijos,fill=factor(Num_cuartos)))+
+  geom_boxplot()+
+  xlab("Números de cuartos en el hogar")+ylab("Número de hijos") +
+  scale_fill_brewer() + 
+  theme(legend.position = "NONE")
+
+
+gra24 <- ggplot(Base_final,aes(x=factor(Gas_natural),y=Num_hijos,fill=factor(Gas_natural)))+
+  geom_boxplot()+
+  xlab("Gas natural en el hogar")+ylab("Número de hijos") +
+  scale_x_discrete(labels = c("Si","No")) +
+   scale_fill_brewer()+
+  theme(legend.position = "NONE")
+
+gra25 <- ggplot(Base_final,aes(x=factor(Contrato_vivienda),y=Num_hijos,fill=factor(Contrato_vivienda)))+
+  geom_boxplot()+
+  xlab("Contrato de la vivienda del hogar")+ylab("Número de hijos") +
+  labs(fill = "Contrato de la vivienda") +
+   scale_fill_brewer(labels = c("1. Propia,
+   totalmente pagada", "2. Propia,
+   la están pagando", "3. En arriendo o
+   subarriendo", "4. Con permiso del
+   propietario,
+   sin pago alguno (usufructuario)", "5. Posesión sin título
+   (ocupante de hecho)", "6. Propiedad colectiva")) +
+  theme(legend.position = "bottom")
+
+
+gra26 <- ggplot(Base_final,aes(x=factor(Num_integrantes),y=Num_hijos,fill=factor(Num_integrantes)))+
+  geom_boxplot()+
+  xlab("Número de integrantes en el hogar")+ylab("Número de hijos") +
+  scale_fill_grey(start = 0.1, end = 0.8, na.value
+= "red")+
+  theme(legend.position = "NONE")
+  
+gra27 <- ggplot(Base_final,aes(x=factor(Telefonia_fija),y=Num_hijos,fill=factor(Telefonia_fija)))+
+  geom_boxplot()+
+  xlab("Telefonia fija en el hogar")+ylab("Número de hijos") +
+  scale_x_discrete(labels = c("Si","No")) +
+   scale_fill_brewer()+
+  theme(legend.position = "NONE")
+
+```
+
+<div class="accordion" id="accordionExample">
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingOne">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+        Género
+</button>
+</h5>
+<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra1
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwo">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        Estado civil
+</button>
+</h5>
+<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra2
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingThree">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+        Lugar de nacimiento
+</button>
+</h5>
+<div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra3
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingFour">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+        Reside el padre con el jefe del hogar
+</button>
+</h5>
+<div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra4
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingFive">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+        Educación del padre del jefe del hogar
+</button>
+</h5>
+<div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra5
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingSix">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+        Reside la madre con el jefe del hogar
+</button>
+</h5>
+<div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra6
+```
+</div>
+</div>
+</div>
+
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingSeven">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+        Educación de la madre del jefe del hogar
+</button>
+</h5>
+<div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra7
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingEight">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+        Etnia
+</button>
+</h5>
+<div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra8
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingNine">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+        Número de subsidios
+</button>
+</h5>
+<div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra9
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTen">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTen" aria-expanded="false" aria-controls="collapseTen">
+        Cantidad de hogares por vivienda
+</button>
+</h5>
+<div id="collapseTen" class="accordion-collapse collapse" aria-labelledby="headingTen" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra10
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingEleven">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEleven" aria-expanded="false" aria-controls="collapseEleven">
+        Tipo de vivienda
+</button>
+</h5>
+<div id="collapseEleven" class="accordion-collapse collapse" aria-labelledby="headingEleven" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra11
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwelve">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwelve" aria-expanded="false" aria-controls="collapseTwelve">
+        Material de los pisos
+</button>
+</h5>
+<div id="collapseTwelve" class="accordion-collapse collapse" aria-labelledby="headingTwelve" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra12
+```
+</div>
+</div>
+</div>
+
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingThirteen">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThirteen" aria-expanded="false" aria-controls="collapseThirteen">
+        Servicio de energía eléctrica
+</button>
+</h5>
+<div id="collapseThirteen" class="accordion-collapse collapse" aria-labelledby="headingThirteen" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra13
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingFourteen">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFourteen" aria-expanded="false" aria-controls="collapseFourteen">
+        Estrato
+</button>
+</h5>
+<div id="collapseFourteen" class="accordion-collapse collapse" aria-labelledby="headingFourteen" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra14
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingFifteen">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFifteen" aria-expanded="false" aria-controls="collapseFifteen">
+        Acueducto
+</button>
+</h5>
+<div id="collapseFifteen" class="accordion-collapse collapse" aria-labelledby="headingFifteen" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra15
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingSixteen">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSixteen" aria-expanded="false" aria-controls="collapseSixteen">
+        Alcantarillado
+</button>
+</h5>
+<div id="collapseSixteen" class="accordion-collapse collapse" aria-labelledby="headingSixteen" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra16
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingSeventeen">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeventeen" aria-expanded="false" aria-controls="collapseSeventeen">
+        Recolección de basuras por semana
+</button>
+</h5>
+<div id="collapseSeventeen" class="accordion-collapse collapse" aria-labelledby="headingSeventeen" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra17
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingEighteen">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEighteen" aria-expanded="false" aria-controls="collapseEighteen">
+        Nivel educativo
+</button>
+</h5>
+<div id="collapseEighteen" class="accordion-collapse collapse" aria-labelledby="headingEighteen" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra18
+```
+</div>
+</div>
+</div>
+
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingNineteen">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNineteen" aria-expanded="false" aria-controls="collapseNineteen">
+        Es estudiante
+</button>
+</h5>
+<div id="collapseNineteen" class="accordion-collapse collapse" aria-labelledby="headingNineteen" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra19
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwenty">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwenty" aria-expanded="false" aria-controls="collapseTwenty">
+        Afiliación a salud
+</button>
+</h5>
+<div id="collapseTwenty" class="accordion-collapse collapse" aria-labelledby="headingTwenty" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra20
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwentyone">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwentyone" aria-expanded="false" aria-controls="collapseTwentyone">
+        Estado de salud
+</button>
+</h5>
+<div id="collapseTwentyone" class="accordion-collapse collapse" aria-labelledby="headingTwentyone" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra21
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwentytwo">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwentytwo" aria-expanded="false" aria-controls="collapseTwentytwo">
+        Uso del celular
+</button>
+</h5>
+<div id="collapseTwentytwo" class="accordion-collapse collapse" aria-labelledby="headingTwentytwo" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra22
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwentythree">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwentythree" aria-expanded="false" aria-controls="collapseTwentythree">
+        Número de cuartos
+</button>
+</h5>
+<div id="collapseTwentythree" class="accordion-collapse collapse" aria-labelledby="headingTwentythree" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra23
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwentyfour">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwentyfour" aria-expanded="false" aria-controls="collapseTwentyfour">
+         Servicio de gas natural
+</button>
+</h5>
+<div id="collapseTwentyfour" class="accordion-collapse collapse" aria-labelledby="headingTwentyfour" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra24
+```
+</div>
+</div>
+</div>
+
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwentyfive">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwentyfive" aria-expanded="false" aria-controls="collapseTwentyfive">
+        Contrato de la vivienda
+</button>
+</h5>
+<div id="collapseTwentyfive" class="accordion-collapse collapse" aria-labelledby="headingTwentyfive" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra25
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwentysix">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwentysix" aria-expanded="false" aria-controls="collapseTwentysix">
+        Número de integrantes en el hogar
+</button>
+</h5>
+<div id="collapseTwentysix" class="accordion-collapse collapse" aria-labelledby="headingTwentysix" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra26
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwentyseven">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwentyseven" aria-expanded="false" aria-controls="collapseTwentyseven">
+        Servicio de telefonía fija
+</button>
+</h5>
+<div id="collapseTwentyseven" class="accordion-collapse collapse" aria-labelledby="headingTwentyseven" data-bs-parent="#accordionExample">
+<div class="accordion-body">
+```{r}
+gra27
+```
+</div>
+</div>
+</div>
+
+</div>
+
+```{r, echo=F}
+require(gridExtra)
+```
+
+Y para las variables numéricas se utilizan gráficos de puntos vs Num_hijos para analizar la posible influencia o relación de cada predictora con la respuesta.
+
+```{r, echo=F}
+puntos1 <- ggplot(Base_final, aes(x = Edad, y = Num_hijos)) +
+  geom_point(col = "cyan4")+
+  labs(x = "Edad del jefe de hogar", y = "Número de hijos")
+
+puntos2 <- ggplot(Base_final, aes(x = Ingresos_hogar, y = Num_hijos)) +
+  geom_point(col = "cyan4")+
+  labs(x = "Ingresos del hogar", y = "Número de hijos") 
+
+puntos3 <- ggplot(Base_final, aes(x = Ultimo_pago_energia, y = Num_hijos)) +
+  geom_point(col = "cyan4")+
+  labs(x = "Ultimo pago de energia del hogar", y = "Número de hijos")
+
+puntos4 <- ggplot(Base_final, aes(x = Pago_mes_energia, y = Num_hijos)) +
+  geom_point(col = "cyan4")+
+  labs(x = "Pago mes de energia del hogar", y = "Número de hijos")
+```
+
+<div class="accordion" id="accordionPuntos">
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingOne">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+        Edad
+</button>
+</h5>
+<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionPuntos">
+<div class="accordion-body">
+```{r}
+puntos1
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingTwo">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        Ingresos del hogar
+</button>
+</h5>
+<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionPuntos">
+<div class="accordion-body">
+```{r}
+puntos2
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingThree">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+        Ultimo pago de energia del hogar
+</button>
+</h5>
+<div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionPuntos">
+<div class="accordion-body">
+```{r}
+puntos3
+```
+</div>
+</div>
+</div>
+<div class="accordion-item">
+<h5 class="accordion-header" id="headingFour">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+        Pago mensual de energía del hogar
+</button>
+</h5>
+<div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionPuntos">
+<div class="accordion-body">
+```{r}
+puntos4
+```
+</div>
+</div>
+</div>
+</div>
+
+
+
+###  Variables escogidas a partir de los graficos descriptivos
+
+```{r, echo=F}
+var_interesantes <- c(
+  "Genero",
+  "Edad",
+  "Num_integrantes",
+  "Num_cuartos",
+  "Estrato",
+  "Tipo_vivienda",
+  "Num_Subsidios",
+  "Educacion_madre",
+  "Estado_civil",
+  "Ultimo_pago_energia",
+  "Ingresos_hogar",
+  "Cant_hogares_vivienda",
+  "Num_hijos"
+)
+
+kable(var_interesantes, align = "c", col.names = "Variables interesantes") %>%
+  kable_paper("striped", full_width = F)
+```
+
+Se realiza un subset con las variables interesantes
+
+```{r, echo=FALSE}
+require(kableExtra)
+
+Base_interesante <- subset(Base_final, select = var_interesantes)
+kable(head(Base_interesante))%>%
+  kable_paper("striped", full_width = F)%>%
+  scroll_box(width = "100%", height = "320px")
+```
+
+Las variables categóricas de Base_interesante se convierten a factor y se crea un modelo de regresión lineal múltiple para poder utilizar selección de variables por regresión paso a paso.
+
+### Regresión por paso a paso
+
+```{r, echo=FALSE}
+
+# Se transforma algunas variables a factores
+
+Base_interesante <-  Base_interesante %>% 
+  mutate(
+    Genero = factor(Genero),
+    Estrato = factor(Estrato),
+    Tipo_vivienda = factor(Tipo_vivienda),
+    Educacion_madre = factor(Educacion_madre),
+    Estado_civil = factor(Estado_civil)
+)
+```
+
+```{r}
+require(olsrr)
+
+mod1 <- lm(Num_hijos~., data = Base_interesante) # Modelo de regresión lineal múltiple
+ols_step_both_p(mod1) # Selección
+```
+
+
+
+### Selección de las variables de interés con Lasso
+
+Se toma la Base_final que posee 32 variables y se convierten las variables categóricas a factor. Se eliminan las variables con mayor número de NA y se eliminan las filas con NA, para poder aplicar Lasso.
+
+```{r, echo=FALSE}
+Base_final <- Base_final %>% 
+  mutate(
+    Genero = factor(Genero),
+    Estado_civil = factor(Estado_civil),
+    Lugar_nacimiento = factor(Lugar_nacimiento),
+    Vive_hogar_padre = factor(Vive_hogar_padre),
+    Educacion_padre = factor(Educacion_padre),
+    Vive_hogar_madre = factor(Vive_hogar_madre),
+    Educacion_madre = factor(Educacion_madre),
+    Etnia = factor(Etnia),
+    Tipo_vivienda = factor(Tipo_vivienda),
+    Material_pisos = factor(Material_pisos),
+    Energia_electrica = factor(Energia_electrica),
+    Estrato = factor(Estrato),
+    Acueducto = factor(Acueducto),
+    Alcantarillado = factor(Alcantarillado),
+    Nivel_educativo = factor(Nivel_educativo),
+    Estudia = factor(Estudia),
+    Afiliado = factor(Afiliado),
+    Salud_general = factor(Salud_general),
+    Uso_celular = factor(Uso_celular),
+    Gas_natural = factor(Gas_natural),
+    Telefonia_fija = factor(Telefonia_fija),
+    Contrato_vivienda = factor(Contrato_vivienda)
+)
+
+Base_basuras <- Base_final
+Base_basuras <- na.omit(Base_basuras)
+
+Base_menos_Nas <- Base_final
+Base_menos_Nas$Basuras_semana <- NULL
+Base_menos_Nas$Pago_mes_energia <- NULL
+Base_menos_Nas <- na.omit(Base_menos_Nas)
+```
+
+Se crea una matriz de diseño para aplicar Regresión Lasso
+
+```{r}
+x <- model.matrix(Num_hijos ~ ., Base_menos_Nas)[,-1] # Matriz de diseño
+y <- Base_menos_Nas$Num_hijos # Variable respuesta
+
+# Aplicación de la técnica de regularización
+
+require(glmnet)
+
+gridz <- 10^seq(-2,10, length = 100) # Malla de lambdas
+lasso.mod <- glmnet(x, y, alpha = 1, lambda = gridz) # Ajuste del modelo
+```
+
+Se hace validación cruzada para seleccionar el $\lambda$ óptimo, que se aplicará en el modelo
+
+```{r}
+set.seed(23)
+
+# Indices para las filas del conjunto de entrenamiento
+train <- sample(1:nrow(x), nrow(x)/2)
+
+# Indices para las filas del conjunto de test
+test <- -train
+y.test <- y[test]
+
+# Validación cruzada
+cv.out <- cv.glmnet(x[train,], y[train], alpha=1)
+
+# Obtención del mejor lambda
+bestlam <-cv.out$lambda.min
+
+# Lasso con el lambda óptimo
+out <- glmnet(x, y, alpha=1)
+lasso.coef <-predict(out, type = "coefficients", s=bestlam)[1:90, ]
+```
+
+A continuación se muestra las variables seleccionadas por medio de los dos métodos anteriores:
+
+```{r,echo=FALSE}
+require(broom)
+```
+
+<table>
+    <tr>
+      <th>Variables</th>
+      <th>Regresion por pasos</th>
+      <th>Lasso</th>
+    </tr>
+    <tr>
+      <td>Genero</td>
+      <td>X</td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Edad</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Estado_civil</td>
+      <td>X</td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Lugar_nacimiento</td>
+      <td></td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Vive_hogar_padre</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Educacion_padre</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Vive_hogar_madre</td>
+      <td></td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Educacion_madre</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Etnia</td>
+      <td></td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Num_subsidios</td>
+      <td></td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Cant_hogares_vivienda</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Tipo_vivienda</td>
+      <td>X</td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Material_pisos</td>
+      <td></td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Energia_electrica</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Estrato</td>
+      <td>X</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Acueducto</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Alcantarillado</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Nivel_educativo</td>
+      <td></td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Estudia</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Afiliado</td>
+      <td></td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Salud_general</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Uso_celular</td>
+      <td></td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Num_cuartos</td>
+      <td>X</td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Gas_natural</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Telefonia_fija</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Ingresos_hogar</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Contrato_vivienda</td>
+      <td></td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <td>Ultimo_pago_energia</td>
+      <td>X</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Num_integrantes</td>
+      <td>X</td>
+      <td></td>
+    </tr>
+</table>
+
+
+Con los anteriores procesos, se obtiene la siguiente base, que se usará en la parte de modelamiento
+
+```{r,echo=FALSE}
+Base_modelar <- Base_final[,c("Genero", 
+                              "Edad",
+                              "Num_integrantes",
+                              "Num_cuartos",
+                              "Estrato",
+                              "Tipo_vivienda",
+                              "Num_Subsidios",
+                              "Educacion_madre",
+                              "Estado_civil",
+                              "Ultimo_pago_energia",
+                              "Ingresos_hogar",
+                              "Cant_hogares_vivienda",
+                              "Num_hijos",
+                              "Uso_celular", 
+                              "Vive_hogar_madre", 
+                              "Contrato_vivienda",
+                              "Etnia",
+                              "Afiliado",
+                              "Lugar_nacimiento",
+                              "Nivel_educativo")]
+```
+
+```{r, echo=FALSE}
+kable(head(Base_modelar))%>%
+  kable_paper(bootstrap_options = c("striped", "hover"))%>%
+  row_spec(c(0,1,2,3,4,5,6),align = "center")%>%
+  scroll_box(height = "320px")
+```
+
+## Modelamiento
+
+La mayoría de las variables escogidas como significativas corresponden a variables categóricas, se seleccionaron modelos que permiten el correcto manejo de las mismas. A continuación se ilustra la etapa de modelamiento:
+
+
+
+```{r, echo=FALSE}
+load("Base_modelar.RData")
+```
+
+Se realiza un gráfico de barras, para observar como se distribuye el número de hijos en los hogares colombianos.
+
+```{r}
+barplot(prop.table(table(Base_modelar$Num_hijos)),
+        main = "Proporción del número de hijos",
+        xlab = "Número de hijos",
+        col = "cyan4")
+grid()
+```
+
+Se deduce que la mayoría de las familias tienen entre 0 y 2 hijos, sin embargo, hay una proporción considerable de hogares que poseen 3, 4 y 5 hijos. Pero, a partir de los 6 hijos la proporción decae, por lo que se podría pensar en agrupar a los hogares en 5 categorías comprendidas como: 0, 1, 2, 3, 4, 5+.  
+
+Además, que en una situación real resulta poco relevante determinar con precisión el número de hijos cuando estos son muchos, ya que con la información de que es una cantidad numerosa de hijos es suficiente para tomar la decisión que se requiera.
+
+
+```{r}
+Base_de_ensayo <- Base_modelar
+
+# Se agrupa los hogares con 5 hijos o más en una sola categoría
+Base_de_ensayo$Num_hijos[Base_de_ensayo$Num_hijos >= 5] <- 5
+```
+
+```{r, echo=FALSE}
+require(kableExtra)
+
+tabla <- data.frame(table(Base_de_ensayo$Num_hijos))
+tabla$Var1 <- c(0:4,"5 o más")
+
+kable(tabla, align="c",col.names=c("Número de hijos", "Frecuencia"))%>%
+  kable_paper(bootstrap_options = c("striped", "hover"), full_width = F)
+```
+
+### Bosques Aleatorios para selección de variables
+
+Se organiza la base de datos para aplicar el modelo
+
+```{r}
+library(tidyverse)
+
+# Se omiten las filas que poseen NA
+Base_modelar_f <- na.omit(Base_de_ensayo)
+
+# Se convierte la variable Num_hijos a factor
+Base_modelar_f$Num_hijos <- as.factor(Base_modelar_f$Num_hijos) 
+
+set.seed(15234) # Semilla
+
+# Se saca una muestra de entrenamiento que conserve las proporciones en la variable Num_hijos
+trn_prop <- Base_modelar_f %>%
+  mutate(
+    var_indx = 1:dim(Base_modelar_f)[1]
+  ) %>% 
+  group_by(Num_hijos) %>% 
+  sample_frac(0.8, replace = F)
+
+# Se saca la muestra de test con las que no fueron seleccionadas en la muestra de train
+tst_prop <- Base_modelar_f[-trn_prop$var_indx, ]
+
+# Se elimina la variable de indice
+trn_prop$var_indx <- NULL
+```
+
+```{r, echo=FALSE}
+library(ISLR)
+library(tree)
+library(MASS)
+library(randomForest)
+library(gbm)
+require(ranger)
+```
+
+Con la función _ranger_ aplicamos el modelo de Bosques aleatorios
+
+```{r}
+# Modelo RF
+mod_RF <- ranger(
+  Num_hijos~., 
+  data = (trn_prop), 
+  num.trees = 500, 
+  mtry = 5, 
+  max.depth = 8,
+  importance = 'impurity'
+)
+```
+
+En la siguiente gráfica se muestra las variables que tienen mayor importancia para Bosques aleatorios:
+
+```{r,echo=FALSE}
+par(mar=c(10,5,1,1))
+barplot(sort(mod_RF$variable.importance, decreasing = T),las=2,col = "cyan4",cex.lab=0.1)
+grid()
+```
+
+Se utiliza los pesos de importancia asignados por Bosques Aleatorios para escoger las variables que se utilizarán en el resto de modelos, además se tiene en cuenta la cantidad de NA en cada una de las variables.
+
+```{r}
+kable(colSums(is.na(Base_de_ensayo)), align = "c", col.names = "Cantidad de NA") %>%
+  kable_paper("striped", full_width =F)
+```
+
+Aunque Ingresos_hogar, Nivel_educativo, Uso_celular, Ultimo_pago_energia, Educacion_madre y Estrato en primera instancia tienen una importancia elevada para el modelo se decide eliminarlas ya que contienen una gran cantidad de datos faltantes.
+
+
+Dado que el anterior modelo fue ajustado eliminando todas las filas con NAs, se procedió a eliminar una a una según el orden de importancia las columnas con NAs y a verificar su impacto en la tasa de acierto en el conjunto de validación. 
+
+El resultado que se obtuvo fue que la tasa de acierto levemente aumentó a medida que se excluyeron las columnas con NAs y por ende no se eliminaba ninguna fila del conjunto de entrenamiento.
+
+Por último, en busca de un modelo parsimonioso se ajustó excluyendo una a una las variables restantes (sin NAs) según el orden de importancia en el modelo Random Forest; Donde se tuvo en cuenta que el orden de importancia no se viera dramáticamente afectado de modelo a modelo y que la tasa de acierto no disminuyera drásticamente.
+
+Del resultado anterior se determinó conservar las siguientes 5 variables.
+
+
+### Variables escogidas
+
+Las variables a utilizar en los modelos son las escogidas en orden de importancia por Bosques Aleatorios, se muestran a continuación:
+
+ * Num_integrantes
+ * Estado_civil
+ * Genero
+ * Edad
+ * Vive_hogar_madre
+ * Num_hijos
+
+```{r}
+library(tidyverse)
+
+# Variables en orden de importancia según RF
+var_imprt <-  c(
+    "Num_integrantes",
+    "Estado_civil",
+    "Genero",
+    "Edad",
+    "Vive_hogar_madre",
+    "Num_hijos"
+  )
+
+
+# Conjunto de datos con las variables importantes
+Base_modelar_f <- Base_de_ensayo[,var_imprt]
+
+# Se convierte la variable Num_hijos a factor
+Base_modelar_f$Num_hijos <- as.factor(Base_modelar_f$Num_hijos) 
+
+set.seed(15234) # Semilla
+
+# Se saca una muestra de entrenamiento que conserve las proporciones en la variable Num_hijos
+trn_prop <- Base_modelar_f %>%
+  mutate(
+    var_indx = 1:dim(Base_modelar_f)[1]
+  ) %>% 
+  group_by(Num_hijos) %>% 
+  sample_frac(0.8, replace = F)
+
+# Se saca la muestra de test con las que no fueron seleccionadas en la muestra de train
+tst_prop <- Base_modelar_f[-trn_prop$var_indx, ]
+
+# Se elimina la variable de indice
+trn_prop$var_indx <- NULL
+```
+
+### Modelo de Regresión Lineal Múltiple
+
+Se debe convertir la variable respuesta nuevamente a numérica para poder aplicar regresión lineal.
+
+```{r}
+modelo1 <- lm(as.numeric(as.character(Num_hijos))~., data=trn_prop)
+```
+
+El error estándar del modelo es `r summary(modelo1)$sigma`
+
+Análisis de residuales.
+
+```{r, echo=FALSE}
+par(mfrow=c(2,2))
+plot(modelo1)
+```
+
+Se puede apreciar que no se cumple el supuesto de normalidad en los residuales, homocedasticidad e independencia, por lo tanto no es adecuado para realizar predicciones. 
+
+```{r, echo=FALSE}
+pred_mod1_reg <- predict(modelo1, newdata = tst_prop)
+pred_mod1_round <- round(pred_mod1_reg)
+```
+
+Matriz de confusión
+
+```{r, echo=FALSE}
+MC1 <- table(pred_mod1_round, tst_prop$Num_hijos)
+
+kable(MC1, align = "c")%>%
+  add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
+  kable_paper("striped", full_width = FALSE) 
+```
+
+```{r, echo=FALSE}
+acierto<-sum(diag(MC1))/sum(MC1)
+error <- 1-acierto
+```
+
+La tasa de acierto es  `r acierto` y la tasa de error es `r error`
+
+### Árbol de clasificación 
+
+```{r, echo=FALSE}
+require(rpart)
+require(rpart.plot)
+```
+
+Con la función _rpart_ se ajusta el modelo y se analizan los resultados
+
+```{r}
+mod1_arboles <- rpart(Num_hijos~., data = trn_prop)
+```
+
+```{r, echo=FALSE}
+prp(mod1_arboles, type = 2, extra = 6, split.font = 3, box.col = c("#009999","#00e6e6","#0099e6","#00d6e6","#5cd6d6","#00cc99")[mod1_arboles$frame$yval])
+```
+
+Se observa que la variable Num_integrantes es una de las más importantes, en la creación del árbol de clasificación.
+
+Se hacen las predicciones y se obtiene la siguiente matriz de confusión
+
+```{r, echo=FALSE}
+pred_mod1_arboles <-  predict(mod1_arboles, newdata = tst_prop, type = "class")
+```
+
+```{r, echo=FALSE}
+MC <- table(pred_mod1_arboles, tst_prop$Num_hijos)
+kable(MC, align = "c")%>%
+  add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
+  kable_paper("striped", full_width = FALSE)
+```
+
+```{r, echo=FALSE}
+acierto<-sum(diag(MC))/sum(MC)
+error <- 1-acierto
+```
+
+La tasa de acierto es  `r acierto` y la tasa de error es `r error`
+
+### Árboles de Regresión
+
+```{r}
+mod1_reg_arboles <- rpart(as.numeric(as.character(Num_hijos))~., data = trn_prop)
+```
+
+```{r, echo=FALSE}
+prp(mod1_reg_arboles, type = 2, split.font = 3,    box.col = c("#009999","#00e6e6","#0099e6","#00d6e6","#5cd6d6","#00cc99")[mod1_reg_arboles$frame$yval])
+```
+
+Se observa que en la construcción del árbol de regresión solo se utilizaron dos variables, Num_integrantes y Estado_civil.
+
+Se hacen las predicciones y se obtiene la matriz de confusión
+
+```{r, echo=FALSE}
+pred_mod1_reg_arboles <-  predict(mod1_reg_arboles, newdata = tst_prop)
+```
+
+```{r, echo=FALSE}
+pred_mod1_reg_arboles <- round(pred_mod1_reg_arboles)
+MC2 <- table(pred_mod1_reg_arboles, tst_prop$Num_hijos)
+kable(MC2, align = "c")%>%
+  add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
+  kable_paper("striped", full_width = FALSE)
+```
+
+```{r, echo=FALSE}
+acierto<-sum(diag(MC2))/sum(MC2)
+error <- 1-acierto
+```
+
+La tasa de acierto es  `r acierto` y la tasa de error es `r error`
+
+### Regresión Poisson
+
+```{r, echo=FALSE}
+require(gamlss)
+```
+
+Se ajusta el modelo usando la función gamlss del paquete gamlss, con una familia Poisson.
+
+```{r}
+HijosPoisson <-gamlss(as.numeric(as.character(Num_hijos))~., data= trn_prop, family=PO(mu.link="log"))
+```
+
+Se hacen las predicciones y obtenemos la matriz de confusión
+
+```{r, echo=FALSE}
+HijosPoisson <-  predict(HijosPoisson, newdata = tst_prop)
+```
+
+```{r, echo=FALSE}
+HijosPoisson <- round(HijosPoisson)
+MC3 <- table(HijosPoisson, na.omit(tst_prop)$Num_hijos)
+kable(MC3, align = "c")%>%
+  add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
+  kable_paper("striped", full_width = FALSE)
+```
+
+```{r}
+acierto<-sum(diag(MC3))/sum(MC3)
+error <- 1-acierto
+```
+
+La tasa de acierto es  `r acierto`, la tasa de error es `r error`, por otro lado se observan predicciones fuera del rango de la variable respuesta, esto puede suceder si no se cumplen los supuestos del modelo.
+
+### Bosque Aleatorio
+
+Se ajusta un Bosque Aleatorio con la función ranger
+
+```{r}
+mod_RF <- ranger(
+  Num_hijos~., 
+  data = (trn_prop), 
+  num.trees = 500, # número de árboles
+  mtry = 5, # numero de variables a utilizar en cada árbol
+  max.depth = 8, # profundidad de cada árbol
+  importance = 'impurity'
+)
+```
+
+Se hacen las predicciones y se obtiene la matriz de confusión
+
+```{r, echo=FALSE}
+pred_mod_RF <- predict(mod_RF, data = (tst_prop))
+```
+
+```{r, echo=FALSE}
+MC4 <- table(predicho = pred_mod_RF$predictions, real = (tst_prop)$Num_hijos)
+kable(MC4, align = "c")%>%
+  add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
+  kable_paper("striped", full_width = FALSE)
+```
+
+```{r, echo=FALSE}
+acierto<-sum(diag(MC4))/sum(MC4)
+error <- 1-acierto
+```
+
+La tasa de acierto es  `r acierto` y la tasa de error es `r error`
+
+### Naive Bayes
+
+```{r, echo=FALSE}
+library(e1071)
+library(caTools)
+library(caret)
+```
+
+Se ajusta un clasficador por el método de Bayes ingenuo
+
+```{r}
+mod_Naive_Bayes <- naiveBayes(Num_hijos ~ ., data = trn_prop)
+```
+
+Se hacen las predicciones y se obtiene la matriz de confusión
+
+```{r, echo=FALSE}
+pred_bayes <- predict(mod_Naive_Bayes, newdata = tst_prop, type="class")
+```
+
+```{r, echo=FALSE}
+MC5 <- table( pred_bayes, tst_prop$Num_hijos)
+kable(MC5, align = "c")%>%
+  add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
+  kable_paper("striped", full_width = FALSE)
+```
+
+```{r, echo=FALSE}
+acierto<-sum(diag(MC5))/sum(MC5)
+error <- 1-acierto
+```
+
+La tasa de acierto es  `r acierto` y la tasa de error es `r error`
+
+### Knn
+
+Antes de aplicar el modelo se deben organizar las variables, como se muestra a continuación.
+
+```{r, echo=FALSE}
+library(kknn)
+```
+
+Conversión de las variables categoricas a variables dummy
+
+```{r}
+library(dummies)
+
+# Conjunto de entrenamiento
+Base_KNN_dummy_trn <- dummy.data.frame(data=data.frame(trn_prop[ ,-6]))
+Base_KNN_dummy_trn <- cbind(Base_KNN_dummy_trn,"Num_hijos" = trn_prop$Num_hijos)
+
+# Conjunto de prueba
+Base_KNN_dummy_tst <- dummy.data.frame(data=tst_prop[ ,-6])
+Base_KNN_dummy_tst <- cbind(Base_KNN_dummy_tst,"Num_hijos" = tst_prop$Num_hijos)
+```
+
+Se normalizan las Variables Numéricas
+
+```{r}
+#Conjunto de entrenamiento
+datos_c_trn <- Base_KNN_dummy_trn
+datos_c_trn[,c(1,10)] <- scale(datos_c_trn[,c(1,10)]) # normalización
+
+#Conjunto de prueba
+datos_c_tst <- Base_KNN_dummy_tst
+datos_c_tst[,c(1,10)] <- scale(datos_c_tst[,c(1,10)])
+```
+
+Conjuntos de entrenamiento y test
+
+```{r}
+train <- datos_c_trn[ ,-14] # crea train sin la variable respuesta
+test <- datos_c_tst[ ,-14] # crea test sin la variable respuesta
+
+y_train <- datos_c_trn[ ,14]
+y_test <- datos_c_tst[ ,14]
+```
+
+```{r, echo=FALSE}
+library(tidyverse)
+library(class)
+library(gmodels)
+library(caret)
+```
+
+Con el fin de elegir un K apropiado se entrena el modelo variando el K entre 1 y 30, después se escoge el que mejor se ajusta al conjunto de entrenamiento.
+
+
+```{r, eval=FALSE}
+modelo <- train.kknn(Num_hijos ~ ., data = datos_c_trn, kmax = 30)
+```
+
+Con el k óptimo que es igual a 18 se ajusta el modelo knn, se hacen las predicciones y se obtiene la matriz de confusión
+
+```{r}
+knn_model <- knn(train, test, cl = y_train, k = 18)
+```
+
+```{r, echo=FALSE}
+MC6 <- table("Predicciones" = knn_model, "Reales" = y_test)
+kable(MC6, align = "c")%>%
+  add_header_above(c("Predicciones" = 1, "Reales" = 6)) %>%
+  kable_paper("striped", full_width = FALSE)
+```
+
+```{r, echo=FALSE}
+acierto<-sum(diag(MC6))/sum(MC6)
+error <- 1-acierto
+```
+
+La tasa de acierto es  `r acierto` y la tasa de error es `r error`.
+
+<br>
+
+## Conclusión del ajuste de modelos
+
+Los modelos escogidos son de regresión y clasificación, en cada uno se adaptó la variable respuesta. En los de clasificación se obtienen las predicciones como el número de hijos puntual, en los de regresión se obtienen aproximaciones decimales las cuales previamente debían ser redondeadas para ser comparadas con los valores reales, en general por este último procedimiento se podía notar que funcionaban mucho mejor en los modelos de clasificación (su tasa de aciertos era la más alta) por lo tanto finalmente estos fueron considerados como los favoritos y continuaron en el proceso de selección de modelos, además, cabe aclarar que a cada modelo le fue ingresado las variables como se debía según su proceso de ajuste, por ejemplo, en el modelo de Knn las variables explicativas fueron ingresadas, estandarizadas las que son numéricas y se crearon variables dummy para las categóricas, en general el desempeño de este modelo fue muy bueno, pero su tiempo de ejecución fue superior al de los otros; este es uno de los criterios utilizados en la selección.
+
+
+
+# Resultados
+
+## Selección del mejor modelo
+
+Para comparar la eficiencia de los modelos se crea una matriz en la cual se almacenará las tasas de acierto de los modelos que se construyeron en el paso anterior 
+
+```{r,eval=FALSE}
+df <- matrix(rep(NA,80), nrow=20, ncol=4)
+df <- data.frame(df)
+colnames(df) <- c("Arbol_clasificacion","RandomForest", "NaiveBayes", "Knn")
+```
+
+Para llenar la matriz anterior se realiza un for que ejecuta cada uno de los modelos 20 veces, escogiendo aleatoriamente el conjunto de entrenamiento y el conjunto de prueba
+
+```{r, message=F, warning=F, eval=FALSE}
+for(i in 1:20){
+
+  set.seed(i) # Semilla
+  
+  # Se saca una muestra de entrenamiento que conserve las proporciones en la varaible Num_hijos
+  
+  trn_prop <- Base_modelar_f %>%
+    mutate(
+      var_indx = 1:dim(Base_modelar_f)[1]
+    ) %>% 
+    group_by(Num_hijos) %>% 
+    sample_frac(0.8, replace = F)
+  
+  # Se saca la muestra de test con las que no fueron seleccionadas en la muestra de
+  # train
+  tst_prop <- Base_modelar_f[-trn_prop$var_indx, ]
+  
+  # Se elimina la variable de índice
+  trn_prop$var_indx <- NULL
+  
+  trn_prop <- trn_prop[sample(1:dim(trn_prop)[1]), ]
+  tst_prop <- tst_prop[sample(1:dim(tst_prop)[1]), ]
+  
+    # Ajuste de los modelos
+  
+  ## Árbol de clasificación 
+  arbol_clasificacion <- rpart(Num_hijos~., data = trn_prop)
+  pred_arbol_clasificacion <-  predict(arbol_clasificacion, newdata = tst_prop, type=
+                                         "class")
+  
+  tasa_arbol_clasificacion <- matriz_confusion(pred_arbol_clasificacion,
+                                               tst_prop$Num_hijos)
+  
+  # Modelo RF
+  RF <- ranger(Num_hijos~.,  data = (trn_prop),   num.trees = 100,  mtry = 5, 
+               max.depth = 8,  importance = 'impurity')
+  
+  
+  pred_RF <- predict(RF, data = (tst_prop))
+  
+  tasa_RF <- matriz_confusion(pred_RF$predictions, tst_prop$Num_hijos)
+  
+  ## Naive Bayes
+  
+  Naive_Bayes <- naiveBayes(Num_hijos ~ ., data = trn_prop)
+  pred_Naive_Bayes <- predict(Naive_Bayes, newdata = tst_prop, type="class")
+  
+  tasa_Naive_Bayes <- matriz_confusion(pred_Naive_Bayes, tst_prop$Num_hijos)
+  
+  
+  ## Knn
+  
+  # Conjunto de entrenamiento
+  Base_KNN_dummy_trn <- dummy.data.frame(data=data.frame(trn_prop[ ,-6]))
+  Base_KNN_dummy_trn <- cbind(Base_KNN_dummy_trn,"Num_hijos" = trn_prop$Num_hijos)
+  # Conjunto de prueba
+  Base_KNN_dummy_tst <- dummy.data.frame(data=tst_prop[ ,-6])
+  Base_KNN_dummy_tst <- cbind(Base_KNN_dummy_tst,"Num_hijos" = tst_prop$Num_hijos)
+  
+  #Conjunto de entrenamiento
+  datos_c_trn <- Base_KNN_dummy_trn
+  datos_c_trn[,c(1,10)] <- scale(datos_c_trn[,c(1,10)])
+  
+  #Conjunto de prueba
+  datos_c_tst <- Base_KNN_dummy_tst
+  datos_c_tst[,c(1,10)] <- scale(datos_c_tst[,c(1,10)])
+  
+  # Separación de la variable respuesta
+  train <- datos_c_trn[ ,-14] # crea train sin la variable respuesta
+  test <- datos_c_tst[ ,-14] # crea test sin la variable respuesta
+  y_train <- datos_c_trn[ ,14]
+  y_test <- datos_c_tst[ ,14]
+  pred_knn <- knn(train, test, cl = y_train, k = 20)
+  
+  tasa_knn <- matriz_confusion(pred_knn, y_test)
+  
+  tasas <- c(tasa_arbol_clasificacion, tasa_RF, tasa_Naive_Bayes, tasa_knn)
+  
+  df[i,] <- tasas
+  
+}
+```
+
+
+```{r,echo=FALSE}
+load("Matriz_coef.Rdata")
+df<- round(df,4)
+df <- rbind(df,colMeans(df))
+rownames(df) <- c(seq(1,20,1),"Media")
+
+kable(df,align = "c")%>%
+  kable_paper("striped",full_width = F)%>%
+  row_spec(21, background = "#82C9B8")
+```
+
+
+Bosques aleatorios se escogió ya que no solo presenta una de las tasas de acierto más altas entre todos los modelos desarrollados, sino que a su vez permite reducir la dimensionalidad del conjunto de datos, ya que este valoraba y utilizaba 5 variables tanto para la modelación, como para la predicción, además de que estas variables no tienen valores faltantes permitiendo contar con el conjunto de datos completo que es una cantidad muy apreciable de registros.
+
+Como último filtro, se busca reducir el número de árboles que se utilizó en el proceso anterior. Para esto se hace una prueba cambiando el tamaño del bosque a 100 árboles en lugar de 500
+
+```{r,eval=FALSE}
+RF <- ranger(Num_hijos~.,  data = (trn_prop),   num.trees = 100,  mtry = 5, 
+             max.depth = 8,  importance = 'impurity')
+pred_RF <- predict(RF, data = (tst_prop))
+tasa_RF <- matriz_confusion(pred_RF$predictions, tst_prop$Num_hijos)
+```
+
+La tasa de acierto tanto con 100 y 500 árboles es de aproximadamente 0.86, es decir, el tamaño del bosque no representa un cambio significativo a la hora de predecir, por lo que se decide implementar el modelo con 100 árboles.
+
+## Ajuste del modelo final con todas las observaciones
+
+Con el fin de presentar el modelo al público se hace uso de todos los registros para su entrenamiento. 
+
+```{r,eval=FALSE}
+RandomForest <- ranger(Num_hijos~.,  data = Base_modelo,   num.trees = 100,  mtry = 5, 
+             max.depth = 8,  importance = 'impurity')
+```
+
+# Prueba de Escritorio
+
+
+```{r,echo=FALSE}
+load("RandomForest.Rdata")
+```
+
+A continuación se darán los datos que corresponden a la información de cada uno de los investigadores 
+
+```{r}
+require(ranger)
+# datos de los investigadores
+# Nombre <- c(Num_integrantes, Estado_civil, Genero, Edad, Vive_hogar_madre)
+Miguel <- c(3, 6, 1, 52, 2)
+Jennifer <- c(4, 2, 2, 43, 3)
+Juan <- c(4, 6, 1, 59, 2)
+Cristina <- c(3, 2, 2, 50, 2)
+Salome <- c(3, 4, 2, 53, 3)
+
+# Poniendo los datos en un data.frame para realizar predicciones
+df <- rbind(Miguel, Jennifer, Juan, Cristina, Salome) #Unión de los datos
+df <- data.frame(df) #Conversión a data.frame
+
+# Nombres de las variables
+colnames(df) <- c("Num_integrantes",  
+                  "Estado_civil", 
+                  "Genero", 
+                  "Edad",
+                  "Vive_hogar_madre")
+
+
+prediccion <- predict(RandomForest, df) # Predicción con el Random Forest
+prediccion$predictions # Imprime las predicciones
+```
+
+
+<center>
+```{r,echo=FALSE}
+real <- factor(c(1,2,2,1,2),levels = c("0","1","2","3","4","5"))
+f <- data.frame("Inverstigador" = c("Miguel", "Jennifer", "Juan", "Cristina", "Salome"),
+                "Valores_predichos" = prediccion$predictions,
+                "Valores_Reales" = c(1,2,2,1,2))
+
+kable(f,align = "c")%>%
+  kable_paper("striped",full_width = FALSE)
+```
+</center>
+
+
+
+
+# Conclusiones
+
+ * En general aunque algunas veces la información no este explicita en los lugares a los que tenemos acceso, gracias a los métodos de aprendizaje estadístico podemos deducirla.
+ 
+ * En el mundo estadístico los Bosques Aleatorios son considerados por algunos como la panacea para los problemas de clasificación, en este problema se ve que este tipo de modelos es el que presenta mejores resultados, además, es un modelo parsimonioso, que se puede llevar a la práctica y presenta buenos resultados. 
+ 
+ * A partir del número de variables que finalmente se obtuvo, da referencia a que se puede obtener información de la variable respuesta sin necesidad de tener en cuenta tantas variables como las que se consideraron inicialmente, esto realmente es algo bueno, ya que no se requiere mucha información para obtener buenos resultados y a la hora de requerir recolectar nueva información será un proceso más sencillo, esto es a lo que llamamos modelos parsimoniosos los cuales siempre serán el mejor resultado.
+
+ * Mediante los análisis realizados en el informe anterior cabe resaltar que muchas veces un hogar puede estar representado y ser estudiado de manera correcta a partir de información que viene principalmente del jefe de hogar y ser verídica. 
+
+ * Dado que los resultados con los métodos de Random forest fueron muy buenos se recomienda para futuros estudios ensayar modelo tipo boosting.
+
+ * La predicción del número de hijos tiene bastantes utilidades en diferentes sectores por ejemplo en el caso de una inmobiliaria, que quiere arrendar una nueva propiedad y dejarla en manos de la familia ideal. La inmobiliaria no quiere invadir e incomodar la privacidad de sus clientes; pero con poca información y con ayuda de esta aplicación la inmobiliaria podrá saber cuántos de los futuros integrantes de este hogar son hijos y así saber un poco más sobre la familia que se mudará a la casa.
+ 
+ * Cabe resaltar que en un inicio cuando se entrenaban los modelo para clasificar el número de hijos de 0 a 14, si bien los modelos basados en arboles presentaban un tiempo de ejecución corto estos solo eran capaces de predecir de 0 a 6 hijos, comparado con el modelo Knn que fue el único de los modelos probados capaz de predecir en las 14 clases.
+
+
+# Bibliografía
+
+
+* Bonilla Jaime, G., & Garcia Valdez, E. (2009). Impacto de las condiciones socioeconomicas familiares en las decisiones de fertilidad (numero de hijos), utilizando un modelo de regresión poisson: período de estudio 2005-2006 (Bachelor's thesis).
+
+* Forero, Nohora, & Gamboa, Luis Fernando. (2009). Family Size in Colombia: Guessing or Planning? Intended vs. Actual Family Size in Colombia. Desarrollo y Sociedad, (64), 85-118. Retrieved March 31, 2021, Recuperada de http://www.scielo.org.co/scielo.php?script=sci_arttext&pid=S0120-35842009000200004&lng=en&tlng=en. 
+
+* García, D. & Jaramillo, A. (6 de Enero de 2019). El cambio social que se gesta en los hogares colombianos. El Tiempo. https://www.eltiempo.com/economia/sectores/que-implica-que-los-hogares-colombianos-sean-mas-pequenos-analisis-censo-2018-311776
+
+* Robayo, E. P. (2019). Tipología del hogar en Colombia  (2000-2015): Características Sociodemográficas de las mujeres. (Tesis de Maestría, Universidad Externado de Colombia). Recuperada de https://bdigital.uexternado.edu.co/bitstream/001/2223/1/DKA-spa-2019-Tipologias_de_hogar_en_Colombia_2000_2015_caracteristicas_sociodemograficas_de_las_mujeres 
+
+* Wright, M. N. & Ziegler, A. (2017). ranger: A fast implementation of random forests for high dimensional data in C++ and R. J Stat Softw 77:1-17. https://doi.org/10.18637/jss.v077.i01.
+
+
+</div>
+
+
